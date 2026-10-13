@@ -38,7 +38,7 @@ export function openSheet(dialog: HTMLDialogElement, opener?: HTMLElement | null
   dialog.style.transform = '';
   // nächster Frame: Klasse setzen, damit die Transition läuft
   requestAnimationFrame(() => requestAnimationFrame(() => dialog.classList.add('is-open')));
-  const first = dialog.querySelector<HTMLElement>('[aria-current="true"], [aria-current="page"]') ?? dialog.querySelector<HTMLElement>('[data-close]');
+  const first = dialog.querySelector<HTMLElement>('[data-autofocus]') ?? dialog.querySelector<HTMLElement>('[data-close]');
   first?.focus({ preventScroll: true });
 }
 
@@ -168,6 +168,35 @@ if (bar) {
     window.setTimeout(() => bar.classList.toggle('is-hidden', isField(document.activeElement)), 50);
   });
 }
+
+/* ---------------- Fokus nie verdeckt (WCAG 2.4.11) ---------------- */
+// Browser berücksichtigen scroll-padding beim Fokussieren nicht einheitlich (Safari). Darum: fokussiertes Element
+// bei Bedarf so nachscrollen, dass es weder unter dem Header noch unter Aktionsleiste oder Sticky-Leisten liegt.
+function unobscure(el: HTMLElement): void {
+  if (el.closest('dialog, [data-header], [data-bottom-bar], .flow__bar, .flow__footer')) return;
+  const r = el.getBoundingClientRect();
+  if (!r.height) return;
+  let top = header?.getBoundingClientRect().bottom ?? 0;
+  let bottom = window.innerHeight;
+  const flow = el.closest('.flow');
+  const fb = flow?.querySelector<HTMLElement>('.flow__bar');
+  const ff = flow?.querySelector<HTMLElement>('.flow__footer:not([hidden])');
+  if (fb) top = Math.max(top, fb.getBoundingClientRect().bottom);
+  if (ff) bottom = Math.min(bottom, ff.getBoundingClientRect().top);
+  if (bar && getComputedStyle(bar).display !== 'none' && !bar.classList.contains('is-hidden')) bottom = Math.min(bottom, bar.getBoundingClientRect().top);
+  const jump = document.querySelector<HTMLElement>('.jump');
+  if (jump && getComputedStyle(jump).position === 'sticky' && jump.getBoundingClientRect().top <= top + 1) top = Math.max(top, jump.getBoundingClientRect().bottom);
+  if (r.bottom < 0 || r.top > window.innerHeight) return;
+  if (r.bottom > bottom - 8) window.scrollBy({ top: r.bottom - bottom + 16, behavior: 'instant' as ScrollBehavior });
+  else if (r.top < top + 8) window.scrollBy({ top: r.top - top - 16, behavior: 'instant' as ScrollBehavior });
+}
+document.addEventListener('focusin', (e) => {
+  const el = e.target;
+  if (!(el instanceof HTMLElement) || el === document.body) return;
+  // nur bei Tastaturfokus – Klicks (z. B. auf Ankerlinks) nicht beeinflussen
+  if (!el.matches(':focus-visible') && !el.matches('input, textarea, select')) return;
+  requestAnimationFrame(() => requestAnimationFrame(() => unobscure(el)));
+});
 
 /* ---------------- Einblenden ---------------- */
 const reveals = document.querySelectorAll<HTMLElement>('.reveal');

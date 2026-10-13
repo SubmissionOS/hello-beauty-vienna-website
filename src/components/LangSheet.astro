@@ -25,6 +25,7 @@ const flag: Record<Lang, string> = { de: 'at', en: 'gb', hu: 'hu' };
             lang={LANG_META[l].htmlLang}
             aria-current={l === lang ? 'true' : undefined}
             data-lang-link={l}
+            data-autofocus={l === lang ? '' : undefined}
           >
             <img src={`/flags/${flag[l]}.svg`} alt="" width="24" height="16" class="lang-flag" />
             <span class="cell__body">
