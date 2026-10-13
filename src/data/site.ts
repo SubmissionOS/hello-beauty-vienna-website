@@ -33,10 +33,8 @@ export const site = {
   },
   /** Bewertungen nur mit Quelle und Datum (Treatwell-Profil, abgerufen 2026-10-13) */
   rating: {
-    value: '4,8',
-    valueEn: '4.8',
-    count: '2.811',
-    countEn: '2,811',
+    value: 4.8,
+    count: 2811,
     source: 'Treatwell',
     url: 'https://www.treatwell.at/salon/hello-beauty-salon/',
     asOf: '2026-10-13',

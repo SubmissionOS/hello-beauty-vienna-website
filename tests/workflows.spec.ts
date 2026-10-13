@@ -251,6 +251,9 @@ test.describe('Kontaktformular', () => {
       const f = dictionaries[lang].form;
       await page.goto(routes.contact.path[lang]);
       const form = page.locator('[data-contact-form]');
+      // Ausgangszustand: keine Fehler- oder Erfolgsmeldung sichtbar
+      await expect(form.locator('[data-summary-box]')).toBeHidden();
+      await expect(page.locator('[data-success]')).toBeHidden();
       await form.locator('[data-submit]').click();
       await expect(form.locator('[data-summary-box]')).toBeVisible();
       await expect(page.locator('#cf-name')).toBeFocused();

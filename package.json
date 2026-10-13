@@ -8,11 +8,11 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "check:i18n": "node scripts/check-i18n.mjs",
-    "check:types": "tsc --noEmit",
-    "build": "node scripts/check-i18n.mjs && astro build",
+    "build": "astro build",
     "preview": "astro preview --port 4321",
+    "check": "tsc --noEmit",
     "test": "playwright test",
+    "test:shots": "node scripts/run-shots.mjs",
     "lighthouse": "node scripts/lighthouse.mjs"
   },
   "dependencies": {

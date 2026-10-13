@@ -55,7 +55,7 @@ const salon = ['salon-innenraum-ueberblick', 'salon-kosmetikraum-liege', 'salon-
   </section>
 
   <section class="section" aria-labelledby="team-title">
-    <div class="container container--narrow">
+    <div class="container">
       <h2 id="team-title">{p.teamTitle}</h2>
       <div class="team-placeholder">
         <Rich text={p.teamText} lang={lang} />
@@ -135,6 +135,7 @@ const salon = ['salon-innenraum-ueberblick', 'salon-kosmetikraum-liege', 'salon-
     color: var(--c-ink-muted);
   }
   .team-placeholder {
+    max-width: 46rem;
     margin-top: var(--s-4);
     padding: var(--s-6);
     border: 1px dashed var(--c-field);

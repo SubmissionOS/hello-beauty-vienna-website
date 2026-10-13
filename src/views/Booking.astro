@@ -405,8 +405,7 @@ const json = JSON.stringify(clientData).replace(/</g, '\\u003c');
     color: var(--c-gold-text);
     font-weight: 500;
   }
-  .flow__back[hidden] {
-    display: inline-flex;
+  .flow__back.is-invisible {
     visibility: hidden;
   }
   .flow__back:hover {

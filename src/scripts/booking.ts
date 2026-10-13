@@ -266,7 +266,7 @@ export function initBooking(): void {
     s.maxStep = Math.max(s.maxStep, n);
     save();
     for (const sec of steps) sec.hidden = Number(sec.dataset.step) !== n;
-    back.hidden = n === 1 || n === TOTAL;
+    back.classList.toggle('is-invisible', n === 1 || n === TOTAL);
     footer.hidden = n >= 6;
     progressLabel.textContent = fmt(B.progress, { current: n, total: TOTAL });
     progressBar.style.width = `${(n / TOTAL) * 100}%`;

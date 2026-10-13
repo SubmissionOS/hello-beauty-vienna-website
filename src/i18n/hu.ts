@@ -55,7 +55,7 @@ export const hu: Dict = {
     hours: 'H–Szo 9–19 óra',
     team: 'Többnyelvű csapat',
     ratingValue: '{value} / 5 csillag',
-    ratingSource: '{count} értékelés a(z) {source} oldalán · {date}',
+    ratingSource: '{count} értékelés a {source} oldalán · {date}',
   },
   hours: {
     title: 'Nyitvatartás',

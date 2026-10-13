@@ -30,6 +30,11 @@ export function layoutAudit({ mobile }: { mobile: boolean }): string[] {
     return false;
   };
 
+  // 0. hidden-Attribut wird respektiert
+  for (const el of document.querySelectorAll<HTMLElement>('[hidden]')) {
+    if (getComputedStyle(el).display !== 'none') issues.push(`Element mit hidden ist sichtbar: ${describe(el)}`);
+  }
+
   // 1. Kein horizontales Scrollen
   const de = document.documentElement;
   if (de.scrollWidth > de.clientWidth + 1) issues.push(`Horizontaler Scroll: html.scrollWidth ${de.scrollWidth} > ${de.clientWidth}`);

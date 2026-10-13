@@ -18,6 +18,9 @@ interface Props {
 const { lang } = Astro.props;
 const d = t(lang);
 const h = d.home;
+const nf = new Intl.NumberFormat(LANG_META[lang].intl);
+const ratingValue = nf.format(site.rating.value);
+const ratingCount = nf.format(site.rating.count);
 const ratingDate = new Intl.DateTimeFormat(LANG_META[lang].intl, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(site.rating.asOf));
 const faqExcerpt = [d.faqPage.groups[0]!.items[0]!, d.faqPage.groups[0]!.items[1]!, d.faqPage.groups[1]!.items[0]!, d.faqPage.groups[2]!.items[0]!];
 const strip = ['salon-innenraum-ueberblick', 'naegel-rot-blumendesign', 'pedikuere-french-haende-fuesse', 'wimpern-volumen-ergebnis-blau', 'naegel-nude-goldornament'];
@@ -64,8 +67,8 @@ const strip = ['salon-innenraum-ueberblick', 'naegel-rot-blumendesign', 'pedikue
         <li>
           <Icon name="star" />
           <span>
-            <strong>{fmt(d.facts.ratingValue, { value: lang === 'de' ? site.rating.value : site.rating.valueEn })}</strong>
-            <span class="muted">{fmt(d.facts.ratingSource, { count: lang === 'de' ? site.rating.count : site.rating.countEn, source: site.rating.source, date: ratingDate })}</span>
+            <strong>{fmt(d.facts.ratingValue, { value: ratingValue })}</strong>
+            <span class="muted">{fmt(d.facts.ratingSource, { count: ratingCount, source: site.rating.source, date: ratingDate })}</span>
           </span>
         </li>
       </ul>
@@ -121,7 +124,7 @@ const strip = ['salon-innenraum-ueberblick', 'naegel-rot-blumendesign', 'pedikue
           {[0, 1, 2, 3, 4].map(() => <Icon name="star" size={18} />)}
         </span>
         <span>
-          {fmt(d.facts.ratingValue, { value: lang === 'de' ? site.rating.value : site.rating.valueEn })} · {h.rating.link}
+          {fmt(d.facts.ratingValue, { value: ratingValue })} · {h.rating.link}
           <span class="visually-hidden">{d.a11y.newWindow}</span>
         </span>
       </a>

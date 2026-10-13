@@ -6,7 +6,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import type { Page } from '@playwright/test';
+import type { Page, TestInfo } from '@playwright/test';
 import { test, expect, deviceOf, browserOf, isMobile, scrollThrough, waitImages } from './support/fixtures';
 import { PAGES } from './support/site';
 import { routes } from '../src/i18n/routes';
@@ -14,14 +14,14 @@ import { LOCALES } from '../src/i18n/config';
 
 test.skip(!process.env.SHOTS, 'Screenshots nur mit SHOTS=1');
 
-const dirFor = (info: Parameters<Parameters<typeof test>[1]>[1], lang: string) => {
+const dirFor = (info: TestInfo, lang: string) => {
   const dev = deviceOf(info.project) + (browserOf(info.project) === 'webkit' ? '-webkit' : '');
   const dir = path.join('docs', 'qa', 'screenshots', dev, lang);
   fs.mkdirSync(dir, { recursive: true });
   return dir;
 };
 
-const wanted = (info: Parameters<Parameters<typeof test>[1]>[1]) =>
+const wanted = (info: TestInfo) =>
   browserOf(info.project) === 'chromium' || deviceOf(info.project) === 'iphone-15';
 
 async function full(page: Page, file: string) {

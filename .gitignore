@@ -10,3 +10,6 @@ docs/qa/screenshots/**/*.png
 !docs/qa/screenshots/.gitkeep
 .claude/settings.local.json
 assets-original/
+test-results-*/
+docs/qa/playwright-results.json
+lh/
