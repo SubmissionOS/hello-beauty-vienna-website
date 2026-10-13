@@ -557,7 +557,7 @@ export const hu: Dict = {
   aboutPage: {
     title: 'Rólunk: szépségszalon Bécs 6. kerületében | Hello Beauty',
     description:
-      'A Hello Beauty köröm- és kozmetikai szalon a bécsi Barnabitengasse 7. szám alatt, a 6. kerületben. Ismerd meg a szalont, az értékeinket és többnyelvű csapatunkat.',
+      'A Hello Beauty köröm- és kozmetikai szalon Bécs 6. kerületében, a Barnabitengasse 7. alatt. Ismerd meg a szalont, az értékeinket és többnyelvű csapatunkat.',
     eyebrow: 'Rólunk',
     h1: 'Szeretjük és éljük a szépséget',
     lead: 'A Hello Beauty köröm- és kozmetikai szalon Bécs 6. kerületében. Ami hajt minket, egyszerű: friss energiával és mosollyal térj vissza a mindennapjaidba.',

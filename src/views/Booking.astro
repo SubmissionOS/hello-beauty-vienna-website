@@ -881,19 +881,30 @@ const json = JSON.stringify(clientData).replace(/</g, '\\u003c');
   }
   .summary :global(.cell) {
     background: transparent;
-    align-items: flex-start;
-    gap: var(--s-4);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'label edit'
+      'value edit';
+    align-items: start;
+    gap: 2px var(--s-3);
+    padding-block: 10px;
   }
   .summary :global(dt) {
-    flex: none;
-    width: 7.5rem;
+    grid-area: label;
     color: var(--c-ink-muted);
-    font-size: var(--fs-small);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    letter-spacing: 0.04em;
   }
   .summary :global(dd) {
+    grid-area: value;
     margin: 0;
-    flex: 1;
     min-width: 0;
+  }
+  .summary :global(.edit) {
+    grid-area: edit;
+    align-self: center;
   }
   .summary :global(dd ul) {
     list-style: none;
@@ -909,9 +920,10 @@ const json = JSON.stringify(clientData).replace(/</g, '\\u003c');
   }
   .summary :global(.edit) {
     flex: none;
-    min-height: 32px;
+    min-height: var(--tap);
+    min-width: var(--tap);
     padding: 0 8px;
-    margin: -6px -8px -6px 0;
+    margin: 0 -8px 0 0;
     border: 0;
     background: none;
     color: var(--c-gold-text);

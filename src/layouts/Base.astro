@@ -3,8 +3,6 @@ import '../styles/fonts.css';
 import '../styles/tokens.css';
 import '../styles/base.css';
 import { getImage } from 'astro:assets';
-import robotoLatin from '../assets/fonts/roboto-latin.woff2?url';
-import playfairLatin from '../assets/fonts/playfair-display-latin.woff2?url';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BottomBar from '../components/BottomBar.astro';
@@ -66,8 +64,6 @@ const nodes = [
     {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
     {routeKey && <link rel="alternate" hreflang="x-default" href={abs(routes[routeKey].path.de)} />}
 
-    <link rel="preload" href={robotoLatin} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={playfairLatin} as="font" type="font/woff2" crossorigin />
     {preloadImage && <link rel="preload" as="image" href={preloadImage.href} imagesrcset={preloadImage.srcset} imagesizes={preloadImage.sizes} type={preloadImage.type} fetchpriority="high" />}
 
     <meta name="theme-color" content="#fbf9f4" />

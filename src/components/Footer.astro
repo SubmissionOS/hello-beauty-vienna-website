@@ -104,6 +104,7 @@ const year = new Date().getFullYear();
     display: inline-flex;
     align-items: center;
     min-height: var(--tap);
+    min-width: var(--tap);
   }
 
   .site-footer a:hover {
@@ -114,7 +115,7 @@ const year = new Date().getFullYear();
   .site-footer__grid {
     display: grid;
     gap: var(--s-6) var(--s-5);
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   @media (min-width: 640px) {

@@ -21,7 +21,7 @@ const H = level;
 <div class="price-groups">
   {
     groups.map((g) => (
-      <section class="price-group" aria-labelledby={`${idPrefix}-${g.id}`}>
+      <div class="price-group">
         <H class="price-group__title" id={`${idPrefix}-${g.id}`}>
           {g.title[lang]}
         </H>
@@ -58,7 +58,7 @@ const H = level;
             </li>
           ))}
         </ul>
-      </section>
+      </div>
     ))
   }
 </div>
@@ -93,6 +93,9 @@ const H = level;
 
   .price-cells .cell__value {
     padding-top: 1px;
+    max-width: 46%;
+    white-space: normal;
+    text-align: right;
   }
 
   .price-table {
