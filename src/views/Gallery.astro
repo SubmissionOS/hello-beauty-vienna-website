@@ -89,7 +89,7 @@ const items = await Promise.all(
       </button>
     </div>
     <figure class="lightbox__stage" data-lb-stage>
-      <img data-lb-img alt="" sizes="100vw" />
+      <img data-lb-img alt="" sizes="100vw" draggable="false" />
       <figcaption class="lightbox__caption" data-lb-caption></figcaption>
     </figure>
     <button type="button" class="lightbox__btn lightbox__nav lightbox__nav--prev" data-lb-prev aria-label={d.a11y.previous}>
@@ -240,8 +240,8 @@ const items = await Promise.all(
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 40px;
-    min-width: 44px;
+    min-height: var(--tap);
+    min-width: var(--tap);
     padding: 0 16px;
     border-radius: var(--r-pill);
     font-size: var(--fs-small);
@@ -382,6 +382,7 @@ const items = await Promise.all(
     border-radius: var(--r-sm);
     -webkit-user-select: none;
     user-select: none;
+    -webkit-user-drag: none;
   }
   .lightbox__caption {
     font-size: var(--fs-small);

@@ -95,11 +95,16 @@ function busyFor(date: string, staff: string): Busy[] {
   } else {
     const r = rng(fnv(`${date}|${staff}`));
     const saturday = weekdayMon0(date) === 5;
-    let t = OPEN + [0, 0, 15, 30, 60][Math.floor(r() * 5)]!;
-    while (t < CLOSE - 30) {
+    // Teilzeit: manche Tage später Beginn oder früheres Ende
+    const start = OPEN + [0, 0, 0, 30, 60, 120, 180][Math.floor(r() * 7)]!;
+    const end = CLOSE - [0, 0, 0, 60, 120][Math.floor(r() * 5)]!;
+    if (start > OPEN) out.push({ start: OPEN, end: start });
+    if (end < CLOSE) out.push({ start: end, end: CLOSE });
+    let t = start + [0, 15, 30, 60][Math.floor(r() * 4)]!;
+    while (t < end - 30) {
       const len = [45, 60, 60, 75, 90, 120][Math.floor(r() * 6)]!;
-      out.push({ start: t, end: Math.min(CLOSE, t + len + BUFFER) });
-      const gap = saturday ? [0, 0, 15, 30][Math.floor(r() * 4)]! : [0, 15, 30, 45, 60, 90][Math.floor(r() * 6)]!;
+      out.push({ start: t, end: Math.min(end, t + len + BUFFER) });
+      const gap = saturday ? [0, 0, 15, 30, 60, 120][Math.floor(r() * 6)]! : [0, 15, 30, 45, 60, 90, 150, 210][Math.floor(r() * 8)]!;
       t += len + BUFFER + gap;
     }
   }
