@@ -59,7 +59,7 @@ function compare(a: unknown, b: unknown, path: string, lang: Lang, errors: strin
   }
 }
 
-if (process.env.I18N_SKIP_CHECK !== "1") {
+{
   const errors: string[] = [];
   for (const lang of LOCALES) if (lang !== 'de') compare(de, dictionaries[lang], '$', lang, errors);
   if (errors.length) {

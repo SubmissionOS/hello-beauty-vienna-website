@@ -10,7 +10,7 @@ import { categories, category, type CategoryId, type Group } from '../data/servi
 import { servicePageMedia, stripFor } from '../data/gallery';
 import { href, SERVICE_PAGES, type RouteKey } from '../i18n/routes';
 import type { Lang } from '../i18n/config';
-import { t } from '../i18n';
+import { fmt, t } from '../i18n';
 import { abs, crumbsFor, faqNode, plainText, serviceNode } from '../lib/schema';
 import { euro } from '../lib/format';
 import { priceRange } from '../data/services';
@@ -54,7 +54,7 @@ const schema = [
           <h1>{s.h1}</h1>
           <p class="lead">{s.lead}</p>
           <p class="svc-hero__price">
-            {d.units.from} <strong>{euro(range.min, lang)}</strong>
+            <strong>{fmt(d.units.from, { price: euro(range.min, lang) })}</strong>
           </p>
           <div class="btn-row">
             <a class="btn" href={bookHref}>
@@ -177,7 +177,7 @@ const schema = [
               <a class="related__link" href={href(SERVICE_PAGES[x.id], lang)} aria-current={x.id === cat ? 'page' : undefined}>
                 <span>{d.cards[x.id].title}</span>
                 <span class="related__price">
-                  {d.units.from} {euro(priceRange(x.id).min, lang)}
+                  {fmt(d.units.from, { price: euro(priceRange(x.id).min, lang) })}
                 </span>
                 <Icon name="chevron-right" size={18} />
               </a>

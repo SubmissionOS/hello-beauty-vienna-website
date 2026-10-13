@@ -4,7 +4,7 @@ import Icon from './Icon.astro';
 import { categories, priceRange, type CategoryId } from '../data/services';
 import { href, SERVICE_PAGES } from '../i18n/routes';
 import type { Lang } from '../i18n/config';
-import { t } from '../i18n';
+import { fmt, t } from '../i18n';
 import { euro } from '../lib/format';
 
 interface Props {
@@ -37,7 +37,7 @@ const imageFor: Record<CategoryId, { name: string; pos?: string }> = {
               <span class="service-card__text">{d.cards[c.id].text}</span>
               <span class="service-card__meta">
                 <span class="service-card__price">
-                  {d.units.from} {euro(r.min, lang)}
+                  {fmt(d.units.from, { price: euro(r.min, lang) })}
                 </span>
                 <span class="service-card__more" aria-hidden="true">
                   <Icon name="arrow-right" size={20} />

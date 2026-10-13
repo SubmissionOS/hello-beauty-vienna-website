@@ -72,7 +72,7 @@ const strip = ['salon-innenraum-ueberblick', 'naegel-rot-blumendesign', 'pedikue
     </div>
   </section>
 
-  <section class="section section--white" aria-labelledby="services-title">
+  <section class="section section--white" id="leistungen" aria-labelledby="services-title">
     <div class="container">
       <div class="section-head">
         <p class="eyebrow">{h.services.eyebrow}</p>
@@ -80,13 +80,13 @@ const strip = ['salon-innenraum-ueberblick', 'naegel-rot-blumendesign', 'pedikue
         <p>{h.services.intro}</p>
       </div>
       <ServiceGrid lang={lang} />
-      <p class="center-link">
+      <p class="center-link" id="preisliste">
         <a class="link-arrow" href={href('prices', lang)}>{d.cta.allPrices}<Icon name="arrow-right" /></a>
       </p>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="why-title">
+  <section class="section" id="uberuns" aria-labelledby="why-title">
     <div class="container why">
       <div class="why__media reveal">
         <Img name="naegel-behandlung-arbeitsplatz" alt={d.gallery['naegel-behandlung-arbeitsplatz']} ratio="4 / 5" position="60% 50%" sizes="(min-width: 1024px) 480px, 92vw" widths={[360, 540, 720, 960]} />
@@ -128,7 +128,7 @@ const strip = ['salon-innenraum-ueberblick', 'naegel-rot-blumendesign', 'pedikue
     </div>
   </section>
 
-  <section class="section" aria-labelledby="gallery-title">
+  <section class="section" id="galerie" aria-labelledby="gallery-title">
     <div class="container">
       <div class="section-head section-head--row">
         <div>
@@ -150,7 +150,7 @@ const strip = ['salon-innenraum-ueberblick', 'naegel-rot-blumendesign', 'pedikue
     </div>
   </section>
 
-  <section class="section section--white" aria-labelledby="visit-title">
+  <section class="section section--white" id="kontakt" aria-labelledby="visit-title">
     <div class="container visit">
       <div class="visit__text">
         <p class="eyebrow">{h.visit.eyebrow}</p>

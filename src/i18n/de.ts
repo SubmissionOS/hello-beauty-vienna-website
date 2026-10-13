@@ -42,7 +42,7 @@ export const de = {
     call: 'Anrufen',
   },
   units: {
-    from: 'ab',
+    from: 'ab {price}',
     perPiece: 'pro Stück',
     minutes: '{n} Min.',
     approxMinutes: 'ca. {n} Min.',

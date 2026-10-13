@@ -46,9 +46,10 @@ const MAX_MIN = 300;
 const HORIZON_DAYS = 120;
 
 export function initBooking(): void {
-  const root = document.querySelector<HTMLElement>('[data-booking]');
+  const rootEl = document.querySelector<HTMLElement>('[data-booking]');
   const dataEl = document.getElementById('booking-data');
-  if (!root || !dataEl) return;
+  if (!rootEl || !dataEl) return;
+  const root: HTMLElement = rootEl;
   const D = JSON.parse(dataEl.textContent ?? '{}') as Dict;
   const B = D.b;
   const $ = <T extends HTMLElement = HTMLElement>(sel: string, el: ParentNode = root) => el.querySelector<T>(sel)!;
@@ -200,7 +201,7 @@ export function initBooking(): void {
 
   function updateTotals() {
     const t = totals();
-    const price = `${t.from ? `${D.units.from} ` : ''}${euro(t.price)}`;
+    const price = t.from ? fmt(D.units.from!, { price: euro(t.price) }) : euro(t.price);
     if (!t.sel.length) {
       totalEl.textContent = B.service.none;
     } else {
@@ -225,7 +226,7 @@ export function initBooking(): void {
         a.textContent = i.dataset.name ?? '';
         const v = document.createElement('span');
         v.className = 'muted';
-        v.textContent = `${i.dataset.from ? `${D.units.from} ` : ''}${euro(Number(i.dataset.price))}`;
+        v.textContent = i.dataset.from ? fmt(D.units.from!, { price: euro(Number(i.dataset.price)) }) : euro(Number(i.dataset.price));
         li.append(a, v);
         ul.append(li);
       }
@@ -781,7 +782,7 @@ export function initBooking(): void {
     const end = booking?.end ?? s.slot?.end;
     if (s.date && start && end) row(dl, B.payment.when, `${dateLong(splitDateTime(start).date)}, ${time(start)}–${time(end)}`, editable ? 3 : undefined);
     row(dl, B.payment.duration, dur(t.min));
-    row(dl, B.payment.total, `${t.from ? `${D.units.from} ` : ''}${euro(t.price)}`, undefined, 'total');
+    row(dl, B.payment.total, t.from ? fmt(D.units.from!, { price: euro(t.price) }) : euro(t.price), undefined, 'total');
   }
 
   const submit = $<HTMLButtonElement>('[data-submit]');

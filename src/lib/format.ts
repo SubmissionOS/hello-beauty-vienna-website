@@ -13,7 +13,8 @@ export function euro(n: number, lang: Lang): string {
 
 export function priceLabel(x: Service, lang: Lang): string {
   const d = t(lang);
-  return `${x.from ? `${d.units.from} ` : ''}${euro(x.price, lang)}${x.perPiece ? ` ${d.units.perPiece}` : ''}`;
+  const p = euro(x.price, lang);
+  return `${x.from ? fmt(d.units.from, { price: p }) : p}${x.perPiece ? ` ${d.units.perPiece}` : ''}`;
 }
 
 export function minutes(n: number, lang: Lang, approx: boolean): string {
