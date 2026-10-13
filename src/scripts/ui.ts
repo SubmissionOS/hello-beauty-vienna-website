@@ -148,6 +148,13 @@ document.querySelectorAll<HTMLButtonElement>('[data-disclosure]').forEach((btn) 
   document.addEventListener('click', (e) => {
     if (!item.contains(e.target as Node)) set(false);
   });
+  // Safari fokussiert Buttons beim Klick nicht – ESC deshalb dokumentweit abfangen
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
+      set(false);
+      btn.focus();
+    }
+  });
 });
 
 /* ---------------- Header & Aktionsleiste ---------------- */

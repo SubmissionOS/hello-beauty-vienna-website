@@ -321,15 +321,19 @@ test.describe('Menü, Sheets, Popover', () => {
       await btn.click();
       await sheet.locator('[data-close]').click();
       await expect(sheet).toBeHidden();
-      // Wischen nach unten schließt
+      // Wischen nach unten schließt (nur Bottom-Sheet unter 768 px; darüber zentrierter Dialog ohne Greifleiste)
       await btn.click();
       await expect(sheet).toBeVisible();
       await page.waitForTimeout(350);
-      const grab = await sheet.locator('[data-sheet-grab]').boundingBox();
-      await page.mouse.move(grab!.x + grab!.width / 2, grab!.y + grab!.height / 2);
-      await page.mouse.down();
-      await page.mouse.move(grab!.x + grab!.width / 2, grab!.y + 500, { steps: 8 });
-      await page.mouse.up();
+      if (await sheet.locator('[data-sheet-grab]').isVisible()) {
+        const grab = (await sheet.locator('[data-sheet-grab]').boundingBox())!;
+        await page.mouse.move(grab.x + grab.width / 2, grab.y + grab.height / 2);
+        await page.mouse.down();
+        await page.mouse.move(grab.x + grab.width / 2, grab.y + 500, { steps: 8 });
+        await page.mouse.up();
+      } else {
+        await page.keyboard.press('Escape');
+      }
       await expect(sheet).toBeHidden();
       // Navigation über das Menü
       await btn.click();
@@ -423,9 +427,11 @@ test.describe('404', () => {
 test.describe('Tastatur', () => {
   test('kompletter Durchlauf nur mit Tastatur', async ({ page }, info) => {
     test.skip(isMobile(info.project), 'Tastatur-Durchlauf auf Desktop-Profilen');
-    test.skip(browserOf(info.project) === 'webkit' && process.platform === 'darwin', 'Safari springt per Tab nur mit Systemeinstellung zu Links');
     await page.goto('/');
-    await page.keyboard.press('Tab');
+    // Safari springt mit Tab standardmäßig nur zu Formularfeldern (Links erst mit der Einstellung
+    // „Mit Tab jedes Objekt hervorheben“). Dort startet der Durchlauf deshalb am Skip-Link.
+    if (browserOf(info.project) === 'webkit') await page.locator('.skip-link').focus();
+    else await page.keyboard.press('Tab');
     await expect(page.locator('.skip-link')).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(page.locator('#main')).toBeFocused();

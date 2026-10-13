@@ -140,11 +140,26 @@ const H = level;
     font-weight: 400;
   }
 
+  .price-table {
+    table-layout: fixed;
+  }
+
   .price-table .num {
     text-align: right;
     white-space: nowrap;
-    width: 1%;
     font-variant-numeric: tabular-nums;
+  }
+
+  .price-table thead th:nth-child(2) {
+    width: 10.5rem;
+  }
+
+  .price-table thead th:nth-child(3) {
+    width: 9.5rem;
+  }
+
+  .price-table td.num {
+    white-space: normal;
   }
 
   .price-table tbody tr:hover {

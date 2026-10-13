@@ -13,6 +13,8 @@ import { routes } from '../src/i18n/routes';
 import { LOCALES } from '../src/i18n/config';
 
 test.skip(!process.env.SHOTS, 'Screenshots nur mit SHOTS=1');
+// Pixeldichte 1 hält die Ganzseiten-Aufnahmen handhabbar (Sichtprüfung über Spaltenbögen, siehe scripts/columns.ps1)
+test.use({ deviceScaleFactor: 1 });
 
 const dirFor = (info: TestInfo, lang: string) => {
   const dev = deviceOf(info.project) + (browserOf(info.project) === 'webkit' ? '-webkit' : '');
