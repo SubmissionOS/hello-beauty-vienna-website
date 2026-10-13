@@ -1,0 +1,97 @@
+---
+import Icon from './Icon.astro';
+import type { Lang } from '../i18n/config';
+import { t } from '../i18n';
+import { site, addressLine } from '../data/site';
+
+interface Props {
+  lang: Lang;
+  id?: string;
+}
+const { lang, id = 'visit' } = Astro.props;
+const d = t(lang);
+---
+<div class="visit-card">
+  <ul class="cells" role="list">
+    <li class="cell">
+      <span class="cell__icon"><Icon name="pin" /></span>
+      <span class="cell__body">
+        <span class="cell__sub">{d.contactActions.address}</span>
+        <span class="cell__title">{addressLine}</span>
+      </span>
+    </li>
+    <li class="cell">
+      <span class="cell__icon"><Icon name="clock" /></span>
+      <span class="cell__body">
+        <span class="cell__sub">{d.hours.title}</span>
+        <span class="cell__title">
+          {d.hours.weekdays} <span class="tabular nowrap">{d.hours.weekdaysTime}</span>
+        </span>
+        <span class="cell__sub">{d.hours.sunday} {d.hours.closed}</span>
+      </span>
+    </li>
+    <li>
+      <a class="cell" href={`tel:${site.phoneE164}`}>
+        <span class="cell__icon"><Icon name="phone" /></span>
+        <span class="cell__body">
+          <span class="cell__sub">{d.contactActions.phone}</span>
+          <span class="cell__title tabular">{site.phone}</span>
+        </span>
+        <Icon name="chevron-right" class="cell__chevron" />
+      </a>
+    </li>
+    <li>
+      <a class="cell" href={`mailto:${site.email}`}>
+        <span class="cell__icon"><Icon name="mail" /></span>
+        <span class="cell__body">
+          <span class="cell__sub">{d.contactActions.email}</span>
+          <span class="cell__title">{site.email}</span>
+        </span>
+        <Icon name="chevron-right" class="cell__chevron" />
+      </a>
+    </li>
+  </ul>
+
+  <div class="visit-card__actions">
+    <button
+      type="button"
+      class="btn btn--secondary btn--sm"
+      data-copy={`Hello Beauty, ${addressLine}`}
+      data-copied={d.contactActions.copied}
+      data-failed={d.contactActions.copyFailed}
+      data-status={`${id}-copy-status`}
+    >
+      <Icon name="copy" />
+      <span data-copy-label>{d.contactActions.copy}</span>
+    </button>
+    <a class="btn btn--secondary btn--sm" href={site.maps.apple} target="_blank" rel="noopener noreferrer">
+      <Icon name="external" />
+      {d.contactActions.appleMaps}
+      <span class="visually-hidden">{d.a11y.newWindow}</span>
+    </a>
+    <a class="btn btn--secondary btn--sm" href={site.maps.google} target="_blank" rel="noopener noreferrer">
+      <Icon name="external" />
+      {d.contactActions.googleMaps}
+      <span class="visually-hidden">{d.a11y.newWindow}</span>
+    </a>
+  </div>
+  <p class="visually-hidden" role="status" id={`${id}-copy-status`}></p>
+</div>
+
+<style>
+  .visit-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-top: var(--s-4);
+  }
+  .visit-card__actions .btn {
+    white-space: normal;
+  }
+  .visit-card :global(.cell__sub) + :global(.cell__title) {
+    margin-top: 1px;
+  }
+  .nowrap {
+    white-space: nowrap;
+  }
+</style>

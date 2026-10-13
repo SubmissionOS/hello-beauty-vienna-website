@@ -1,0 +1,99 @@
+---
+import Icon from './Icon.astro';
+import { href } from '../i18n/routes';
+import type { Lang } from '../i18n/config';
+import { t } from '../i18n';
+import { site } from '../data/site';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  text?: string;
+  bookHref?: string;
+  bookLabel?: string;
+}
+const { lang, title, text, bookHref, bookLabel } = Astro.props;
+const d = t(lang);
+---
+<section class="cta-band" aria-labelledby="cta-band-title">
+  <div class="container">
+    <div class="cta-band__card">
+      <div class="cta-band__text">
+        <h2 id="cta-band-title">{title ?? d.closing.title}</h2>
+        <p>{text ?? d.closing.text}</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn--light" href={bookHref ?? href('booking', lang)}>
+          <Icon name="calendar" />
+          {bookLabel ?? d.cta.bookNow}
+        </a>
+        <a class="btn cta-band__call" href={`tel:${site.phoneE164}`}>
+          <Icon name="phone" />
+          <span class="tabular">{site.phone}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-band {
+    padding-block: var(--section-y);
+  }
+  .cta-band__card {
+    position: relative;
+    display: grid;
+    gap: var(--s-6);
+    padding: clamp(var(--s-6), 4vw, var(--s-8));
+    border-radius: var(--r-xl);
+    background: var(--c-ink);
+    color: var(--c-on-dark);
+    overflow: hidden;
+  }
+  .cta-band__card::after {
+    content: '';
+    position: absolute;
+    inset: auto -10% -60% auto;
+    width: 60%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid rgb(221 200 124 / 0.25);
+    pointer-events: none;
+  }
+  @media (min-width: 900px) {
+    .cta-band__card {
+      grid-template-columns: 1.4fr auto;
+      align-items: center;
+    }
+  }
+  .cta-band h2 {
+    color: var(--c-white);
+  }
+  .cta-band p {
+    margin-top: var(--s-3);
+    color: var(--c-on-dark-muted);
+    max-width: 52ch;
+  }
+  .cta-band .btn-row {
+    position: relative;
+    z-index: 1;
+  }
+  .cta-band__call {
+    --btn-bg: transparent;
+    --btn-fg: var(--c-white);
+    --btn-bd: rgb(245 242 235 / 0.45);
+  }
+  .cta-band__call:hover {
+    --btn-bg: rgb(245 242 235 / 0.08);
+    --btn-bd: var(--c-gold-soft);
+  }
+  .cta-band :global(:focus-visible) {
+    outline-color: var(--c-accent);
+    box-shadow: 0 0 0 3px var(--c-ink);
+  }
+  @media (max-width: 479px) {
+    .cta-band .btn {
+      width: 100%;
+    }
+  }
+</style>

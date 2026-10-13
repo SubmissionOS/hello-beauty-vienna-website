@@ -1,0 +1,114 @@
+---
+import Sheet from './Sheet.astro';
+import Icon from './Icon.astro';
+import { href, SERVICE_PAGES, type RouteKey } from '../i18n/routes';
+import type { Lang } from '../i18n/config';
+import { t } from '../i18n';
+import { categories } from '../data/services';
+import { site } from '../data/site';
+
+interface Props {
+  lang: Lang;
+  routeKey: RouteKey | null;
+}
+const { lang, routeKey } = Astro.props;
+const d = t(lang);
+const cur = (k: RouteKey) => (routeKey === k ? 'page' : undefined);
+const main: { key: RouteKey; label: string }[] = [
+  { key: 'home', label: d.nav.home },
+  { key: 'prices', label: d.nav.prices },
+  { key: 'gallery', label: d.nav.gallery },
+  { key: 'about', label: d.nav.about },
+  { key: 'contact', label: d.nav.contact },
+  { key: 'faq', label: d.nav.faq },
+];
+---
+<Sheet id="menu-sheet" title={d.a11y.menu} closeLabel={d.a11y.closeMenu} size="large">
+  <nav aria-label={d.a11y.mainNav} class="menu">
+    <a class="btn btn--block" href={href('booking', lang)}>
+      <Icon name="calendar" />
+      {d.nav.book}
+    </a>
+
+    <p class="menu__label">{d.nav.services}</p>
+    <ul class="cells" role="list">
+      <li>
+        <a class="cell" href={href('services', lang)} aria-current={cur('services')}>
+          <span class="cell__body"><span class="cell__title">{d.nav.allServices}</span></span>
+          <Icon name="chevron-right" class="cell__chevron" />
+        </a>
+      </li>
+      {
+        categories.map((c) => (
+          <li>
+            <a class="cell" href={href(SERVICE_PAGES[c.id], lang)} aria-current={cur(SERVICE_PAGES[c.id])}>
+              <span class="cell__body">
+                <span class="cell__title">{d.cards[c.id].title}</span>
+              </span>
+              <Icon name="chevron-right" class="cell__chevron" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="menu__label">Hello Beauty</p>
+    <ul class="cells" role="list">
+      {
+        main.map((m) => (
+          <li>
+            <a class="cell" href={href(m.key, lang)} aria-current={cur(m.key)}>
+              <span class="cell__body">
+                <span class="cell__title">{m.label}</span>
+              </span>
+              <Icon name="chevron-right" class="cell__chevron" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <ul class="cells menu__contact" role="list">
+      <li>
+        <a class="cell" href={`tel:${site.phoneE164}`}>
+          <span class="cell__icon"><Icon name="phone" /></span>
+          <span class="cell__body">
+            <span class="cell__title">{site.phone}</span>
+            <span class="cell__sub">{d.facts.hours}</span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a class="cell" href={href('contact', lang)}>
+          <span class="cell__icon"><Icon name="pin" /></span>
+          <span class="cell__body">
+            <span class="cell__title">{d.facts.location}</span>
+          </span>
+          <Icon name="chevron-right" class="cell__chevron" />
+        </a>
+      </li>
+    </ul>
+  </nav>
+</Sheet>
+
+<style>
+  .menu {
+    display: flex;
+    flex-direction: column;
+  }
+  .menu__label {
+    margin: var(--s-5) 4px var(--s-2);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--c-ink-muted);
+  }
+  .menu__contact {
+    margin-top: var(--s-5);
+  }
+  .menu .cell[aria-current='page'] .cell__title {
+    color: var(--c-gold-text);
+    font-weight: 500;
+  }
+</style>

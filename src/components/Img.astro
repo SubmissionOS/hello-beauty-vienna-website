@@ -1,0 +1,63 @@
+---
+/**
+ * Bild aus src/assets/salon über die Astro-Bildpipeline: AVIF + WebP, srcset nie breiter als das Original.
+ * Der Rahmen hält das Seitenverhältnis fest (kein Layout-Sprung); das Bild füllt ihn per object-fit.
+ */
+import { Picture } from 'astro:assets';
+import { image } from '../data/images';
+
+interface Props {
+  name: string;
+  alt: string;
+  sizes: string;
+  /** Seitenverhältnis des Rahmens, z. B. "4 / 5". Standard: Original */
+  ratio?: string;
+  /** Bildausschnitt, z. B. "50% 30%" */
+  position?: string;
+  /** LCP-Bild: sofort laden, hohe Priorität */
+  eager?: boolean;
+  widths?: number[];
+  class?: string;
+  rounded?: boolean;
+}
+
+const { name, alt, sizes, ratio, position, eager = false, widths = [360, 540, 720, 960, 1280, 1600, 2000], class: cls, rounded = true } = Astro.props;
+const src = image(name);
+const usable = widths.filter((w) => w <= src.width);
+if (usable.length === 0 || usable[usable.length - 1]! < Math.min(src.width, widths[widths.length - 1]!)) usable.push(Math.min(src.width, widths[widths.length - 1]!));
+const frameRatio = ratio ?? `${src.width} / ${src.height}`;
+---
+<div class:list={['img', cls, { 'img--rounded': rounded }]} style={`aspect-ratio: ${frameRatio};${position ? ` --pos: ${position};` : ''}`}>
+  <Picture
+    src={src}
+    alt={alt}
+    widths={usable}
+    sizes={sizes}
+    formats={['avif', 'webp']}
+    quality={72}
+    loading={eager ? 'eager' : 'lazy'}
+    decoding={eager ? 'sync' : 'async'}
+    fetchpriority={eager ? 'high' : 'auto'}
+  />
+</div>
+
+<style>
+  .img {
+    position: relative;
+    overflow: hidden;
+    background: var(--c-cream);
+    width: 100%;
+  }
+  .img--rounded {
+    border-radius: var(--r-lg);
+  }
+  .img :global(picture),
+  .img :global(img) {
+    width: 100%;
+    height: 100%;
+  }
+  .img :global(img) {
+    object-fit: cover;
+    object-position: var(--pos, 50% 50%);
+  }
+</style>

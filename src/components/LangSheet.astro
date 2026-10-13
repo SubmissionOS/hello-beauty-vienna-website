@@ -1,0 +1,60 @@
+---
+import Sheet from './Sheet.astro';
+import Icon from './Icon.astro';
+import { LANG_META, LOCALES, type Lang } from '../i18n/config';
+import { routes, type RouteKey } from '../i18n/routes';
+import { t } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  routeKey: RouteKey | null;
+}
+const { lang, routeKey } = Astro.props;
+const d = t(lang);
+const flag: Record<Lang, string> = { de: 'at', en: 'gb', hu: 'hu' };
+---
+<Sheet id="lang-sheet" title={d.lang.title} closeLabel={d.a11y.close} desktop="popover">
+  <ul class="cells lang-list" role="list">
+    {
+      LOCALES.map((l) => (
+        <li>
+          <a
+            class="cell"
+            href={routes[routeKey ?? 'home'].path[l]}
+            hreflang={LANG_META[l].hreflang}
+            lang={LANG_META[l].htmlLang}
+            aria-current={l === lang ? 'true' : undefined}
+            data-lang-link={l}
+          >
+            <img src={`/flags/${flag[l]}.svg`} alt="" width="24" height="16" class="lang-flag" />
+            <span class="cell__body">
+              <span class="cell__title">{LANG_META[l].label}</span>
+            </span>
+            {l === lang ? <Icon name="check" size={20} class="lang-check" /> : <Icon name="chevron-right" class="cell__chevron" />}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  <p class="lang-hint small muted">{d.lang.hint}</p>
+</Sheet>
+
+<style>
+  .lang-flag {
+    width: 24px;
+    height: 16px;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgb(43 38 24 / 0.12);
+  }
+  .lang-list .cell[aria-current='true'] .cell__title {
+    font-weight: 500;
+  }
+  .lang-list :global(.lang-check) {
+    color: var(--c-gold-text);
+    flex: none;
+  }
+  .lang-hint {
+    margin-top: var(--s-3);
+    padding-inline: 4px;
+  }
+</style>

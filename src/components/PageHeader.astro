@@ -1,0 +1,50 @@
+---
+import Breadcrumbs from './Breadcrumbs.astro';
+import type { RouteKey } from '../i18n/routes';
+import type { Lang } from '../i18n/config';
+
+interface Props {
+  lang: Lang;
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  crumbs?: { key: RouteKey; name: string }[];
+  center?: boolean;
+}
+const { lang, eyebrow, title, lead, crumbs, center = false } = Astro.props;
+---
+<section class:list={['page-header', { 'page-header--center': center }]}>
+  <div class="container">
+    {crumbs && crumbs.length > 1 && <Breadcrumbs lang={lang} items={crumbs} />}
+    <div class="page-header__text">
+      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+      <h1>{title}</h1>
+      {lead && <p class="lead">{lead}</p>}
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .page-header {
+    padding-block: var(--s-5) clamp(var(--s-6), 3vw + 1rem, var(--s-8));
+  }
+  .page-header__text {
+    max-width: 46rem;
+    margin-top: var(--s-4);
+  }
+  .page-header--center .page-header__text {
+    margin-inline: auto;
+    text-align: center;
+  }
+  .page-header--center .eyebrow {
+    justify-content: center;
+  }
+  .page-header .lead {
+    margin-top: var(--s-4);
+    color: var(--c-ink-muted);
+  }
+  .page-header :global(.btn-row) {
+    margin-top: var(--s-6);
+  }
+</style>

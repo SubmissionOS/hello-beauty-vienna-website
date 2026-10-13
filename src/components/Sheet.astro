@@ -1,0 +1,195 @@
+---
+/**
+ * Bottom-Sheet (Handy) bzw. Popover/zentrierter Dialog (ab 768 px) auf Basis von <dialog>.
+ * showModal() liefert Fokusfalle, ESC und inerten Hintergrund; Animation, Wischen und Fokus-Rückgabe in scripts/ui.ts.
+ */
+import Icon from './Icon.astro';
+
+interface Props {
+  id: string;
+  title: string;
+  closeLabel: string;
+  /** Darstellung ab 768 px: 'popover' oben rechts, 'center' zentriert */
+  desktop?: 'popover' | 'center';
+  /** Titel nur für Screenreader */
+  hideTitle?: boolean;
+  size?: 'auto' | 'large';
+}
+const { id, title, closeLabel, desktop = 'center', hideTitle = false, size = 'auto' } = Astro.props;
+---
+<dialog id={id} class:list={['sheet', `sheet--${desktop}`, `sheet--${size}`]} aria-labelledby={`${id}-title`} data-sheet>
+  <div class="sheet__grab" data-sheet-grab aria-hidden="true"><span></span></div>
+  <div class="sheet__head">
+    <h2 id={`${id}-title`} class:list={['sheet__title', { 'visually-hidden': hideTitle }]}>{title}</h2>
+    <button type="button" class="sheet__close" data-close aria-label={closeLabel}>
+      <Icon name="close" size={20} />
+    </button>
+  </div>
+  <div class="sheet__body">
+    <slot />
+  </div>
+</dialog>
+
+<style>
+  .sheet {
+    --sheet-pad: 16px;
+    position: fixed;
+    inset: auto 0 0 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - var(--safe-top) - 12px);
+    margin: 0;
+    padding: 0 0 var(--safe-bottom);
+    border: 0;
+    border-radius: var(--r-xl) var(--r-xl) 0 0;
+    background: var(--c-paper);
+    color: var(--c-ink);
+    box-shadow: var(--sh-3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(100%);
+    transition:
+      transform var(--dur-3) var(--ease-sheet),
+      overlay var(--dur-3) allow-discrete,
+      display var(--dur-3) allow-discrete;
+  }
+
+  .sheet:not([open]) {
+    display: none;
+  }
+
+  .sheet:global(.is-open) {
+    transform: none;
+  }
+
+  .sheet--large {
+    height: calc(100dvh - var(--safe-top) - 12px);
+  }
+
+  .sheet::backdrop {
+    background: var(--c-overlay);
+    opacity: 0;
+    transition: opacity var(--dur-3) var(--ease-out);
+  }
+
+  .sheet:global(.is-open)::backdrop {
+    opacity: 1;
+  }
+
+  .sheet__grab {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 22px;
+    flex: none;
+    touch-action: none;
+    cursor: grab;
+  }
+
+  .sheet__grab span {
+    width: 36px;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--c-line-strong);
+  }
+
+  .sheet__head {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    padding: 0 8px 8px var(--sheet-pad);
+    flex: none;
+    touch-action: none;
+  }
+
+  .sheet__title {
+    flex: 1;
+    font-size: 1.25rem;
+    line-height: 1.3;
+  }
+
+  .sheet__close {
+    display: grid;
+    place-items: center;
+    width: var(--tap);
+    height: var(--tap);
+    margin-left: auto;
+    border: 0;
+    border-radius: 50%;
+    background: var(--c-cream);
+    color: var(--c-ink);
+  }
+
+  .sheet__close:hover {
+    background: var(--c-line);
+  }
+
+  .sheet__body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px var(--sheet-pad) var(--s-5);
+  }
+
+  @media (min-width: 768px) {
+    .sheet--center {
+      inset: 0;
+      margin: auto;
+      width: min(560px, 92vw);
+      height: fit-content;
+      max-height: min(720px, 86dvh);
+      border-radius: var(--r-xl);
+      padding-bottom: 0;
+      transform: translateY(12px) scale(0.98);
+      opacity: 0;
+      transition:
+        transform var(--dur-2) var(--ease-out),
+        opacity var(--dur-2) var(--ease-out),
+        overlay var(--dur-2) allow-discrete,
+        display var(--dur-2) allow-discrete;
+    }
+    .sheet--center:global(.is-open) {
+      transform: none;
+      opacity: 1;
+    }
+    .sheet--popover {
+      inset: calc(var(--header-h) + var(--safe-top) + 4px) max(var(--gutter), calc((100vw - var(--container)) / 2)) auto auto;
+      width: 320px;
+      height: fit-content;
+      border-radius: var(--r-lg);
+      padding-bottom: 0;
+      transform: translateY(-6px);
+      opacity: 0;
+      border: 1px solid var(--c-line);
+      box-shadow: var(--sh-2);
+      transition:
+        transform var(--dur-2) var(--ease-out),
+        opacity var(--dur-2) var(--ease-out),
+        overlay var(--dur-2) allow-discrete,
+        display var(--dur-2) allow-discrete;
+    }
+    .sheet--popover:global(.is-open) {
+      transform: none;
+      opacity: 1;
+    }
+    .sheet--popover::backdrop {
+      background: transparent;
+    }
+    .sheet--popover .sheet__grab,
+    .sheet--center .sheet__grab {
+      display: none;
+    }
+    .sheet--popover .sheet__head,
+    .sheet--center .sheet__head {
+      padding-top: 12px;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .sheet {
+      border: 2px solid CanvasText;
+    }
+  }
+</style>

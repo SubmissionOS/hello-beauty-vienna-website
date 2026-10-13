@@ -1,0 +1,14 @@
+---
+import { rich } from '../lib/richtext';
+import { t } from '../i18n';
+import type { Lang } from '../i18n/config';
+
+interface Props {
+  text: string;
+  lang: Lang;
+  as?: 'p' | 'span' | 'div' | 'li' | 'dd' | 'dt';
+  class?: string;
+}
+const { text, lang, as: Tag = 'p', class: cls } = Astro.props;
+---
+<Tag class={cls} set:html={rich(text, lang, t(lang).a11y.newWindow)} />

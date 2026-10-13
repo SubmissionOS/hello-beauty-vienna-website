@@ -1,0 +1,93 @@
+---
+import Icon from './Icon.astro';
+import { href } from '../i18n/routes';
+import type { Lang } from '../i18n/config';
+import { t } from '../i18n';
+import { site } from '../data/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+---
+<div class="bottom-bar" data-bottom-bar role="region" aria-label={d.a11y.quickActions}>
+  <a class="btn bottom-bar__book" href={href('booking', lang)}>
+    <Icon name="calendar" />
+    {d.nav.book}
+  </a>
+  <a class="bottom-bar__call" href={`tel:${site.phoneE164}`} aria-label={`${d.nav.call}: ${site.phone}`}>
+    <Icon name="phone" />
+  </a>
+</div>
+
+<style>
+  .bottom-bar {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 30;
+    display: flex;
+    gap: var(--s-3);
+    padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(12px + var(--safe-bottom)) max(16px, env(safe-area-inset-left, 0px));
+    background: var(--c-paper);
+    border-top: 1px solid var(--c-line);
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+
+  @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .bottom-bar {
+      background: color-mix(in srgb, var(--c-paper) 82%, transparent);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      backdrop-filter: saturate(180%) blur(20px);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    .bottom-bar {
+      background: var(--c-paper);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  .bottom-bar:global(.is-hidden) {
+    transform: translateY(110%);
+  }
+
+  .bottom-bar__book {
+    flex: 1;
+  }
+
+  .bottom-bar__call {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: var(--btn-h);
+    height: var(--btn-h);
+    border-radius: 50%;
+    border: 1px solid var(--c-field);
+    color: var(--c-ink);
+    background: var(--c-white);
+    transition: transform var(--dur-1) var(--ease-out);
+  }
+
+  .bottom-bar__call:active {
+    transform: scale(0.96);
+  }
+
+  @media (min-width: 1024px) {
+    .bottom-bar {
+      display: none;
+    }
+  }
+
+  :global(body.has-bar) {
+    padding-bottom: calc(var(--bar-h) + var(--safe-bottom));
+  }
+
+  @media (min-width: 1024px) {
+    :global(body.has-bar) {
+      padding-bottom: 0;
+    }
+  }
+</style>

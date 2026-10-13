@@ -1,0 +1,219 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { image } from '../data/images';
+import { href, SERVICE_PAGES } from '../i18n/routes';
+import type { Lang } from '../i18n/config';
+import { fmt, t } from '../i18n';
+import { categories } from '../data/services';
+import { site, addressLine } from '../data/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const year = new Date().getFullYear();
+---
+<footer class="site-footer on-dark">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <Image src={image('logo-hb-hello-beauty-quer-weiss')} alt="Hello Beauty" width={200} height={44} densities={[1, 2]} format="webp" class="site-footer__logo" />
+      <p class="site-footer__claim">{d.footer.claim}</p>
+      <ul class="social" role="list">
+        <li>
+          <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" aria-label={`${d.contactActions.instagram}: ${site.social.instagramHandle} ${d.a11y.newWindow}`}>
+            <Icon name="instagram" />
+          </a>
+        </li>
+        <li>
+          <a href={site.social.facebook} target="_blank" rel="noopener noreferrer" aria-label={`${d.contactActions.facebook}: ${site.social.facebookHandle} ${d.a11y.newWindow}`}>
+            <Icon name="facebook" />
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="site-footer__col">
+      <h2 class="site-footer__h">{d.footer.visit}</h2>
+      <address>
+        <a href={href('contact', lang)}>{addressLine}</a>
+      </address>
+      <p class="site-footer__hours">
+        <span>{d.hours.weekdays}</span>
+        <span class="tabular">{d.hours.weekdaysTime}</span>
+        <span>{d.hours.sunday}</span>
+        <span>{d.hours.closed}</span>
+      </p>
+      <p class="site-footer__contact">
+        <a href={`tel:${site.phoneE164}`} class="tabular">{site.phone}</a>
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+      </p>
+    </div>
+
+    <nav class="site-footer__col" aria-labelledby="f-services">
+      <h2 id="f-services" class="site-footer__h">{d.footer.services}</h2>
+      <ul role="list">
+        {
+          categories.map((c) => (
+            <li>
+              <a href={href(SERVICE_PAGES[c.id], lang)}>{d.cards[c.id].title}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <nav class="site-footer__col" aria-labelledby="f-salon">
+      <h2 id="f-salon" class="site-footer__h">{d.footer.salon}</h2>
+      <ul role="list">
+        <li><a href={href('booking', lang)}>{d.nav.book}</a></li>
+        <li><a href={href('prices', lang)}>{d.nav.prices}</a></li>
+        <li><a href={href('gallery', lang)}>{d.nav.gallery}</a></li>
+        <li><a href={href('about', lang)}>{d.nav.about}</a></li>
+        <li><a href={href('faq', lang)}>{d.nav.faq}</a></li>
+        <li><a href={href('contact', lang)}>{d.nav.contact}</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="container site-footer__bottom">
+    <p>{fmt(d.footer.rights, { year })}</p>
+    <nav aria-label={d.footer.legal}>
+      <ul role="list" class="site-footer__legal">
+        <li><a href={href('imprint', lang)}>{d.footer.imprint}</a></li>
+        <li><a href={href('privacy', lang)}>{d.footer.privacy}</a></li>
+        <li><a href={href('accessibility', lang)}>{d.footer.accessibility}</a></li>
+      </ul>
+    </nav>
+    <p class="site-footer__demo">{d.footer.demo}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--c-ink);
+    color: var(--c-on-dark);
+    padding-block: var(--s-8) var(--s-6);
+    font-size: var(--fs-small);
+  }
+
+  .site-footer a {
+    color: var(--c-on-dark);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
+  }
+
+  .site-footer a:hover {
+    color: var(--c-gold-soft);
+    text-decoration: underline;
+  }
+
+  .site-footer__grid {
+    display: grid;
+    gap: var(--s-6) var(--s-5);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .site-footer__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-footer__grid {
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    }
+  }
+
+  .site-footer__brand :global(.site-footer__logo) {
+    height: 36px;
+    width: auto;
+  }
+
+  .site-footer__claim {
+    margin-top: var(--s-4);
+    color: var(--c-on-dark-muted);
+    max-width: 30ch;
+  }
+
+  .social {
+    list-style: none;
+    display: flex;
+    gap: var(--s-2);
+    margin-top: var(--s-4);
+  }
+
+  .social a {
+    justify-content: center;
+    width: var(--tap);
+    height: var(--tap);
+    border-radius: 50%;
+    border: 1px solid rgb(245 242 235 / 0.25);
+  }
+
+  .social a:hover {
+    border-color: var(--c-gold-soft);
+    text-decoration: none;
+  }
+
+  .site-footer__h {
+    font-family: var(--font-sans);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c-gold-soft);
+    margin-bottom: var(--s-2);
+  }
+
+  .site-footer__col ul {
+    list-style: none;
+  }
+
+  address {
+    font-style: normal;
+  }
+
+  .site-footer__hours {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: start;
+    gap: 2px var(--s-4);
+    margin-top: var(--s-2);
+    color: var(--c-on-dark-muted);
+  }
+
+  .site-footer__contact {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: var(--s-2);
+  }
+
+  .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-2) var(--s-5);
+    margin-top: var(--s-7);
+    padding-top: var(--s-5);
+    border-top: 1px solid rgb(245 242 235 / 0.16);
+    color: var(--c-on-dark-muted);
+  }
+
+  .site-footer__legal {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--s-5);
+  }
+
+  .site-footer__demo {
+    flex-basis: 100%;
+    font-size: var(--fs-xs);
+  }
+</style>

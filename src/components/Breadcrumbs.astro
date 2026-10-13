@@ -1,0 +1,64 @@
+---
+import Icon from './Icon.astro';
+import { href, type RouteKey } from '../i18n/routes';
+import type { Lang } from '../i18n/config';
+import { t } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  items: { key: RouteKey; name: string }[];
+}
+const { lang, items } = Astro.props;
+---
+<nav class="crumbs" aria-label={t(lang).a11y.breadcrumb}>
+  <ol>
+    {
+      items.map((c, i) => (
+        <li>
+          {i < items.length - 1 ? (
+            <>
+              <a href={href(c.key, lang)}>{c.name}</a>
+              <Icon name="chevron-right" size={14} />
+            </>
+          ) : (
+            <span aria-current="page">{c.name}</span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .crumbs ol {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px 6px;
+    font-size: var(--fs-small);
+    color: var(--c-ink-muted);
+  }
+  .crumbs li {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .crumbs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
+    color: var(--c-ink-muted);
+    text-decoration: none;
+  }
+  .crumbs a:hover {
+    color: var(--c-gold-text);
+    text-decoration: underline;
+  }
+  .crumbs :global(svg) {
+    color: var(--c-field);
+  }
+  .crumbs [aria-current] {
+    color: var(--c-ink);
+  }
+</style>

@@ -1,0 +1,324 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { image } from '../data/images';
+import { href, routes, SERVICE_PAGES, type RouteKey } from '../i18n/routes';
+import { LANG_META, type Lang } from '../i18n/config';
+import { t } from '../i18n';
+import { categories } from '../data/services';
+
+interface Props {
+  lang: Lang;
+  routeKey: RouteKey | null;
+}
+const { lang, routeKey } = Astro.props;
+const d = t(lang);
+const current = (k: RouteKey) => routeKey === k;
+const inServices = routeKey === 'services' || (routeKey !== null && routes[routeKey].parent === 'services');
+const flag = { de: 'at', en: 'gb', hu: 'hu' }[lang];
+const links: { key: RouteKey; label: string }[] = [
+  { key: 'prices', label: d.nav.prices },
+  { key: 'gallery', label: d.nav.gallery },
+  { key: 'about', label: d.nav.about },
+  { key: 'contact', label: d.nav.contact },
+];
+---
+<header class="site-header" data-header>
+  <div class="site-header__inner container">
+    <a class="brand" href={href('home', lang)} aria-label={d.a11y.homeLink}>
+      <Image
+        src={image('logo-hb-hello-beauty-quer-gold')}
+        alt=""
+        width={180}
+        height={40}
+        densities={[1, 2, 3]}
+        format="webp"
+        loading="eager"
+        class="brand__logo"
+      />
+    </a>
+
+    <nav class="desk-nav" aria-label={d.a11y.mainNav}>
+      <ul class="desk-nav__list">
+        <li class="desk-nav__item desk-nav__item--has-sub">
+          <button
+            type="button"
+            class="desk-nav__link desk-nav__toggle"
+            aria-expanded="false"
+            aria-controls="services-popover"
+            data-disclosure
+            aria-current={inServices ? 'true' : undefined}
+          >
+            {d.nav.services}
+            <Icon name="chevron-down" size={16} />
+          </button>
+          <div class="popover" id="services-popover" hidden>
+            <ul class="cells">
+              <li>
+                <a class="cell" href={href('services', lang)} aria-current={current('services') ? 'page' : undefined}>
+                  <span class="cell__body"><span class="cell__title">{d.nav.allServices}</span></span>
+                  <Icon name="chevron-right" class="cell__chevron" />
+                </a>
+              </li>
+              {
+                categories.map((c) => (
+                  <li>
+                    <a class="cell" href={href(SERVICE_PAGES[c.id], lang)} aria-current={current(SERVICE_PAGES[c.id]) ? 'page' : undefined}>
+                      <span class="cell__body">
+                        <span class="cell__title">{d.cards[c.id].title}</span>
+                      </span>
+                      <Icon name="chevron-right" class="cell__chevron" />
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </li>
+        {
+          links.map((l) => (
+            <li class="desk-nav__item">
+              <a class="desk-nav__link" href={href(l.key, lang)} aria-current={current(l.key) ? 'page' : undefined}>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      <button type="button" class="lang-btn" data-open="lang-sheet" aria-haspopup="dialog" aria-label={`${d.a11y.chooseLanguage} – ${d.a11y.currentLanguage}`}>
+        <img src={`/flags/${flag}.svg`} alt="" width="20" height="14" class="flag" />
+        <span class="lang-btn__label" aria-hidden="true">{LANG_META[lang].short}</span>
+        <span class="lang-btn__name" aria-hidden="true">{LANG_META[lang].label}</span>
+        <Icon name="chevron-down" size={14} class="lang-btn__chev" />
+      </button>
+      <a class="btn btn--sm header-book" href={href('booking', lang)}>{d.nav.book}</a>
+      <button type="button" class="menu-btn" data-open="menu-sheet" aria-haspopup="dialog" aria-label={d.a11y.openMenu}>
+        <Icon name="menu" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    padding-top: var(--safe-top);
+    background: var(--c-paper);
+    border-bottom: 1px solid transparent;
+    transition:
+      border-color var(--dur-2) var(--ease-out),
+      background-color var(--dur-2) var(--ease-out);
+  }
+
+  @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .site-header {
+      background: color-mix(in srgb, var(--c-paper) 82%, transparent);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      backdrop-filter: saturate(180%) blur(20px);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    .site-header {
+      background: var(--c-paper);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  :global(.is-scrolled) .site-header,
+  .site-header:global(.is-scrolled) {
+    border-bottom-color: var(--c-line);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+    height: var(--header-h);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    min-height: var(--tap);
+    margin-right: auto;
+    border-radius: var(--r-sm);
+  }
+
+  .brand :global(.brand__logo) {
+    width: auto;
+    height: 30px;
+  }
+
+  @media (min-width: 1024px) {
+    .brand :global(.brand__logo) {
+      height: 38px;
+    }
+  }
+
+  .site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+
+  .lang-btn,
+  .menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: var(--tap);
+    min-height: var(--tap);
+    padding: 0 10px;
+    border: 1px solid transparent;
+    border-radius: var(--r-pill);
+    background: transparent;
+    color: var(--c-ink);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    transition: background-color var(--dur-1) var(--ease-out);
+  }
+
+  .lang-btn:hover,
+  .menu-btn:hover {
+    background: var(--c-cream);
+  }
+
+  .lang-btn:active,
+  .menu-btn:active {
+    background: var(--c-line);
+  }
+
+  .flag {
+    width: 20px;
+    height: 14px;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgb(43 38 24 / 0.12);
+    object-fit: cover;
+  }
+
+  .lang-btn__name {
+    display: none;
+  }
+
+  .header-book {
+    display: none;
+  }
+
+  .desk-nav {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .menu-btn {
+      display: none;
+    }
+    .header-book {
+      display: inline-flex;
+    }
+    .lang-btn__label {
+      display: none;
+    }
+    .lang-btn__name {
+      display: inline;
+    }
+    .desk-nav {
+      display: block;
+      margin-right: auto;
+    }
+    .brand {
+      margin-right: var(--s-5);
+    }
+  }
+
+  .desk-nav__list {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .desk-nav__item {
+    position: relative;
+  }
+
+  .desk-nav__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: var(--tap);
+    padding: 0 14px;
+    border: 0;
+    border-radius: var(--r-pill);
+    background: transparent;
+    color: var(--c-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 400;
+    text-decoration: none;
+    transition: background-color var(--dur-1) var(--ease-out);
+  }
+
+  .desk-nav__link:hover {
+    background: var(--c-cream);
+    color: var(--c-ink);
+  }
+
+  .desk-nav__link[aria-current] {
+    color: var(--c-gold-text);
+    font-weight: 500;
+  }
+
+  .desk-nav__toggle :global(svg) {
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+
+  .desk-nav__toggle[aria-expanded='true'] :global(svg) {
+    transform: rotate(180deg);
+  }
+
+  .popover {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: -8px;
+    width: 300px;
+    padding: 6px;
+    background: var(--c-white);
+    border-radius: var(--r-lg);
+    box-shadow: var(--sh-2);
+    border: 1px solid var(--c-line);
+    animation: pop var(--dur-2) var(--ease-out);
+  }
+
+  .popover .cells {
+    box-shadow: none;
+  }
+
+  .popover .cell {
+    min-height: var(--tap);
+    border-radius: var(--r-sm);
+  }
+
+  .popover .cells > li + li > .cell::before {
+    display: none;
+  }
+
+  .popover .cell[aria-current='page'] .cell__title {
+    color: var(--c-gold-text);
+    font-weight: 500;
+  }
+
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: translateY(-4px) scale(0.98);
+    }
+  }
+</style>
