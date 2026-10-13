@@ -1,0 +1,40 @@
+---
+/**
+ * Alle Seiten in allen Sprachen aus der zentralen Routentabelle (übersetzte Slugs).
+ */
+import Home from '../views/Home.astro';
+import Services from '../views/Services.astro';
+import ServicePage from '../views/ServicePage.astro';
+import Prices from '../views/Prices.astro';
+import Gallery from '../views/Gallery.astro';
+import About from '../views/About.astro';
+import Contact from '../views/Contact.astro';
+import Booking from '../views/Booking.astro';
+import Faq from '../views/Faq.astro';
+import Legal from '../views/Legal.astro';
+import { LOCALES, type Lang } from '../i18n/config';
+import { routes, ROUTE_KEYS, SERVICE_PAGES, type RouteKey } from '../i18n/routes';
+import type { CategoryId } from '../data/services';
+
+export function getStaticPaths() {
+  return ROUTE_KEYS.flatMap((key) =>
+    LOCALES.map((lang) => ({
+      params: { slug: routes[key].path[lang].replace(/^\/|\/$/g, '') || undefined },
+      props: { key, lang },
+    })),
+  );
+}
+
+const { key, lang } = Astro.props as { key: RouteKey; lang: Lang };
+const serviceCat = (Object.entries(SERVICE_PAGES) as [CategoryId, RouteKey][]).find(([, k]) => k === key)?.[0];
+---
+{key === 'home' && <Home lang={lang} />}
+{key === 'services' && <Services lang={lang} />}
+{serviceCat && <ServicePage lang={lang} cat={serviceCat} />}
+{key === 'prices' && <Prices lang={lang} />}
+{key === 'gallery' && <Gallery lang={lang} />}
+{key === 'about' && <About lang={lang} />}
+{key === 'contact' && <Contact lang={lang} />}
+{key === 'booking' && <Booking lang={lang} />}
+{key === 'faq' && <Faq lang={lang} />}
+{(key === 'imprint' || key === 'privacy' || key === 'accessibility') && <Legal lang={lang} page={key} />}

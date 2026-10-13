@@ -1,0 +1,246 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Img from '../components/Img.astro';
+import Icon from '../components/Icon.astro';
+import Rich from '../components/Rich.astro';
+import VisitCard from '../components/VisitCard.astro';
+import { href, type RouteKey } from '../i18n/routes';
+import type { Lang } from '../i18n/config';
+import { t } from '../i18n';
+import { crumbsFor } from '../lib/schema';
+import { site } from '../data/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const p = d.contactPage;
+const f = d.form;
+const crumbs = crumbsFor('contact', lang, (k: RouteKey) => (k === 'home' ? d.nav.home : d.nav.contact));
+const messages = JSON.stringify(f.errors);
+---
+<Base lang={lang} routeKey="contact" title={p.title} description={p.description} crumbs={crumbs} pageType="ContactPage" ogImage="salon-schaufenster-barnabitengasse" ogAlt={p.storefrontAlt}>
+  <PageHeader lang={lang} eyebrow={p.eyebrow} title={p.h1} lead={p.lead} crumbs={crumbs}>
+    <div class="btn-row">
+      <a class="btn" href={href('booking', lang)}>
+        <Icon name="calendar" />
+        {d.cta.bookNow}
+      </a>
+    </div>
+  </PageHeader>
+
+  <section class="section section--white" aria-labelledby="reach-title">
+    <div class="container contact-grid">
+      <div>
+        <h2 id="reach-title" class="h3">{p.reachTitle}</h2>
+        <div class="mt">
+          <VisitCard lang={lang} id="contact-visit" />
+        </div>
+        <ul class="social-cells cells" role="list">
+          <li>
+            <a class="cell" href={site.social.instagram} target="_blank" rel="noopener noreferrer">
+              <span class="cell__icon"><Icon name="instagram" /></span>
+              <span class="cell__body">
+                <span class="cell__sub">{d.contactActions.instagram}</span>
+                <span class="cell__title">@{site.social.instagramHandle}</span>
+              </span>
+              <Icon name="external" class="cell__chevron" />
+              <span class="visually-hidden">{d.a11y.newWindow}</span>
+            </a>
+          </li>
+          <li>
+            <a class="cell" href={site.social.facebook} target="_blank" rel="noopener noreferrer">
+              <span class="cell__icon"><Icon name="facebook" /></span>
+              <span class="cell__body">
+                <span class="cell__sub">{d.contactActions.facebook}</span>
+                <span class="cell__title">{site.social.facebookHandle}</span>
+              </span>
+              <Icon name="external" class="cell__chevron" />
+              <span class="visually-hidden">{d.a11y.newWindow}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="h3" id="directions-title">{p.directionsTitle}</h2>
+        <ul class="directions" role="list" aria-labelledby="directions-title">
+          {
+            p.directions.map((x) => (
+              <li>
+                <span class="directions__mode">{x.mode}</span>
+                <span>{x.text}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <Rich text={p.accessNote} lang={lang} class="small muted access" />
+        <div class="mt">
+          <Img name="salon-schaufenster-barnabitengasse" alt={p.storefrontAlt} ratio="4 / 3" position="35% 50%" sizes="(min-width: 1024px) 560px, 92vw" widths={[360, 540, 720, 960, 1200]} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="form-title" id="message">
+    <div class="container container--narrow">
+      <h2 id="form-title">{p.formTitle}</h2>
+      <p class="muted form-intro">{p.formIntro}</p>
+
+      <form class="contact-form" novalidate data-contact-form data-messages={messages} data-summary={f.errors.summary}>
+        <div class="notice notice--error form-summary" role="alert" data-summary-box hidden tabindex="-1">
+          <Icon name="alert" />
+          <span data-summary-text></span>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="cf-name">{f.name} <span aria-hidden="true">*</span></label>
+          <input class="input" id="cf-name" name="name" type="text" autocomplete="name" enterkeyhint="next" required aria-describedby="cf-name-err" />
+          <p class="field__error" id="cf-name-err"></p>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field__label" for="cf-email">{f.email} <span aria-hidden="true">*</span></label>
+            <input class="input" id="cf-email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" enterkeyhint="next" required aria-describedby="cf-email-err" />
+            <p class="field__error" id="cf-email-err"></p>
+          </div>
+          <div class="field">
+            <label class="field__label" for="cf-phone">{f.phoneOptional}</label>
+            <input class="input" id="cf-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" aria-describedby="cf-phone-err" />
+            <p class="field__error" id="cf-phone-err"></p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="cf-message">{f.message} <span aria-hidden="true">*</span></label>
+          <textarea class="input" id="cf-message" name="message" rows="5" enterkeyhint="done" required aria-describedby="cf-message-hint cf-message-err"></textarea>
+          <p class="field__hint" id="cf-message-hint">{f.messageHint}</p>
+          <p class="field__error" id="cf-message-err"></p>
+        </div>
+
+        <!-- Honeypot gegen Spam-Bots -->
+        <div class="hp" aria-hidden="true">
+          <label for="cf-website">Website</label>
+          <input id="cf-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <Rich text={f.privacy} lang={lang} class="small muted" />
+        <p class="small muted">* {f.required}</p>
+
+        <button type="submit" class="btn" data-submit data-sending={f.sending}>{f.submit}</button>
+      </form>
+
+      <div class="notice notice--success form-success" data-success hidden tabindex="-1">
+        <Icon name="check" />
+        <div>
+          <p class="form-success__title">{f.success.title}</p>
+          <p>{f.success.text}</p>
+          <button type="button" class="btn btn--secondary btn--sm" data-again>{f.success.again}</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { initContactForm } from '../scripts/contact-form';
+  initContactForm();
+</script>
+
+<style>
+  .h3 {
+    font-size: var(--fs-h3);
+  }
+  .mt {
+    margin-top: var(--s-4);
+  }
+  .contact-grid {
+    display: grid;
+    gap: var(--s-8);
+  }
+  @media (min-width: 1024px) {
+    .contact-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .social-cells {
+    margin-top: var(--s-4);
+  }
+  .directions {
+    list-style: none;
+    margin-top: var(--s-4);
+    display: grid;
+    gap: var(--s-3);
+  }
+  .directions li {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    gap: var(--s-3);
+    padding-bottom: var(--s-3);
+    border-bottom: 1px solid var(--c-line);
+  }
+  @media (max-width: 359px) {
+    .directions li {
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+  }
+  .directions__mode {
+    font-weight: 500;
+    color: var(--c-gold-text);
+  }
+  .access {
+    margin-top: var(--s-4);
+  }
+  .form-intro {
+    margin-top: var(--s-3);
+  }
+  .contact-form {
+    display: grid;
+    gap: var(--s-5);
+    margin-top: var(--s-6);
+    padding: clamp(var(--s-5), 3vw, var(--s-7));
+    background: var(--c-white);
+    border-radius: var(--r-lg);
+    box-shadow: var(--sh-1);
+  }
+  .field-row {
+    display: grid;
+    gap: var(--s-5);
+  }
+  @media (min-width: 640px) {
+    .field-row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .contact-form .btn {
+    justify-self: start;
+  }
+  @media (max-width: 479px) {
+    .contact-form .btn {
+      justify-self: stretch;
+    }
+  }
+  .form-success {
+    margin-top: var(--s-6);
+    padding: var(--s-5);
+  }
+  .form-success__title {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: var(--s-2);
+  }
+  .form-success .btn {
+    margin-top: var(--s-4);
+  }
+</style>

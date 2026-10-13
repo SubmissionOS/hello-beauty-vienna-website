@@ -1,0 +1,1085 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Rich from '../components/Rich.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { categories } from '../data/services';
+import { site, addressLine } from '../data/site';
+import type { RouteKey } from '../i18n/routes';
+import { href } from '../i18n/routes';
+import { LANG_META, type Lang } from '../i18n/config';
+import { fmt, t } from '../i18n';
+import { crumbsFor } from '../lib/schema';
+import { durationLabel, priceLabel } from '../lib/format';
+import { marks } from '../lib/richtext';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const b = d.booking;
+const crumbs = crumbsFor('booking', lang, (k: RouteKey) => (k === 'home' ? d.nav.home : d.nav.book));
+const staff = ['staff-1', 'staff-2', 'staff-3'];
+
+// Texte für das Client-Skript (keine Strings im JavaScript)
+const clientData = {
+  lang,
+  intl: LANG_META[lang].intl,
+  b: {
+    ...b,
+    errors: {
+      name: d.form.errors.nameRequired,
+      phone: d.form.errors.phoneInvalid,
+      email: d.form.errors.emailRequired,
+      emailInvalid: d.form.errors.emailInvalid,
+      summary: d.form.errors.summary,
+    },
+  },
+  days: d.days,
+  months: d.months,
+  units: d.units,
+  homeHref: href('home', lang),
+  address: `Hello Beauty, ${addressLine}`,
+  phone: site.phone,
+};
+const json = JSON.stringify(clientData).replace(/</g, '\\u003c');
+---
+<Base lang={lang} routeKey="booking" title={b.title} description={b.description} crumbs={crumbs} hideBar ogImage="salon-empfang-theke">
+  <section class="booking">
+    <div class="container">
+      <Breadcrumbs lang={lang} items={crumbs} />
+      <div class="booking__intro">
+        <h1>{b.h1}</h1>
+        <p class="notice booking__demo">
+          <Icon name="info" />
+          <span>{b.demo}</span>
+        </p>
+      </div>
+
+      <noscript>
+        <p class="notice notice--error">{b.noscript}</p>
+      </noscript>
+
+      <div class="booking__layout">
+        <div class="flow" data-booking hidden>
+          <div class="flow__bar">
+            <button type="button" class="flow__back" data-back>
+              <Icon name="chevron-left" size={20} />
+              <span>{b.back}</span>
+            </button>
+            <p class="flow__progress-label" data-progress-label></p>
+            <div class="flow__progress" aria-hidden="true"><span data-progress-bar></span></div>
+          </div>
+          <p class="visually-hidden" aria-live="polite" data-live></p>
+
+          <!-- 1 Leistung -->
+          <section class="step" data-step="1" aria-labelledby="st1">
+            <h2 id="st1" tabindex="-1">{b.service.title}</h2>
+            <p class="step__hint">{b.service.hint}</p>
+            <p class="notice step__pre" data-preselected hidden><Icon name="check" /><span></span></p>
+            <div class="svc-cats">
+              {
+                categories.map((c) => (
+                  <details class="svc-cat" data-cat={c.id}>
+                    <summary>
+                      <span class="svc-cat__title">{d.cards[c.id].title}</span>
+                      <span class="svc-cat__count" data-cat-count />
+                      <Icon name="chevron-down" size={20} class="svc-cat__chev" />
+                    </summary>
+                    <div class="svc-cat__body">
+                      {c.groups.map((g) => (
+                        <fieldset class="svc-group">
+                          <legend class="svc-group__title">{g.title[lang]}</legend>
+                          {g.note && <p class="svc-group__note">{g.note[lang]}</p>}
+                          <div class="cells">
+                            {g.items.map((x) => (
+                              <label class="cell svc-opt">
+                                <input
+                                  type="checkbox"
+                                  name="svc"
+                                  value={x.id}
+                                  data-price={x.price}
+                                  data-min={x.min}
+                                  data-from={x.from || x.perPiece ? '1' : undefined}
+                                  data-addon={x.bookable ? undefined : '1'}
+                                  data-name={x.name[lang]}
+                                  data-cat={c.id}
+                                />
+                                <span class="svc-opt__box" aria-hidden="true">
+                                  <Icon name="check" size={16} />
+                                </span>
+                                <span class="cell__body">
+                                  <span class="cell__title">{x.name[lang]}</span>
+                                  <span class="cell__sub">{x.bookable ? durationLabel(x, lang) : b.service.addonHint}</span>
+                                </span>
+                                <span class="cell__value">{priceLabel(x, lang)}</span>
+                              </label>
+                            ))}
+                          </div>
+                        </fieldset>
+                      ))}
+                    </div>
+                  </details>
+                ))
+              }
+            </div>
+            <p class="step__foot small muted">{d.prices.vat} {b.service.estimate}</p>
+          </section>
+
+          <!-- 2 Mitarbeiterin -->
+          <section class="step" data-step="2" aria-labelledby="st2" hidden>
+            <h2 id="st2" tabindex="-1">{b.staff.title}</h2>
+            <p class="step__hint">{b.staff.hint}</p>
+            <fieldset class="cells radio-cells">
+              <legend class="visually-hidden">{b.staff.title}</legend>
+              <label class="cell">
+                <input type="radio" name="staff" value="" checked />
+                <span class="cell__icon"><Icon name="user" /></span>
+                <span class="cell__body">
+                  <span class="cell__title">{b.staff.any}</span>
+                  <span class="cell__sub">{b.staff.anyText}</span>
+                </span>
+                <span class="radio-dot" aria-hidden="true"></span>
+              </label>
+              {
+                staff.map((id, i) => (
+                  <label class="cell">
+                    <input type="radio" name="staff" value={id} />
+                    <span class="cell__icon">
+                      <Icon name="user" />
+                    </span>
+                    <span class="cell__body">
+                      <span class="cell__title">{fmt(b.staff.member, { n: i + 1 })}</span>
+                      <span class="cell__sub" set:html={marks(b.staff.placeholder)} />
+                    </span>
+                    <span class="radio-dot" aria-hidden="true" />
+                  </label>
+                ))
+              }
+            </fieldset>
+          </section>
+
+          <!-- 3 Datum -->
+          <section class="step" data-step="3" aria-labelledby="st3" hidden>
+            <h2 id="st3" tabindex="-1">{b.date.title}</h2>
+            <p class="step__hint">{b.date.hint}</p>
+            <div class="cal" data-calendar>
+              <div class="cal__head">
+                <button type="button" class="cal__nav" data-cal-prev aria-label={b.date.prevMonth}><Icon name="chevron-left" /></button>
+                <h3 class="cal__title" id="cal-title" aria-live="polite" data-cal-title></h3>
+                <button type="button" class="cal__nav" data-cal-next aria-label={b.date.nextMonth}><Icon name="chevron-right" /></button>
+              </div>
+              <table class="cal__grid" role="grid" aria-labelledby="cal-title" aria-describedby="cal-help" data-cal-grid>
+                <thead>
+                  <tr>
+                    {d.days.short.map((s, i) => (
+                      <th scope="col" abbr={d.days.long[i]}>
+                        {s}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody data-cal-body></tbody>
+              </table>
+              <p id="cal-help" class="visually-hidden">{b.date.keyboard}</p>
+              <ul class="cal__legend" role="list">
+                <li><span class="dot dot--free"></span>{b.date.available}</li>
+                <li><span class="dot dot--full"></span>{b.date.full}</li>
+                <li><span class="dot dot--closed"></span>{b.date.closed}</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- 4 Uhrzeit -->
+          <section class="step" data-step="4" aria-labelledby="st4" hidden>
+            <h2 id="st4" tabindex="-1">{b.time.title}</h2>
+            <p class="step__hint" data-time-for></p>
+            <div data-slots aria-busy="false"></div>
+          </section>
+
+          <!-- 5 Kontaktdaten -->
+          <section class="step" data-step="5" aria-labelledby="st5" hidden>
+            <h2 id="st5" tabindex="-1">{b.details.title}</h2>
+            <p class="step__hint">{b.details.hint}</p>
+            <form class="details-form" novalidate data-details>
+              <div class="notice notice--error" role="alert" data-details-summary hidden tabindex="-1">
+                <Icon name="alert" />
+                <span></span>
+              </div>
+              <div class="field">
+                <label class="field__label" for="bk-name">{b.details.name} <span aria-hidden="true">*</span></label>
+                <input class="input" id="bk-name" name="name" type="text" autocomplete="name" enterkeyhint="next" required aria-describedby="bk-name-err" />
+                <p class="field__error" id="bk-name-err"></p>
+              </div>
+              <div class="field">
+                <label class="field__label" for="bk-phone">{b.details.phone} <span aria-hidden="true">*</span></label>
+                <input class="input" id="bk-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" required aria-describedby="bk-phone-err" />
+                <p class="field__error" id="bk-phone-err"></p>
+              </div>
+              <div class="field">
+                <label class="field__label" for="bk-email">{b.details.email} <span aria-hidden="true">*</span></label>
+                <input class="input" id="bk-email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" enterkeyhint="next" required aria-describedby="bk-email-err" />
+                <p class="field__error" id="bk-email-err"></p>
+              </div>
+              <div class="field">
+                <label class="field__label" for="bk-note">{b.details.note}</label>
+                <textarea class="input" id="bk-note" name="note" rows="3" enterkeyhint="done" aria-describedby="bk-note-hint"></textarea>
+                <p class="field__hint" id="bk-note-hint">{b.details.noteHint}</p>
+              </div>
+              <div class="consents">
+                <label class="check">
+                  <input type="checkbox" name="terms" aria-describedby="bk-terms-err" />
+                  <span set:html={marks(b.details.terms)} />
+                </label>
+                <p class="field__error" id="bk-terms-err"></p>
+                <div data-early hidden>
+                  <label class="check">
+                    <input type="checkbox" name="earlyStart" aria-describedby="bk-early-err" />
+                    <span>{b.details.earlyStart}</span>
+                  </label>
+                  <p class="field__error" id="bk-early-err"></p>
+                </div>
+                <Rich text={b.details.withdrawal} lang={lang} class="small muted" />
+                <Rich text={b.details.privacy} lang={lang} class="small muted" />
+              </div>
+            </form>
+          </section>
+
+          <!-- 6 Zahlung -->
+          <section class="step" data-step="6" aria-labelledby="st6" hidden>
+            <h2 id="st6" tabindex="-1">{b.payment.title}</h2>
+            <fieldset class="cells radio-cells pay">
+              <legend class="visually-hidden">{b.payment.title}</legend>
+              <label class="cell">
+                <input type="radio" name="payment" value="onsite" checked />
+                <span class="cell__icon"><Icon name="store" /></span>
+                <span class="cell__body">
+                  <span class="cell__title">{b.payment.onsite}</span>
+                  <span class="cell__sub" set:html={marks(b.payment.onsiteText)} />
+                </span>
+                <span class="radio-dot" aria-hidden="true"></span>
+              </label>
+              <label class="cell is-disabled">
+                <input type="radio" name="payment" value="online" disabled aria-describedby="pay-online-soon" />
+                <span class="cell__icon"><Icon name="card" /></span>
+                <span class="cell__body">
+                  <span class="cell__title">{b.payment.online}</span>
+                  <span class="cell__sub" id="pay-online-soon">{b.payment.onlineText}</span>
+                </span>
+                <span class="badge">{b.payment.onlineText}</span>
+              </label>
+            </fieldset>
+
+            <h3 class="summary__title">{b.payment.summary}</h3>
+            <dl class="summary cells" data-summary></dl>
+            <p class="small muted provider" set:html={marks(b.payment.provider)} />
+            <p class="small muted">{d.prices.vat}</p>
+            <div class="notice notice--error" role="alert" data-submit-error hidden tabindex="-1">
+              <Icon name="alert" />
+              <span></span>
+            </div>
+            <button type="button" class="btn btn--block submit" data-submit>{b.payment.submit}</button>
+          </section>
+
+          <!-- 7 Bestätigung -->
+          <section class="step" data-step="7" aria-labelledby="st7" hidden>
+            <div class="done__icon" aria-hidden="true"><Icon name="check" size={32} /></div>
+            <h2 id="st7" tabindex="-1">{b.done.title}</h2>
+            <p class="notice done__demo">
+              <Icon name="info" />
+              <span>{b.done.text}</span>
+            </p>
+            <dl class="summary cells" data-done-summary></dl>
+            <div class="done__actions">
+              <button type="button" class="btn btn--block" data-ics>
+                <Icon name="calendar" />
+                {b.done.calendar}
+              </button>
+              <p class="small muted">{b.done.calendarHint}</p>
+              <button type="button" class="btn btn--secondary btn--block" data-again>{b.done.another}</button>
+              <a class="link-arrow" href={href('home', lang)}>{b.done.home}<Icon name="arrow-right" /></a>
+            </div>
+          </section>
+
+          <div class="flow__footer" data-footer>
+            <div class="flow__total" data-total aria-live="polite"></div>
+            <p class="field__error flow__error" data-step-error role="alert"></p>
+            <button type="button" class="btn flow__next" data-next>{b.next}</button>
+          </div>
+
+          <details class="devtools" data-devtools>
+            <summary>{b.dev.label}</summary>
+            <label class="check"><input type="checkbox" data-dev="failNext" /> {b.dev.network}</label>
+            <label class="check"><input type="checkbox" data-dev="conflictNext" /> {b.dev.conflict}</label>
+          </details>
+        </div>
+
+        <aside class="side" aria-label={b.payment.summary}>
+          <div class="side__card">
+            <p class="side__title">{b.payment.summary}</p>
+            <div data-side-summary class="side__body"></div>
+          </div>
+          <a class="side__call" href={`tel:${site.phoneE164}`}>
+            <Icon name="phone" />
+            <span>{d.nav.call}: <span class="tabular">{site.phone}</span></span>
+          </a>
+        </aside>
+      </div>
+    </div>
+  </section>
+  <script type="application/json" id="booking-data" set:html={json} />
+</Base>
+
+<script>
+  import { initBooking } from '../scripts/booking';
+  initBooking();
+</script>
+
+<style>
+  .booking {
+    padding: var(--s-3) 0 var(--s-8);
+  }
+  .booking__intro {
+    display: grid;
+    gap: var(--s-4);
+    margin: var(--s-3) 0 var(--s-5);
+  }
+  .booking__intro h1 {
+    font-size: var(--fs-h2);
+  }
+  .booking__layout {
+    display: grid;
+    gap: var(--s-6);
+    align-items: start;
+  }
+  @media (min-width: 1024px) {
+    .booking__layout {
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: var(--s-7);
+    }
+  }
+
+  .flow {
+    background: var(--c-white);
+    border-radius: var(--r-xl);
+    box-shadow: var(--sh-1);
+    padding: 0 clamp(16px, 3vw, 32px) clamp(16px, 3vw, 32px);
+  }
+  @media (max-width: 599px) {
+    .flow {
+      margin-inline: calc(var(--gutter) * -1);
+      border-radius: 0;
+      box-shadow: none;
+      background: transparent;
+      padding-inline: var(--gutter);
+    }
+  }
+
+  .flow__bar {
+    position: sticky;
+    top: calc(var(--header-h) + var(--safe-top));
+    z-index: 5;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 4px var(--s-3);
+    padding: 10px 0 12px;
+    background: inherit;
+    background-color: var(--c-white);
+  }
+  @media (max-width: 599px) {
+    .flow__bar {
+      background-color: var(--c-paper);
+    }
+  }
+  .flow__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    min-height: var(--tap);
+    padding: 0 10px 0 2px;
+    border: 0;
+    border-radius: var(--r-pill);
+    background: transparent;
+    color: var(--c-gold-text);
+    font-weight: 500;
+  }
+  .flow__back[hidden] {
+    display: inline-flex;
+    visibility: hidden;
+  }
+  .flow__back:hover {
+    background: var(--c-cream);
+  }
+  .flow__progress-label {
+    justify-self: end;
+    font-size: var(--fs-small);
+    color: var(--c-ink-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .flow__progress {
+    grid-column: 1 / -1;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--c-cream);
+    overflow: hidden;
+  }
+  .flow__progress span {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--c-gold);
+    border-radius: inherit;
+    transition: width var(--dur-3) var(--ease-out);
+  }
+
+  .step {
+    padding-top: var(--s-4);
+  }
+  .step h2 {
+    font-size: clamp(1.5rem, 1.3rem + 0.9vw, 2rem);
+  }
+  .step h2:focus {
+    outline: none;
+  }
+  .step h2:focus-visible {
+    outline: 2px solid var(--c-gold-text);
+  }
+  .step__hint {
+    margin-top: var(--s-2);
+    color: var(--c-ink-muted);
+  }
+  .step__pre {
+    margin-top: var(--s-4);
+  }
+  .step__foot {
+    margin-top: var(--s-5);
+  }
+
+  .svc-cats {
+    display: grid;
+    gap: var(--s-3);
+    margin-top: var(--s-5);
+  }
+  .svc-cat {
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-md);
+    background: var(--c-paper);
+    overflow: hidden;
+  }
+  .svc-cat > summary {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    min-height: 56px;
+    padding: 0 14px 0 16px;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 500;
+  }
+  .svc-cat > summary::-webkit-details-marker {
+    display: none;
+  }
+  .svc-cat__title {
+    flex: 1;
+  }
+  .svc-cat__count {
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    color: var(--c-white);
+    background: var(--c-gold-text);
+    border-radius: var(--r-pill);
+    padding: 2px 8px;
+  }
+  .svc-cat__count:empty {
+    display: none;
+  }
+  .svc-cat :global(.svc-cat__chev) {
+    color: var(--c-ink-muted);
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+  .svc-cat[open] :global(.svc-cat__chev) {
+    transform: rotate(180deg);
+  }
+  .svc-cat__body {
+    display: grid;
+    gap: var(--s-5);
+    padding: var(--s-2) 12px var(--s-4);
+  }
+  .svc-group {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+  .svc-group__title {
+    padding: 0 4px;
+    margin-bottom: var(--s-2);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--c-ink-muted);
+  }
+  .svc-group__note {
+    margin: 0 4px var(--s-2);
+    font-size: var(--fs-xs);
+    color: var(--c-ink-muted);
+  }
+  .svc-opt {
+    cursor: pointer;
+  }
+  .svc-opt input,
+  .radio-cells input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+  }
+  .svc-opt__box {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border: 1.5px solid var(--c-field);
+    border-radius: 7px;
+    color: transparent;
+    background: var(--c-white);
+    transition:
+      background-color var(--dur-1) var(--ease-out),
+      border-color var(--dur-1) var(--ease-out);
+  }
+  .svc-opt input:checked ~ .svc-opt__box {
+    background: var(--c-gold-text);
+    border-color: var(--c-gold-text);
+    color: var(--c-white);
+  }
+  .svc-opt input:focus-visible ~ .svc-opt__box,
+  .radio-cells input:focus-visible ~ .radio-dot,
+  .radio-cells input:focus-visible ~ .cell__icon {
+    outline: 2px solid var(--c-gold-text);
+    outline-offset: 2px;
+  }
+  .svc-opt input:checked ~ .cell__body .cell__title {
+    font-weight: 500;
+  }
+  .svc-opt .cell__value {
+    color: var(--c-ink);
+    font-weight: 500;
+    align-self: flex-start;
+    padding-top: 1px;
+  }
+  .svc-opt input:disabled ~ * {
+    opacity: 0.55;
+  }
+
+  .radio-cells {
+    margin: var(--s-5) 0 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+  .radio-cells .cell {
+    cursor: pointer;
+    min-height: 64px;
+  }
+  .radio-dot {
+    flex: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid var(--c-field);
+    background: var(--c-white);
+    transition:
+      border-width var(--dur-1) var(--ease-out),
+      border-color var(--dur-1) var(--ease-out);
+  }
+  .radio-cells input:checked ~ .radio-dot {
+    border: 7px solid var(--c-gold-text);
+  }
+  .radio-cells input:checked ~ .cell__body .cell__title {
+    font-weight: 500;
+  }
+  .radio-cells .is-disabled {
+    cursor: not-allowed;
+    background: var(--c-paper);
+  }
+  .radio-cells .is-disabled .cell__title,
+  .radio-cells .is-disabled .cell__icon {
+    color: var(--c-ink-muted);
+  }
+  .badge {
+    flex: none;
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: var(--r-pill);
+    background: var(--c-cream);
+    color: var(--c-ink-muted);
+    white-space: nowrap;
+  }
+  .pay .is-disabled .cell__sub {
+    display: none;
+  }
+
+  /* Kalender */
+  .cal {
+    margin-top: var(--s-5);
+    max-width: 440px;
+  }
+  .cal__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    margin-bottom: var(--s-3);
+  }
+  .cal__title {
+    font-size: 1.25rem;
+    text-transform: capitalize;
+  }
+  .cal__nav {
+    display: grid;
+    place-items: center;
+    width: var(--tap);
+    height: var(--tap);
+    border: 1px solid var(--c-line);
+    border-radius: 50%;
+    background: var(--c-white);
+    color: var(--c-ink);
+  }
+  .cal__nav:hover:not([aria-disabled='true']) {
+    border-color: var(--c-gold-text);
+  }
+  .cal__nav[aria-disabled='true'] {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+  .cal__grid {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 2px 4px;
+    table-layout: fixed;
+  }
+  .cal__grid th {
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    color: var(--c-ink-muted);
+    padding-bottom: 4px;
+  }
+  .cal__grid :global(td) {
+    padding: 0;
+    text-align: center;
+  }
+  .cal__grid :global(.day) {
+    position: relative;
+    display: grid;
+    place-items: center;
+    height: 46px;
+    border-radius: var(--r-md);
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--c-ink);
+    transition: background-color var(--dur-1) var(--ease-out);
+  }
+  .cal__grid :global(.day::after) {
+    content: '';
+    position: absolute;
+    bottom: 6px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: transparent;
+  }
+  .cal__grid :global(.day.is-available::after) {
+    background: var(--c-success);
+  }
+  .cal__grid :global(.day.is-full::after) {
+    background: var(--c-field);
+  }
+  .cal__grid :global(.day:hover:not([aria-disabled='true'])) {
+    background: var(--c-cream);
+  }
+  .cal__grid :global(.day[aria-disabled='true']) {
+    color: var(--c-field);
+    cursor: not-allowed;
+    font-weight: 400;
+    text-decoration: line-through;
+    text-decoration-color: rgb(140 130 112 / 0.5);
+  }
+  .cal__grid :global(.day.is-past),
+  .cal__grid :global(.day.is-closed) {
+    text-decoration: none;
+  }
+  .cal__grid :global(.day.is-today) {
+    box-shadow: inset 0 0 0 1px var(--c-gold);
+  }
+  .cal__grid :global(.day[aria-selected='true']) {
+    background: var(--c-gold-text);
+    color: var(--c-white);
+  }
+  .cal__grid :global(.day[aria-selected='true']::after) {
+    background: var(--c-white);
+  }
+  .cal__grid :global(.day:focus-visible) {
+    outline: 2px solid var(--c-gold-text);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px var(--c-white);
+  }
+  .cal__grid :global(.day.is-loading) {
+    color: transparent;
+    background: linear-gradient(90deg, var(--c-cream) 0%, var(--c-paper) 50%, var(--c-cream) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.2s linear infinite;
+    cursor: progress;
+  }
+  .cal__legend {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2) var(--s-5);
+    margin-top: var(--s-4);
+    font-size: var(--fs-small);
+    color: var(--c-ink-muted);
+  }
+  .cal__legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .dot--free {
+    background: var(--c-success);
+  }
+  .dot--full {
+    background: var(--c-field);
+  }
+  .dot--closed {
+    background: transparent;
+    border: 1px solid var(--c-field);
+  }
+
+  /* Uhrzeiten */
+  [data-slots] {
+    margin-top: var(--s-5);
+  }
+  [data-slots] :global(.slot-group + .slot-group) {
+    margin-top: var(--s-5);
+  }
+  [data-slots] :global(.slot-group__title) {
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--c-ink-muted);
+    margin-bottom: var(--s-2);
+  }
+  [data-slots] :global(.slots) {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+    gap: var(--s-2);
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  [data-slots] :global(.slot) {
+    position: relative;
+  }
+  [data-slots] :global(.slot input) {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+  [data-slots] :global(.slot span) {
+    display: grid;
+    place-items: center;
+    min-height: var(--tap);
+    border: 1px solid var(--c-field);
+    border-radius: var(--r-pill);
+    background: var(--c-white);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    transition:
+      background-color var(--dur-1) var(--ease-out),
+      color var(--dur-1) var(--ease-out);
+  }
+  [data-slots] :global(.slot input:checked + span) {
+    background: var(--c-gold-text);
+    border-color: var(--c-gold-text);
+    color: var(--c-white);
+  }
+  [data-slots] :global(.slot input:focus-visible + span) {
+    outline: 2px solid var(--c-gold-text);
+    outline-offset: 2px;
+  }
+  [data-slots] :global(.slot:hover span) {
+    border-color: var(--c-gold-text);
+  }
+  [data-slots] :global(.skeleton) {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+    gap: var(--s-2);
+  }
+  [data-slots] :global(.skeleton span) {
+    height: var(--tap);
+    border-radius: var(--r-pill);
+    background: linear-gradient(90deg, var(--c-cream) 0%, var(--c-paper) 50%, var(--c-cream) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.2s linear infinite;
+  }
+  [data-slots] :global(.empty) {
+    display: grid;
+    gap: var(--s-4);
+    justify-items: start;
+    padding: var(--s-5);
+    border-radius: var(--r-lg);
+    background: var(--c-paper);
+    border: 1px solid var(--c-line);
+  }
+  [data-slots] :global(.empty .btn-row) {
+    gap: var(--s-2);
+  }
+  @keyframes shimmer {
+    to {
+      background-position: -200% 0;
+    }
+  }
+
+  /* Kontaktdaten */
+  .details-form {
+    display: grid;
+    gap: var(--s-5);
+    margin-top: var(--s-5);
+  }
+  .consents {
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  /* Zusammenfassung */
+  .summary__title {
+    font-family: var(--font-sans);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c-ink-muted);
+    margin: var(--s-6) 0 var(--s-2);
+  }
+  .summary {
+    margin: 0;
+    background: var(--c-paper);
+    border: 1px solid var(--c-line);
+    box-shadow: none;
+  }
+  .summary :global(.cell) {
+    background: transparent;
+    align-items: flex-start;
+    gap: var(--s-4);
+  }
+  .summary :global(dt) {
+    flex: none;
+    width: 7.5rem;
+    color: var(--c-ink-muted);
+    font-size: var(--fs-small);
+  }
+  .summary :global(dd) {
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+  }
+  .summary :global(dd ul) {
+    list-style: none;
+  }
+  .summary :global(.cell + .cell::before) {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 16px;
+    right: 0;
+    height: 1px;
+    background: var(--c-line);
+  }
+  .summary :global(.edit) {
+    flex: none;
+    min-height: 32px;
+    padding: 0 8px;
+    margin: -6px -8px -6px 0;
+    border: 0;
+    background: none;
+    color: var(--c-gold-text);
+    font-weight: 500;
+    font-size: var(--fs-small);
+    border-radius: var(--r-sm);
+  }
+  .summary :global(.edit:hover) {
+    text-decoration: underline;
+  }
+  .summary :global(.total dd) {
+    font-weight: 500;
+    font-size: 1.125rem;
+  }
+  .provider {
+    margin-top: var(--s-4);
+  }
+  .submit {
+    margin-top: var(--s-5);
+  }
+  [data-submit-error] {
+    margin-top: var(--s-4);
+  }
+
+  .done__icon {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--c-success-bg);
+    color: var(--c-success);
+    margin-bottom: var(--s-4);
+  }
+  .done__demo {
+    margin: var(--s-4) 0;
+  }
+  .done__actions {
+    display: grid;
+    gap: var(--s-3);
+    margin-top: var(--s-5);
+    justify-items: center;
+  }
+
+  .flow__footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 4px var(--s-4);
+    margin: var(--s-6) calc(clamp(16px, 3vw, 32px) * -1) calc(clamp(16px, 3vw, 32px) * -1);
+    padding: 12px clamp(16px, 3vw, 32px) calc(12px + var(--safe-bottom));
+    background: var(--c-white);
+    border-top: 1px solid var(--c-line);
+    border-radius: 0 0 var(--r-xl) var(--r-xl);
+  }
+  @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .flow__footer {
+      background: color-mix(in srgb, var(--c-white) 86%, transparent);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      backdrop-filter: saturate(180%) blur(20px);
+    }
+  }
+  @media (max-width: 599px) {
+    .flow__footer {
+      margin-inline: calc(var(--gutter) * -1);
+      padding-inline: var(--gutter);
+      border-radius: 0;
+      background: color-mix(in srgb, var(--c-paper) 90%, transparent);
+    }
+  }
+  .flow__footer[hidden] {
+    display: none;
+  }
+  .flow__total {
+    font-size: var(--fs-small);
+    color: var(--c-ink-muted);
+    line-height: 1.35;
+    min-width: 0;
+  }
+  .flow__total :global(strong) {
+    display: block;
+    color: var(--c-ink);
+    font-size: 1rem;
+  }
+  .flow__error {
+    grid-column: 1 / -1;
+    order: -1;
+  }
+  .flow__next {
+    min-width: 8.5rem;
+  }
+
+  .devtools {
+    margin-top: var(--s-6);
+    font-size: var(--fs-small);
+    color: var(--c-ink-muted);
+  }
+  .devtools summary {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
+    cursor: pointer;
+  }
+  .devtools[hidden] {
+    display: none;
+  }
+
+  .side {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .side {
+      display: grid;
+      gap: var(--s-3);
+      position: sticky;
+      top: calc(var(--header-h) + var(--safe-top) + 16px);
+    }
+  }
+  .side__card {
+    padding: var(--s-5);
+    background: var(--c-white);
+    border-radius: var(--r-lg);
+    box-shadow: var(--sh-1);
+  }
+  .side__title {
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c-ink-muted);
+  }
+  .side__body {
+    margin-top: var(--s-3);
+    font-size: var(--fs-small);
+    display: grid;
+    gap: var(--s-3);
+  }
+  .side__body :global(ul) {
+    list-style: none;
+    display: grid;
+    gap: 4px;
+  }
+  .side__body :global(li) {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--s-3);
+  }
+  .side__body :global(.side__total) {
+    display: flex;
+    justify-content: space-between;
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--c-line);
+    font-weight: 500;
+    font-size: 1rem;
+  }
+  .side__body :global(.muted) {
+    color: var(--c-ink-muted);
+  }
+  .side__call {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    min-height: var(--tap);
+    padding: 0 var(--s-2);
+    font-size: var(--fs-small);
+    text-decoration: none;
+  }
+</style>

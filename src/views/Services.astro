@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import ServiceGrid from '../components/ServiceGrid.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { href, type RouteKey } from '../i18n/routes';
+import type { Lang } from '../i18n/config';
+import { t } from '../i18n';
+import { crumbsFor } from '../lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const p = d.servicesPage;
+const crumbs = crumbsFor('services', lang, (k: RouteKey) => (k === 'home' ? d.nav.home : d.nav.services));
+---
+<Base lang={lang} routeKey="services" title={p.title} description={p.description} crumbs={crumbs} ogImage="naegel-behandlung-arbeitsplatz">
+  <PageHeader lang={lang} eyebrow={p.eyebrow} title={p.h1} lead={p.lead} crumbs={crumbs}>
+    <div class="btn-row">
+      <a class="btn" href={href('booking', lang)}>
+        <Icon name="calendar" />
+        {d.cta.bookNow}
+      </a>
+      <a class="btn btn--secondary" href={href('prices', lang)}>{d.cta.allPrices}</a>
+    </div>
+  </PageHeader>
+  <section class="section section--white" aria-label={d.nav.services}>
+    <div class="container">
+      <ServiceGrid lang={lang} headingLevel="h2" />
+      <p class="small muted note">{d.prices.vat}</p>
+    </div>
+  </section>
+  <CtaBand lang={lang} />
+</Base>
+
+<style>
+  .note {
+    margin-top: var(--s-5);
+  }
+</style>

@@ -1,0 +1,88 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Rich from '../components/Rich.astro';
+import Icon from '../components/Icon.astro';
+import type { RouteKey } from '../i18n/routes';
+import type { Lang } from '../i18n/config';
+import { t } from '../i18n';
+import { crumbsFor } from '../lib/schema';
+
+interface Props {
+  lang: Lang;
+  page: 'imprint' | 'privacy' | 'accessibility';
+}
+const { lang, page } = Astro.props;
+const d = t(lang);
+const p = d[page];
+const label = { imprint: d.footer.imprint, privacy: d.footer.privacy, accessibility: d.footer.accessibility }[page];
+const crumbs = crumbsFor(page, lang, (k: RouteKey) => (k === 'home' ? d.nav.home : label));
+const updated = 'updated' in p ? p.updated : undefined;
+---
+<Base lang={lang} routeKey={page} title={p.title} description={p.description} crumbs={crumbs}>
+  <PageHeader lang={lang} title={p.h1} crumbs={crumbs} />
+  <div class="container legal">
+    <div class="legal__notes">
+      <p class="notice">
+        <Icon name="info" />
+        <span>{p.draft}</span>
+      </p>
+      {
+        lang !== 'de' && (
+          <p class="notice">
+            <Icon name="globe" />
+            <span>{d.legalNote}</span>
+          </p>
+        )
+      }
+    </div>
+    <article class="prose">
+      {updated && <p class="muted small">{updated}</p>}
+      {
+        p.sections.map((s) => (
+          <section>
+            <h2>{s.h}</h2>
+            {s.body.map((b) =>
+              typeof b === 'string' ? (
+                <Rich text={b} lang={lang} />
+              ) : 'list' in b ? (
+                <ul>
+                  {b.list.map((li) => (
+                    <Rich text={li} lang={lang} as="li" />
+                  ))}
+                </ul>
+              ) : 'dl' in b ? (
+                <dl>
+                  {b.dl.map(([k, v]) => (
+                    <>
+                      <dt>{k}</dt>
+                      <Rich text={v} lang={lang} as="dd" />
+                    </>
+                  ))}
+                </dl>
+              ) : (
+                <Rich text={b.note} lang={lang} class="notice" />
+              ),
+            )}
+          </section>
+        ))
+      }
+    </article>
+  </div>
+</Base>
+
+<style>
+  .legal {
+    padding-bottom: var(--section-y);
+  }
+  .legal__notes {
+    display: grid;
+    gap: var(--s-2);
+    max-width: var(--measure);
+    margin-bottom: var(--s-4);
+  }
+  .legal .prose > section:first-of-type h2,
+  .legal .prose > p + section h2 {
+    margin-top: var(--s-5);
+  }
+</style>

@@ -1,0 +1,435 @@
+---
+import Base from '../layouts/Base.astro';
+import Img from '../components/Img.astro';
+import Icon from '../components/Icon.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import PriceList from '../components/PriceList.astro';
+import FaqList from '../components/FaqList.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { categories, category, type CategoryId, type Group } from '../data/services';
+import { servicePageMedia, stripFor } from '../data/gallery';
+import { href, SERVICE_PAGES, type RouteKey } from '../i18n/routes';
+import type { Lang } from '../i18n/config';
+import { t } from '../i18n';
+import { abs, crumbsFor, faqNode, plainText, serviceNode } from '../lib/schema';
+import { euro } from '../lib/format';
+import { priceRange } from '../data/services';
+
+interface Props {
+  lang: Lang;
+  cat: CategoryId;
+}
+const { lang, cat } = Astro.props;
+const d = t(lang);
+const s = d.svc[cat];
+const c = d.svc.common;
+const key = SERVICE_PAGES[cat];
+const media = servicePageMedia[cat];
+const allGroups = categories.flatMap((x) => x.groups);
+const groups = s.priceGroups.map((id) => allGroups.find((g) => g.id === id)).filter((g): g is Group => !!g);
+const names = (k: RouteKey) => (k === 'home' ? d.nav.home : k === 'services' ? d.nav.services : s.crumb);
+const crumbs = crumbsFor(key, lang, names);
+const bookHref = `${href('booking', lang)}?leistung=${media.book}`;
+const range = priceRange(cat);
+const related = categories.filter((x) => x.id !== cat).slice(0, 6);
+const url = abs(href(key, lang));
+const schema = [
+  serviceNode({
+    url,
+    name: s.crumb,
+    description: s.description,
+    lang,
+    items: groups.flatMap((g) => g.items).map((x) => ({ name: x.name[lang], x })),
+  }),
+  faqNode(url, s.faq, plainText),
+];
+---
+<Base lang={lang} routeKey={key} title={s.title} description={s.description} ogImage={media.hero} ogAlt={s.heroAlt} crumbs={crumbs} schema={schema}>
+  <section class="svc-hero">
+    <div class="container">
+      <Breadcrumbs lang={lang} items={crumbs} />
+      <div class="svc-hero__grid">
+        <div class="svc-hero__text">
+          <p class="eyebrow">{s.eyebrow}</p>
+          <h1>{s.h1}</h1>
+          <p class="lead">{s.lead}</p>
+          <p class="svc-hero__price">
+            {d.units.from} <strong>{euro(range.min, lang)}</strong>
+          </p>
+          <div class="btn-row">
+            <a class="btn" href={bookHref}>
+              <Icon name="calendar" />
+              {d.cta.bookService}
+            </a>
+            <a class="btn btn--secondary" href="#prices">{d.cta.prices}</a>
+          </div>
+        </div>
+        <div class="svc-hero__media">
+          <Img name={media.hero} alt={s.heroAlt} ratio="4 / 3" {...(media.pos ? { position: media.pos } : {})} eager sizes="(min-width: 1024px) 560px, 92vw" widths={[360, 480, 640, 800, 1000, 1200]} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white" aria-labelledby="intro-title">
+    <div class="container intro">
+      <div class="intro__text">
+        <h2 id="intro-title">{s.introTitle}</h2>
+        <div class="intro__body">
+          {s.intro.map((p) => <p>{p}</p>)}
+        </div>
+      </div>
+      <div class="intro__facts">
+        <h3 class="intro__facts-title">{c.factsTitle}</h3>
+        <dl class="cells facts-list">
+          {
+            s.facts.map(([k, v]) => (
+              <div class="cell">
+                <dt class="cell__body">{k}</dt>
+                <dd class="cell__value">{v}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="steps-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="steps-title">{c.stepsTitle}</h2>
+      </div>
+      <ol class="steps" role="list">
+        {
+          s.steps.map((x, i) => (
+            <li class="step reveal">
+              <span class="step__num" aria-hidden="true">
+                {i + 1}
+              </span>
+              <h3>{x.title}</h3>
+              <p>{x.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <ul class="strip" role="list">
+        {
+          stripFor(cat).map((name) => (
+            <li class="reveal">
+              <Img name={name} alt={d.gallery[name as keyof typeof d.gallery]} ratio="1 / 1" sizes="(min-width: 1024px) 280px, 46vw" widths={[320, 480, 640]} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--white" id="prices" aria-labelledby="prices-title">
+    <div class="container container--narrow">
+      <div class="section-head">
+        <p class="eyebrow">{s.eyebrow}</p>
+        <h2 id="prices-title">{c.pricesTitle}</h2>
+      </div>
+      <PriceList lang={lang} groups={groups} idPrefix={`svc-${cat}`} />
+      <p class="price-note small muted">{d.prices.vat} {d.prices.duration}</p>
+      <div class="btn-row prices-actions">
+        <a class="btn" href={bookHref}>
+          <Icon name="calendar" />
+          {d.cta.bookService}
+        </a>
+        <a class="link-arrow" href={href('prices', lang)}>{c.pricesAll}<Icon name="arrow-right" /></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="care-title">
+    <div class="container two-col">
+      <div>
+        <h2 id="care-title">{c.careTitle}</h2>
+        <ul class="care" role="list">
+          {
+            s.care.map((x) => (
+              <li>
+                <Icon name="check" size={20} />
+                <span>{x}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div>
+        <h2 id="svc-faq-title">{c.faqTitle}</h2>
+        <div class="faq-wrap">
+          <FaqList lang={lang} items={s.faq} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white section--tight" aria-labelledby="related-title">
+    <div class="container">
+      <h2 id="related-title" class="related-title">{c.relatedTitle}</h2>
+      <ul class="related" role="list">
+        {
+          related.map((x) => (
+            <li>
+              <a class="related__link" href={href(SERVICE_PAGES[x.id], lang)} aria-current={x.id === cat ? 'page' : undefined}>
+                <span>{d.cards[x.id].title}</span>
+                <span class="related__price">
+                  {d.units.from} {euro(priceRange(x.id).min, lang)}
+                </span>
+                <Icon name="chevron-right" size={18} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} title={c.bookTitle} text={c.bookText} bookHref={bookHref} bookLabel={d.cta.bookService} />
+</Base>
+
+<style>
+  .svc-hero {
+    padding-block: var(--s-3) var(--s-8);
+  }
+  .svc-hero__grid {
+    display: grid;
+    gap: var(--s-6);
+    align-items: center;
+    margin-top: var(--s-4);
+  }
+  @media (min-width: 1024px) {
+    .svc-hero__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s-8);
+    }
+  }
+  .svc-hero .lead {
+    margin-top: var(--s-4);
+    color: var(--c-ink-muted);
+  }
+  .svc-hero__price {
+    margin-top: var(--s-4);
+    color: var(--c-ink-muted);
+  }
+  .svc-hero__price strong {
+    color: var(--c-gold-text);
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  .svc-hero .btn-row {
+    margin-top: var(--s-5);
+  }
+  @media (max-width: 479px) {
+    .svc-hero .btn-row .btn {
+      width: 100%;
+    }
+  }
+
+  .intro {
+    display: grid;
+    gap: var(--s-7);
+  }
+  @media (min-width: 1024px) {
+    .intro {
+      grid-template-columns: 1.3fr 1fr;
+      gap: var(--s-8);
+      align-items: start;
+    }
+  }
+  .intro__body {
+    margin-top: var(--s-4);
+    color: var(--c-ink-muted);
+    max-width: 62ch;
+  }
+  .intro__facts-title {
+    font-family: var(--font-sans);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c-gold-text);
+    margin-bottom: var(--s-3);
+  }
+  .facts-list {
+    margin: 0;
+    background: var(--c-paper);
+    box-shadow: none;
+    border: 1px solid var(--c-line);
+  }
+  .facts-list .cell {
+    background: transparent;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 2px var(--s-3);
+  }
+  .facts-list dt {
+    color: var(--c-ink-muted);
+    font-size: var(--fs-small);
+  }
+  .facts-list dd {
+    margin: 0;
+    color: var(--c-ink);
+    font-weight: 500;
+    text-align: right;
+  }
+  .facts-list .cell + .cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 16px;
+    right: 0;
+    height: 1px;
+    background: var(--c-line);
+  }
+
+  .steps {
+    list-style: none;
+    display: grid;
+    gap: var(--s-4);
+    counter-reset: step;
+  }
+  @media (min-width: 640px) {
+    .steps {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .steps {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .step {
+    padding: var(--s-5);
+    background: var(--c-white);
+    border-radius: var(--r-lg);
+    box-shadow: var(--sh-1);
+  }
+  .step__num {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--c-gold);
+    color: var(--c-gold-text);
+    font-family: var(--font-serif);
+    font-weight: 600;
+    margin-bottom: var(--s-4);
+  }
+  .step h3 {
+    font-size: 1.125rem;
+  }
+  .step p {
+    margin-top: var(--s-2);
+    color: var(--c-ink-muted);
+    font-size: var(--fs-small);
+  }
+
+  .strip {
+    list-style: none;
+    display: grid;
+    gap: var(--s-3);
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: var(--s-7);
+  }
+  @media (min-width: 1024px) {
+    .strip {
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--s-4);
+    }
+  }
+
+  .price-note {
+    margin-top: var(--s-5);
+  }
+  .prices-actions {
+    margin-top: var(--s-5);
+    align-items: center;
+    gap: var(--s-4);
+  }
+
+  .two-col {
+    display: grid;
+    gap: var(--s-8);
+  }
+  @media (min-width: 1024px) {
+    .two-col {
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: var(--s-8);
+    }
+  }
+  .care {
+    list-style: none;
+    margin-top: var(--s-5);
+    display: grid;
+    gap: var(--s-4);
+  }
+  .care li {
+    display: flex;
+    gap: var(--s-3);
+    align-items: flex-start;
+  }
+  .care :global(svg) {
+    flex: none;
+    margin-top: 3px;
+    color: var(--c-gold-text);
+  }
+  .faq-wrap {
+    margin-top: var(--s-5);
+  }
+
+  .related-title {
+    font-size: var(--fs-h3);
+    margin-bottom: var(--s-4);
+  }
+  .related {
+    list-style: none;
+    display: grid;
+    gap: var(--s-3);
+  }
+  @media (min-width: 640px) {
+    .related {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .related {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .related__link {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    min-height: 56px;
+    padding: 12px 16px;
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-md);
+    background: var(--c-paper);
+    color: var(--c-ink);
+    text-decoration: none;
+    transition: border-color var(--dur-1) var(--ease-out);
+  }
+  .related__link:hover {
+    border-color: var(--c-gold-text);
+    color: var(--c-ink);
+  }
+  .related__link > span:first-child {
+    flex: 1;
+    font-weight: 500;
+  }
+  .related__price {
+    color: var(--c-ink-muted);
+    font-size: var(--fs-small);
+    white-space: nowrap;
+  }
+  .related__link :global(svg) {
+    color: var(--c-field);
+    flex: none;
+  }
+</style>

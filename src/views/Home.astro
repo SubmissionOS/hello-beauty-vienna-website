@@ -1,0 +1,410 @@
+---
+import Base from '../layouts/Base.astro';
+import Img from '../components/Img.astro';
+import Icon from '../components/Icon.astro';
+import ServiceGrid from '../components/ServiceGrid.astro';
+import VisitCard from '../components/VisitCard.astro';
+import FaqList from '../components/FaqList.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { href } from '../i18n/routes';
+import type { Lang } from '../i18n/config';
+import { LANG_META } from '../i18n/config';
+import { fmt, t } from '../i18n';
+import { site } from '../data/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const h = d.home;
+const ratingDate = new Intl.DateTimeFormat(LANG_META[lang].intl, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(site.rating.asOf));
+const faqExcerpt = [d.faqPage.groups[0]!.items[0]!, d.faqPage.groups[0]!.items[1]!, d.faqPage.groups[1]!.items[0]!, d.faqPage.groups[2]!.items[0]!];
+const strip = ['salon-innenraum-ueberblick', 'naegel-rot-blumendesign', 'pedikuere-french-haende-fuesse', 'wimpern-volumen-ergebnis-blau', 'naegel-nude-goldornament'];
+---
+<Base lang={lang} routeKey="home" title={h.title} description={h.description}>
+  <section class="hero">
+    <div class="container hero__grid">
+      <div class="hero__text">
+        <p class="eyebrow">{h.hero.eyebrow}</p>
+        <h1 class="hero__title">{h.hero.h1}</h1>
+        <p class="lead hero__lead">{h.hero.lead}</p>
+        <div class="btn-row hero__actions">
+          <a class="btn" href={href('booking', lang)}>
+            <Icon name="calendar" />
+            {d.cta.bookNow}
+          </a>
+          <a class="btn btn--secondary" href={href('services', lang)}>{h.hero.secondary}</a>
+        </div>
+      </div>
+      <div class="hero__media">
+        <Img
+          name="salon-empfang-hb-monogramm"
+          alt={d.gallery['salon-empfang-hb-monogramm']}
+          ratio="4 / 5"
+          position="42% 50%"
+          eager
+          sizes="(min-width: 1024px) 560px, 92vw"
+          widths={[360, 480, 640, 800, 1000, 1200]}
+          class="hero__img"
+        />
+      </div>
+    </div>
+
+    <div class="container">
+      <ul class="facts" role="list">
+        <li>
+          <Icon name="pin" />
+          <span><strong>{d.facts.location}</strong><span class="muted">{d.facts.nearby}</span></span>
+        </li>
+        <li>
+          <Icon name="clock" />
+          <span><strong>{d.facts.hours}</strong><span class="muted">{d.hours.sunday} {d.hours.closed}</span></span>
+        </li>
+        <li>
+          <Icon name="star" />
+          <span>
+            <strong>{fmt(d.facts.ratingValue, { value: lang === 'de' ? site.rating.value : site.rating.valueEn })}</strong>
+            <span class="muted">{fmt(d.facts.ratingSource, { count: lang === 'de' ? site.rating.count : site.rating.countEn, source: site.rating.source, date: ratingDate })}</span>
+          </span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--white" aria-labelledby="services-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">{h.services.eyebrow}</p>
+        <h2 id="services-title">{h.services.title}</h2>
+        <p>{h.services.intro}</p>
+      </div>
+      <ServiceGrid lang={lang} />
+      <p class="center-link">
+        <a class="link-arrow" href={href('prices', lang)}>{d.cta.allPrices}<Icon name="arrow-right" /></a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="why-title">
+    <div class="container why">
+      <div class="why__media reveal">
+        <Img name="naegel-behandlung-arbeitsplatz" alt={d.gallery['naegel-behandlung-arbeitsplatz']} ratio="4 / 5" position="60% 50%" sizes="(min-width: 1024px) 480px, 92vw" widths={[360, 540, 720, 960]} />
+      </div>
+      <div class="why__text">
+        <p class="eyebrow">{h.why.eyebrow}</p>
+        <h2 id="why-title">{h.why.title}</h2>
+        <ol class="why__list" role="list">
+          {
+            h.why.items.map((x, i) => (
+              <li class="reveal">
+                <span class="why__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <div>
+                  <h3>{x.title}</h3>
+                  <p>{x.text}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream glance" aria-labelledby="glance-title">
+    <div class="container container--narrow">
+      <p class="eyebrow">{h.glance.eyebrow}</p>
+      <h2 id="glance-title">{h.glance.title}</h2>
+      <p class="glance__text">{h.glance.text}</p>
+      <a class="rating" href={site.rating.url} target="_blank" rel="noopener noreferrer">
+        <span class="rating__stars" aria-hidden="true">
+          {[0, 1, 2, 3, 4].map(() => <Icon name="star" size={18} />)}
+        </span>
+        <span>
+          {fmt(d.facts.ratingValue, { value: lang === 'de' ? site.rating.value : site.rating.valueEn })} · {h.rating.link}
+          <span class="visually-hidden">{d.a11y.newWindow}</span>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="gallery-title">
+    <div class="container">
+      <div class="section-head section-head--row">
+        <div>
+          <p class="eyebrow">{h.gallery.eyebrow}</p>
+          <h2 id="gallery-title">{h.gallery.title}</h2>
+          <p>{h.gallery.text}</p>
+        </div>
+        <a class="link-arrow" href={href('gallery', lang)}>{d.cta.gallery}<Icon name="arrow-right" /></a>
+      </div>
+      <ul class="mosaic" role="list">
+        {
+          strip.map((name, i) => (
+            <li class:list={['mosaic__item', 'reveal', `mosaic__item--${i}`]}>
+              <Img name={name} alt={d.gallery[name as keyof typeof d.gallery]} ratio={i === 0 ? '4 / 5' : '1 / 1'} sizes={i === 0 ? '(min-width: 1024px) 480px, 92vw' : '(min-width: 1024px) 280px, 46vw'} widths={[320, 480, 640, 960]} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--white" aria-labelledby="visit-title">
+    <div class="container visit">
+      <div class="visit__text">
+        <p class="eyebrow">{h.visit.eyebrow}</p>
+        <h2 id="visit-title">{h.visit.title}</h2>
+        <p class="muted">{h.visit.text}</p>
+        <VisitCard lang={lang} id="home-visit" />
+      </div>
+      <div class="visit__media reveal">
+        <Img name="salon-schaufenster-barnabitengasse" alt={d.contactPage.storefrontAlt} ratio="4 / 3" position="35% 50%" sizes="(min-width: 1024px) 560px, 92vw" widths={[360, 540, 720, 960, 1200]} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="faq-title">
+    <div class="container container--narrow">
+      <div class="section-head">
+        <p class="eyebrow">{h.faq.eyebrow}</p>
+        <h2 id="faq-title">{h.faq.title}</h2>
+      </div>
+      <FaqList lang={lang} items={faqExcerpt} />
+      <p class="center-link">
+        <a class="link-arrow" href={href('faq', lang)}>{d.cta.faq}<Icon name="arrow-right" /></a>
+      </p>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</Base>
+
+<style>
+  .hero {
+    padding-block: var(--s-5) var(--s-7);
+  }
+  .hero__grid {
+    display: grid;
+    gap: var(--s-6);
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .hero {
+      padding-block: var(--s-7) var(--s-8);
+    }
+    .hero__grid {
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: var(--s-8);
+    }
+  }
+  .hero__title {
+    font-size: var(--fs-display);
+    line-height: 1.08;
+    font-weight: 600;
+  }
+  .hero__lead {
+    margin-top: var(--s-5);
+    color: var(--c-ink-muted);
+    max-width: 38rem;
+  }
+  .hero__actions {
+    margin-top: var(--s-6);
+  }
+  @media (max-width: 479px) {
+    .hero__actions .btn {
+      width: 100%;
+    }
+  }
+  .hero__media {
+    position: relative;
+  }
+  .hero__media::before {
+    content: '';
+    position: absolute;
+    inset: -14px 14px 14px -14px;
+    border: 1px solid var(--c-gold-soft);
+    border-radius: calc(var(--r-lg) + 6px);
+    pointer-events: none;
+  }
+  @media (max-width: 1023px) {
+    .hero__media {
+      max-width: 560px;
+    }
+    .hero__media :global(.img) {
+      aspect-ratio: 4 / 3 !important;
+    }
+    .hero__media::before {
+      inset: -10px 10px 10px -10px;
+    }
+  }
+
+  .facts {
+    list-style: none;
+    display: grid;
+    gap: var(--s-4);
+    margin-top: var(--s-7);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--c-line);
+  }
+  @media (min-width: 768px) {
+    .facts {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .facts li {
+    display: flex;
+    gap: var(--s-3);
+    align-items: flex-start;
+    font-size: var(--fs-small);
+    line-height: 1.45;
+  }
+  .facts li > :global(svg) {
+    flex: none;
+    margin-top: 1px;
+    color: var(--c-gold-text);
+  }
+  .facts strong {
+    display: block;
+    font-weight: 500;
+    color: var(--c-ink);
+  }
+  .facts .muted {
+    display: block;
+  }
+
+  .center-link {
+    margin-top: var(--s-6);
+    text-align: center;
+  }
+
+  .why {
+    display: grid;
+    gap: var(--s-7);
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .why {
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: var(--s-9);
+    }
+  }
+  @media (max-width: 1023px) {
+    .why__media {
+      max-width: 520px;
+    }
+    .why__media :global(.img) {
+      aspect-ratio: 3 / 2 !important;
+    }
+  }
+  .why__list {
+    list-style: none;
+    margin-top: var(--s-6);
+    display: grid;
+    gap: var(--s-5);
+  }
+  .why__list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--s-4);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--c-line);
+  }
+  .why__num {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--c-gold);
+    min-width: 2ch;
+  }
+  .why__list h3 {
+    font-size: 1.25rem;
+  }
+  .why__list p {
+    margin-top: var(--s-2);
+    color: var(--c-ink-muted);
+  }
+
+  .glance__text {
+    margin-top: var(--s-4);
+    font-size: var(--fs-lead);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+  .rating {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-2) var(--s-3);
+    margin-top: var(--s-5);
+    min-height: var(--tap);
+    font-weight: 500;
+  }
+  .rating__stars {
+    display: inline-flex;
+    gap: 2px;
+    color: var(--c-gold);
+  }
+  .rating__stars :global(svg) {
+    fill: var(--c-accent);
+  }
+
+  .section-head--row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--s-4);
+    max-width: none;
+  }
+  .section-head--row > div {
+    max-width: 40rem;
+  }
+  .section-head--row p:not(.eyebrow) {
+    margin-top: var(--s-3);
+    color: var(--c-ink-muted);
+  }
+
+  .mosaic {
+    list-style: none;
+    display: grid;
+    gap: var(--s-3);
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .mosaic__item--0 {
+    grid-column: 1 / -1;
+  }
+  .mosaic__item--0 :global(.img) {
+    aspect-ratio: 3 / 2 !important;
+  }
+  @media (min-width: 1024px) {
+    .mosaic {
+      grid-template-columns: 1.6fr 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: var(--s-4);
+    }
+    .mosaic__item--0 {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+    }
+    .mosaic__item--0 :global(.img) {
+      aspect-ratio: auto !important;
+      height: 100%;
+    }
+  }
+
+  .visit {
+    display: grid;
+    gap: var(--s-7);
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .visit {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s-8);
+    }
+  }
+  .visit__text > .muted {
+    margin: var(--s-4) 0 var(--s-5);
+  }
+</style>

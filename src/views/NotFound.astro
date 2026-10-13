@@ -1,0 +1,87 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { Image } from 'astro:assets';
+import { image } from '../data/images';
+import { href, SERVICE_PAGES } from '../i18n/routes';
+import type { Lang } from '../i18n/config';
+import { t } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const p = d.notFound;
+---
+<Base lang={lang} routeKey={null} title={p.title} description={p.description}>
+  <section class="nf">
+    <div class="container container--narrow nf__inner">
+      <Image src={image('logo-hb-monogramm-gold')} alt="" width={96} height={96} class="nf__mono" />
+      <p class="eyebrow">{p.eyebrow}</p>
+      <h1>{p.h1}</h1>
+      <p class="lead muted">{p.text}</p>
+      <div class="btn-row nf__actions">
+        <a class="btn" href={href('home', lang)} data-home-link>{p.home}</a>
+        <a class="btn btn--secondary" href={href('booking', lang)}>
+          <Icon name="calendar" />
+          {d.nav.book}
+        </a>
+      </div>
+      <ul class="cells nf__links" role="list">
+        <li>
+          <a class="cell" href={href('services', lang)}>
+            <span class="cell__body"><span class="cell__title">{d.nav.services}</span></span>
+            <Icon name="chevron-right" class="cell__chevron" />
+          </a>
+        </li>
+        <li>
+          <a class="cell" href={href(SERVICE_PAGES.nails, lang)}>
+            <span class="cell__body"><span class="cell__title">{d.cards.nails.title}</span></span>
+            <Icon name="chevron-right" class="cell__chevron" />
+          </a>
+        </li>
+        <li>
+          <a class="cell" href={href('prices', lang)}>
+            <span class="cell__body"><span class="cell__title">{d.nav.prices}</span></span>
+            <Icon name="chevron-right" class="cell__chevron" />
+          </a>
+        </li>
+        <li>
+          <a class="cell" href={href('contact', lang)}>
+            <span class="cell__body"><span class="cell__title">{d.nav.contact}</span></span>
+            <Icon name="chevron-right" class="cell__chevron" />
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    padding-block: var(--s-8) var(--section-y);
+  }
+  .nf__inner {
+    text-align: center;
+  }
+  .nf__inner .eyebrow {
+    justify-content: center;
+  }
+  .nf :global(.nf__mono) {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto var(--s-5);
+  }
+  .nf .lead {
+    margin-top: var(--s-4);
+  }
+  .nf__actions {
+    justify-content: center;
+    margin-top: var(--s-6);
+  }
+  .nf__links {
+    margin-top: var(--s-7);
+    text-align: left;
+  }
+</style>

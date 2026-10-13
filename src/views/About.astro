@@ -1,0 +1,174 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Img from '../components/Img.astro';
+import Rich from '../components/Rich.astro';
+import CtaBand from '../components/CtaBand.astro';
+import type { RouteKey } from '../i18n/routes';
+import type { Lang } from '../i18n/config';
+import { t } from '../i18n';
+import { crumbsFor } from '../lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const p = d.aboutPage;
+const crumbs = crumbsFor('about', lang, (k: RouteKey) => (k === 'home' ? d.nav.home : d.nav.about));
+const salon = ['salon-innenraum-ueberblick', 'salon-kosmetikraum-liege', 'salon-willkommenskaffee', 'salon-pflegeprodukte-vitrine'];
+---
+<Base lang={lang} routeKey="about" title={p.title} description={p.description} crumbs={crumbs} pageType="AboutPage" ogImage="salon-innenraum-ueberblick">
+  <PageHeader lang={lang} eyebrow={p.eyebrow} title={p.h1} lead={p.lead} crumbs={crumbs} />
+
+  <section class="about-hero">
+    <div class="container">
+      <Img name="salon-empfang-theke" alt={d.gallery['salon-empfang-theke']} ratio="21 / 9" position="50% 40%" eager sizes="(min-width: 1280px) 1200px, 94vw" widths={[480, 720, 960, 1280, 1600, 2000]} class="about-hero__img" />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="story-title">
+    <div class="container story">
+      <h2 id="story-title">{p.storyTitle}</h2>
+      <div class="story__body">
+        {p.story.map((x) => <p>{x}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white" aria-labelledby="values-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="values-title">{p.valuesTitle}</h2>
+      </div>
+      <ul class="values" role="list">
+        {
+          p.values.map((v) => (
+            <li class="reveal">
+              <h3>{v.title}</h3>
+              <p>{v.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="team-title">
+    <div class="container container--narrow">
+      <h2 id="team-title">{p.teamTitle}</h2>
+      <div class="team-placeholder">
+        <Rich text={p.teamText} lang={lang} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white" aria-labelledby="salon-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="salon-title">{p.salonTitle}</h2>
+      </div>
+      <ul class="salon-grid" role="list">
+        {
+          salon.map((name, i) => (
+            <li class="reveal">
+              <Img name={name} alt={d.gallery[name as keyof typeof d.gallery]} ratio={i === 0 ? '3 / 2' : '1 / 1'} sizes="(min-width: 1024px) 400px, 92vw" widths={[360, 540, 720, 960]} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</Base>
+
+<style>
+  .about-hero :global(.about-hero__img) {
+    border-radius: var(--r-xl);
+  }
+  @media (max-width: 767px) {
+    .about-hero :global(.about-hero__img) {
+      aspect-ratio: 4 / 3 !important;
+    }
+  }
+  .story {
+    display: grid;
+    gap: var(--s-5);
+  }
+  @media (min-width: 1024px) {
+    .story {
+      grid-template-columns: 1fr 1.6fr;
+      gap: var(--s-8);
+    }
+  }
+  .story__body {
+    font-size: var(--fs-lead);
+    font-weight: 300;
+    line-height: 1.6;
+    max-width: 60ch;
+  }
+  .values {
+    list-style: none;
+    display: grid;
+    gap: var(--s-5);
+  }
+  @media (min-width: 640px) {
+    .values {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .values {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .values li {
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--c-gold);
+  }
+  .values h3 {
+    font-size: 1.25rem;
+  }
+  .values p {
+    margin-top: var(--s-2);
+    color: var(--c-ink-muted);
+  }
+  .team-placeholder {
+    margin-top: var(--s-4);
+    padding: var(--s-6);
+    border: 1px dashed var(--c-field);
+    border-radius: var(--r-lg);
+    background: var(--c-white);
+    color: var(--c-ink-muted);
+  }
+  .salon-grid {
+    list-style: none;
+    display: grid;
+    gap: var(--s-3);
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .salon-grid li:first-child {
+    grid-column: 1 / -1;
+  }
+  @media (min-width: 1024px) {
+    .salon-grid {
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: var(--s-4);
+    }
+    .salon-grid li:first-child {
+      grid-column: 1;
+      grid-row: span 2;
+    }
+    .salon-grid li:first-child :global(.img) {
+      aspect-ratio: auto !important;
+      height: 100%;
+    }
+    .salon-grid li:last-child {
+      grid-column: 2 / span 2;
+    }
+    .salon-grid li:last-child :global(.img) {
+      aspect-ratio: 2 / 1 !important;
+    }
+  }
+</style>

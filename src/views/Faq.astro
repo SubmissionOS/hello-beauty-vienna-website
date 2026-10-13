@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import FaqList from '../components/FaqList.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { href, type RouteKey } from '../i18n/routes';
+import type { Lang } from '../i18n/config';
+import { t } from '../i18n';
+import { abs, crumbsFor, faqNode, plainText } from '../lib/schema';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const p = d.faqPage;
+const crumbs = crumbsFor('faq', lang, (k: RouteKey) => (k === 'home' ? d.nav.home : d.nav.faq));
+const all = p.groups.flatMap((g) => g.items);
+const schema = [faqNode(abs(href('faq', lang)), all, plainText)];
+---
+<Base lang={lang} routeKey="faq" title={p.title} description={p.description} crumbs={crumbs} schema={schema} pageType="FAQPage">
+  <PageHeader lang={lang} eyebrow={p.eyebrow} title={p.h1} lead={p.lead} crumbs={crumbs} />
+  <div class="container container--narrow faq-page">
+    {
+      p.groups.map((g, i) => (
+        <section aria-labelledby={`faq-g${i}`}>
+          <h2 id={`faq-g${i}`} class="faq-group__title">
+            {g.title}
+          </h2>
+          <FaqList lang={lang} items={g.items} />
+        </section>
+      ))
+    }
+  </div>
+  <CtaBand lang={lang} />
+</Base>
+
+<style>
+  .faq-page {
+    display: grid;
+    gap: var(--s-7);
+    padding-bottom: var(--s-4);
+  }
+  .faq-group__title {
+    font-size: var(--fs-h3);
+    margin-bottom: var(--s-4);
+  }
+</style>

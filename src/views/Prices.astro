@@ -1,0 +1,155 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import PriceList from '../components/PriceList.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { categories } from '../data/services';
+import { href, SERVICE_PAGES, type RouteKey } from '../i18n/routes';
+import type { Lang } from '../i18n/config';
+import { t } from '../i18n';
+import { crumbsFor, abs, serviceNode } from '../lib/schema';
+import { site } from '../data/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const p = d.pricesPage;
+const crumbs = crumbsFor('prices', lang, (k: RouteKey) => (k === 'home' ? d.nav.home : d.nav.prices));
+const url = abs(href('prices', lang));
+const schema = categories.map((c) =>
+  serviceNode({
+    url: `${url}#${c.id}`,
+    name: d.cards[c.id].title,
+    description: d.cards[c.id].text,
+    lang,
+    items: c.groups.flatMap((g) => g.items).map((x) => ({ name: x.name[lang], x })),
+  }),
+);
+---
+<Base lang={lang} routeKey="prices" title={p.title} description={p.description} crumbs={crumbs} schema={schema} ogImage="salon-innenraum-ueberblick">
+  <PageHeader lang={lang} eyebrow={p.eyebrow} title={p.h1} lead={p.lead} crumbs={crumbs} />
+
+  <nav class="jump" aria-label={p.jump}>
+    <div class="container">
+      <ul class="jump__list" role="list">
+        {
+          categories.map((c) => (
+            <li>
+              <a class="jump__chip" href={`#${c.id}`}>
+                {d.cards[c.id].title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container container--narrow price-page">
+    {
+      categories.map((c) => (
+        <section class="price-cat" id={c.id} aria-labelledby={`${c.id}-title`}>
+          <div class="price-cat__head">
+            <h2 id={`${c.id}-title`}>{d.cards[c.id].title}</h2>
+            <a class="link-arrow" href={href(SERVICE_PAGES[c.id], lang)}>
+              {d.cta.more}
+              <span class="visually-hidden">: {d.cards[c.id].title}</span>
+              <Icon name="arrow-right" />
+            </a>
+          </div>
+          <PriceList lang={lang} groups={c.groups} idPrefix={`p-${c.id}`} />
+        </section>
+      ))
+    }
+
+    <div class="price-foot">
+      <p class="small muted">{d.prices.vat}</p>
+      <p class="small muted">{d.prices.duration}</p>
+      <p class="small muted">{p.asOf}</p>
+      <a class="btn btn--secondary btn--sm" href={site.priceListPdf} download>
+        <Icon name="download" />
+        {p.pdf}
+      </a>
+    </div>
+  </div>
+
+  <CtaBand lang={lang} />
+</Base>
+
+<style>
+  .jump {
+    position: sticky;
+    top: calc(var(--header-h) + var(--safe-top));
+    z-index: 20;
+    background: var(--c-paper);
+    border-block: 1px solid var(--c-line);
+  }
+  .jump__list {
+    list-style: none;
+    display: flex;
+    gap: var(--s-2);
+    overflow-x: auto;
+    padding-block: 10px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+  }
+  .jump__list::-webkit-scrollbar {
+    display: none;
+  }
+  .jump__list li {
+    flex: none;
+    scroll-snap-align: start;
+  }
+  .jump__chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
+    padding: 0 16px;
+    border: 1px solid var(--c-field);
+    border-radius: var(--r-pill);
+    background: var(--c-white);
+    color: var(--c-ink);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      background-color var(--dur-1) var(--ease-out),
+      color var(--dur-1) var(--ease-out);
+  }
+  .jump__chip:hover {
+    background: var(--c-ink);
+    border-color: var(--c-ink);
+    color: var(--c-white);
+  }
+  .price-page {
+    padding-block: var(--s-7) var(--s-4);
+    display: grid;
+    gap: var(--s-9);
+  }
+  .price-cat {
+    scroll-margin-top: calc(var(--header-h) + var(--safe-top) + 80px);
+  }
+  .price-cat__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--s-2) var(--s-4);
+    margin-bottom: var(--s-5);
+    padding-bottom: var(--s-4);
+    border-bottom: 1px solid var(--c-gold-soft);
+  }
+  .price-foot {
+    display: grid;
+    gap: var(--s-2);
+    justify-items: start;
+  }
+  .price-foot .btn {
+    margin-top: var(--s-3);
+  }
+</style>
