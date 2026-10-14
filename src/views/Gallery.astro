@@ -95,7 +95,7 @@ const groups = groupTags.map((tag) => ({
                         aria-label={fmt(p.open, { alt: x.alt })}
                         aria-haspopup="dialog"
                       >
-                        <Img name={x.name} alt="" ratio="4 / 5" sizes="(min-width: 1200px) 300px, (min-width: 768px) 34vw, 70vw" widths={[240, 360, 480, 640]} eager={x.index < 3} />
+                        <Img name={x.name} alt="" ratio="4 / 5" sizes="(min-width: 1200px) 300px, (min-width: 768px) 34vw, 70vw" widths={[240, 360, 480, 640]} quality={50} eager={x.index < 2} low={x.index >= 2} />
                       </button>
                     </li>
                   ))}
@@ -252,6 +252,12 @@ const groups = groupTags.map((tag) => ({
     grid-template-columns: minmax(0, 1fr);
     gap: var(--s-7);
   }
+  /* Mobil: Streifen unterhalb des sichtbaren Bereichs werden nicht gerendert und ihre Bilder nicht vorab geladen
+     (Chrome lädt Lazy-Bilder sonst bis 2 500 px Entfernung – das verdrängt das Hauptbild) */
+  .gal__group {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 26rem;
+  }
   .gal__title {
     display: flex;
     align-items: baseline;
@@ -302,6 +308,7 @@ const groups = groupTags.map((tag) => ({
     .gal__scroller,
     .gal__list {
       display: contents;
+      content-visibility: visible;
     }
     .gal__title {
       position: absolute;

@@ -19,9 +19,13 @@ interface Props {
   widths?: number[];
   class?: string;
   rounded?: boolean;
+  /** Kompression von AVIF/WebP (Standard 64); Vorschaubilder dürfen stärker komprimiert sein */
+  quality?: number;
+  /** nicht-vorrangiges Bild (z. B. Galerie-Vorschau außerhalb des ersten Bildschirms): niedrige Ladepriorität */
+  low?: boolean;
 }
 
-const { name, alt, sizes, ratio, position, eager = false, widths = [360, 540, 720, 960, 1280, 1600, 2000], class: cls, rounded = true } = Astro.props;
+const { name, alt, sizes, ratio, position, eager = false, widths = [360, 540, 720, 960, 1280, 1600, 2000], class: cls, rounded = true, quality = 64, low = false } = Astro.props;
 const src = image(name);
 const usable = widths.filter((w) => w <= src.width);
 if (usable.length === 0 || usable[usable.length - 1]! < Math.min(src.width, widths[widths.length - 1]!)) usable.push(Math.min(src.width, widths[widths.length - 1]!));
@@ -53,10 +57,10 @@ const pictureWidths = crop ? [...new Set(usable.map((w) => Math.min(w, crop.widt
     {...(crop ?? {})}
     sizes={sizes}
     formats={['avif', 'webp']}
-    quality={64}
+    quality={quality}
     loading={eager ? 'eager' : 'lazy'}
     decoding={eager ? 'sync' : 'async'}
-    fetchpriority={eager ? 'high' : 'auto'}
+    fetchpriority={eager ? 'high' : low ? 'low' : 'auto'}
   />
 </div>
 

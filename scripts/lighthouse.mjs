@@ -1,6 +1,6 @@
 // Lighthouse für alle Seiten in allen Sprachen, mobil und Desktop.
 // Aufruf: npm run lighthouse (erwartet `npm run preview` auf Port 4321). Chrome: Playwright-Chromium.
-// Ergebnis: docs/qa/lighthouse.md (Tabelle), Rohdaten in lh/ (nicht im Repository).
+// Ergebnis: docs/qa/lighthouse.md (Tabelle; anderer Pfad über LH_OUT), Rohdaten in lh/ (nicht im Repository). LH_BASE und LH_ONLY wählen Server und Seiten.
 import fs from 'node:fs';
 import lighthouse from 'lighthouse';
 import * as chromeLauncher from 'chrome-launcher';
@@ -56,7 +56,7 @@ const maxLcp = Math.max(...all.map((x) => x.lcp));
 const maxCls = Math.max(...all.map((x) => x.cls));
 const md = `# Lighthouse
 
-Gemessen am ${new Date().toISOString().slice(0, 16).replace('T', ' ')} gegen \`npm run preview\` (lokal), Lighthouse ${lighthouse.version ?? ''} mit Playwright-Chromium.
+Gemessen am ${new Date().toISOString().slice(0, 16).replace('T', ' ')} gegen ${process.env.LH_NOTE ?? '`npm run preview` (lokal, Demo-Modus: noindex, daher SEO 69 durch „Seite ist für die Indexierung gesperrt“)'} (UTC), Lighthouse mit Playwright-Chromium.
 Mobil: Standard-Emulation (Moto G Power, simuliertes langsames 4G, 4× CPU). Desktop: 1350 × 940, ohne CPU-Drosselung.
 
 **Minimum über alle ${all.length} Messungen:** Performance ${min(0)} · Barrierefreiheit ${min(1)} · Best Practices ${min(2)} · SEO ${min(3)} · max. LCP ${(maxLcp / 1000).toFixed(2)} s · max. CLS ${maxCls.toFixed(3)}
@@ -65,5 +65,5 @@ Mobil: Standard-Emulation (Moto G Power, simuliertes langsames 4G, 4× CPU). Des
 |---|---|---|---|---|---|---|---|---|---|---|
 ${rows.join('\n')}
 `;
-fs.writeFileSync('docs/qa/lighthouse.md', md);
+fs.writeFileSync(process.env.LH_OUT ?? 'docs/qa/lighthouse.md', md);
 console.log(`\nMinimum: ${min(0)}/${min(1)}/${min(2)}/${min(3)}  max LCP ${(maxLcp / 1000).toFixed(2)} s  max CLS ${maxCls.toFixed(3)}`);
