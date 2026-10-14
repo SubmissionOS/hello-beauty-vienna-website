@@ -28,30 +28,37 @@ const schema = categories.map((c) =>
     items: c.groups.flatMap((g) => g.items).map((x) => ({ name: x.name[lang], x })),
   }),
 );
+const filterCss = categories
+  .map((c) => `.prices:has(input[name="price-cat"][value="${c.id}"]:checked) .price-cat:not([data-cat="${c.id}"]){display:none}`)
+  .join('');
 ---
 <Base lang={lang} routeKey="prices" title={p.title} description={p.description} crumbs={crumbs} schema={schema} ogImage="salon-innenraum-ueberblick">
   <PageHeader lang={lang} eyebrow={p.eyebrow} title={p.h1} lead={p.lead} crumbs={crumbs} />
 
-  <nav class="jump" aria-label={p.jump}>
-    <div class="container">
-      <ul class="jump__list" role="list">
-        {
-          categories.map((c) => (
-            <li>
-              <a class="jump__chip" href={`#${c.id}`}>
-                {d.cards[c.id].title}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
+  <div class="prices">
+    <div class="seg-bar">
+      <div class="container">
+        <div class="segmented-scroll">
+          <fieldset class="segmented" style={`--n: ${categories.length + 1}`}>
+            <legend class="visually-hidden">{p.jump}</legend>
+            {
+              (['all', ...categories.map((c) => c.id)] as const).map((id, i) => (
+                <label class="segmented__opt">
+                  <input type="radio" name="price-cat" value={id} checked={i === 0} />
+                  <span>{p.tabs[id]}</span>
+                </label>
+              ))
+            }
+          </fieldset>
+        </div>
+      </div>
     </div>
-  </nav>
-
+    {/* Filter rein per CSS: die gewählte Kategorie bleibt sichtbar, ohne JavaScript */}
+    <style is:inline set:html={filterCss} />
   <div class="container price-page">
     {
       categories.map((c) => (
-        <section class="price-cat" id={c.id} aria-labelledby={`${c.id}-title`}>
+        <section class="price-cat" id={c.id} data-cat={c.id} aria-labelledby={`${c.id}-title`}>
           <div class="price-cat__head">
             <h2 id={`${c.id}-title`}>{d.cards[c.id].title}</h2>
             <a class="link-arrow" href={href(SERVICE_PAGES[c.id], lang)}>
@@ -76,55 +83,19 @@ const schema = categories.map((c) =>
     </div>
   </div>
 
+  </div>
+
   <CtaBand lang={lang} />
 </Base>
 
 <style>
-  .jump {
+  .seg-bar {
     position: sticky;
     top: calc(var(--header-h) + var(--safe-top));
     z-index: 20;
-    background: var(--c-paper);
-    border-block: 1px solid var(--c-line);
-  }
-  .jump__list {
-    list-style: none;
-    display: flex;
-    gap: var(--s-2);
-    overflow-x: auto;
     padding-block: 10px;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x proximity;
-  }
-  .jump__list::-webkit-scrollbar {
-    display: none;
-  }
-  .jump__list li {
-    flex: none;
-    scroll-snap-align: start;
-  }
-  .jump__chip {
-    display: inline-flex;
-    align-items: center;
-    min-height: var(--tap);
-    padding: 0 16px;
-    border: 1px solid var(--c-field);
-    border-radius: var(--r-pill);
-    background: var(--c-white);
-    color: var(--c-ink);
-    font-size: var(--fs-small);
-    font-weight: 500;
-    text-decoration: none;
-    white-space: nowrap;
-    transition:
-      background-color var(--dur-1) var(--ease-out),
-      color var(--dur-1) var(--ease-out);
-  }
-  .jump__chip:hover {
-    background: var(--c-ink);
-    border-color: var(--c-ink);
-    color: var(--c-white);
+    background: var(--c-paper);
+    border-bottom: 1px solid var(--c-line);
   }
   .price-page {
     padding-block: var(--s-7) var(--s-4);

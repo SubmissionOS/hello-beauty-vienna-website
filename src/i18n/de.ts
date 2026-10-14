@@ -530,6 +530,7 @@ export const de = {
     h1: 'Preisliste',
     lead: 'Alle Leistungen und Preise auf einen Blick. Wählen Sie einen Bereich – oder buchen Sie direkt.',
     jump: 'Bereich wählen',
+    tabs: { all: 'Alle', nails: 'Nägel', manicure: 'Maniküre', pedicure: 'Pediküre', facial: 'Kosmetik', lashes: 'Wimpern', hair: 'Haarentfernung' },
     service: 'Leistung',
     price: 'Preis',
     duration: 'Dauer',

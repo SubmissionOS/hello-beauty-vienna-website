@@ -529,6 +529,7 @@ export const hu: Dict = {
     h1: 'Árlista',
     lead: 'Minden kezelés és ár egy helyen. Válassz egy területet – vagy foglalj azonnal.',
     jump: 'Terület kiválasztása',
+    tabs: { all: 'Mind', nails: 'Műköröm', manicure: 'Manikűr', pedicure: 'Pedikűr', facial: 'Kozmetika', lashes: 'Szempilla', hair: 'Szőrtelenítés' },
     service: 'Kezelés',
     price: 'Ár',
     duration: 'Időtartam',

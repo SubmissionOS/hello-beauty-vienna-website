@@ -205,29 +205,6 @@ document.addEventListener('focusin', (e) => {
   requestAnimationFrame(() => requestAnimationFrame(() => unobscure(el)));
 });
 
-/* ---------------- Einblenden ---------------- */
-const reveals = document.querySelectorAll<HTMLElement>('.reveal');
-if (reveals.length && 'IntersectionObserver' in window && !reduced()) {
-  const io = new IntersectionObserver(
-    (entries) => {
-      for (const e of entries) {
-        if (e.isIntersecting) {
-          e.target.classList.add('is-visible');
-          io.unobserve(e.target);
-        }
-      }
-    },
-    { rootMargin: '0px 0px -8% 0px' },
-  );
-  const vh = window.innerHeight;
-  reveals.forEach((el) => {
-    // Was schon sichtbar ist, bleibt sichtbar (kein Aufblitzen)
-    if (el.getBoundingClientRect().top < vh) return;
-    el.classList.add('reveal--pending');
-    io.observe(el);
-  });
-}
-
 /* ---------------- Sprache merken ---------------- */
 // Die Wahl gilt für die Sitzung; keine automatische Umleitung. Genutzt dort, wo die Seite die Sprache nicht
 // aus der Adresse kennt (Fehlerseite unter /404.html): der Rückweg führt zur Startseite der gewählten Sprache.

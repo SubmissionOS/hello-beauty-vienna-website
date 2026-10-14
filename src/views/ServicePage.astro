@@ -103,7 +103,7 @@ const schema = [
       <ol class="steps" role="list">
         {
           s.steps.map((x, i) => (
-            <li class="step reveal">
+            <li class="step">
               <span class="step__num" aria-hidden="true">
                 {i + 1}
               </span>
@@ -116,7 +116,7 @@ const schema = [
       <ul class="strip" role="list">
         {
           stripFor(cat).map((name) => (
-            <li class="reveal">
+            <li>
               <Img name={name} alt={d.gallery[name as keyof typeof d.gallery]} ratio="1 / 1" sizes="(min-width: 1024px) 280px, 46vw" widths={[320, 480, 640]} />
             </li>
           ))

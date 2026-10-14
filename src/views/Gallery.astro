@@ -39,45 +39,72 @@ const items = await Promise.all(
     };
   }),
 );
+// Nach Bereichen gruppiert: mobil je ein Wischstreifen, am Desktop fließen alle Gruppen in ein Mosaik
+const groupTags: GalleryTag[] = ['nails', 'pedicure', 'lashes', 'salon'];
+let n = 0;
+const groups = groupTags.map((tag) => ({
+  tag,
+  items: items
+    .filter((x) => x.tag === tag)
+    .map((x) => {
+      const index = n++;
+      // Mosaik-Rhythmus: breit (Querformat), hoch, sonst Standard
+      const shape = x.ratio > 1.2 && index % 5 === 0 ? 'wide' : index % 7 === 3 ? 'tall' : 'std';
+      return { ...x, index, shape };
+    }),
+}));
 ---
 <Base lang={lang} routeKey="gallery" title={p.title} description={p.description} crumbs={crumbs} ogImage="naegel-rot-blumendesign">
   <PageHeader lang={lang} eyebrow={p.eyebrow} title={p.h1} lead={p.lead} crumbs={crumbs} />
 
   <section class="gallery-section" aria-label={p.h1}>
     <div class="container">
-      <fieldset class="segmented" data-filter>
-        <legend class="visually-hidden">{p.filterLabel}</legend>
-        {
-          tags.map((tag, i) => (
-            <label class="segmented__opt">
-              <input type="radio" name="gallery-filter" value={tag} checked={i === 0} />
-              <span>{p.filters[tag]}</span>
-            </label>
-          ))
-        }
-      </fieldset>
+      <div class="segmented-scroll gallery-filter">
+        <fieldset class="segmented" data-filter style={`--n: ${tags.length}`}>
+          <legend class="visually-hidden">{p.filterLabel}</legend>
+          {
+            tags.map((tag, i) => (
+              <label class="segmented__opt">
+                <input type="radio" name="gallery-filter" value={tag} checked={i === 0} />
+                <span>{p.filters[tag]}</span>
+              </label>
+            ))
+          }
+        </fieldset>
+      </div>
       <p class="visually-hidden" role="status" data-filter-status data-label={p.shown}></p>
 
-      <ul class="grid" role="list" data-gallery>
+      <div class="gal" data-gallery>
         {
-          items.map((x, i) => (
-            <li class="grid__item" data-tag={x.tag}>
-              <button
-                type="button"
-                class="grid__btn"
-                data-index={i}
-                data-full={x.full}
-                data-srcset={x.srcset}
-                data-alt={x.alt}
-                aria-label={fmt(p.open, { alt: x.alt })}
-                aria-haspopup="dialog"
-              >
-                <Img name={x.name} alt="" ratio="1 / 1" sizes="(min-width: 1200px) 290px, (min-width: 768px) 31vw, 46vw" widths={[240, 360, 480, 640]} eager={i < 4} />
-              </button>
-            </li>
+          groups.map((g) => (
+            <section class="gal__group" aria-labelledby={`gal-${g.tag}`}>
+              <h2 class="gal__title" id={`gal-${g.tag}`}>
+                {p.filters[g.tag]} <span class="gal__count">{g.items.length}</span>
+              </h2>
+              <div class="gal__scroller" role="region" aria-labelledby={`gal-${g.tag}`} tabindex="0">
+                <ul class="gal__list" role="list">
+                  {g.items.map((x) => (
+                    <li class:list={['grid__item', `grid__item--${x.shape}`]} data-tag={x.tag}>
+                      <button
+                        type="button"
+                        class="grid__btn"
+                        data-index={x.index}
+                        data-full={x.full}
+                        data-srcset={x.srcset}
+                        data-alt={x.alt}
+                        aria-label={fmt(p.open, { alt: x.alt })}
+                        aria-haspopup="dialog"
+                      >
+                        <Img name={x.name} alt="" ratio="4 / 5" sizes="(min-width: 1200px) 300px, (min-width: 768px) 34vw, 70vw" widths={[240, 360, 480, 640]} eager={x.index < 3} />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </section>
           ))
         }
-      </ul>
+      </div>
     </div>
   </section>
 
@@ -109,7 +136,7 @@ const items = await Promise.all(
   const grid = document.querySelector<HTMLElement>('[data-gallery]')!;
   const filter = document.querySelector<HTMLFieldSetElement>('[data-filter]');
   const status = document.querySelector<HTMLElement>('[data-filter-status]');
-  const items = [...grid.querySelectorAll<HTMLLIElement>('li')];
+  const items = [...grid.querySelectorAll<HTMLLIElement>('li.grid__item')];
 
   // Filter (Segmented Control); ohne JavaScript bleibt er verborgen und alle Bilder sind sichtbar
   if (filter) {
@@ -203,95 +230,113 @@ const items = await Promise.all(
     padding-bottom: var(--section-y);
   }
 
-  .segmented {
-    display: inline-flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin: 0 0 var(--s-6);
-    padding: 4px;
-    border: 0;
-    border-radius: var(--r-pill);
-    background: var(--c-cream);
-    max-width: 100%;
-    min-width: 0;
-  }
-  @media (scripting: none) {
-    .segmented {
-      display: none;
-    }
-  }
-  @media (max-width: 559px) {
-    .segmented {
-      display: grid;
-      grid-auto-flow: column;
-      grid-auto-columns: minmax(max-content, 1fr);
-      gap: 2px;
-      width: 100%;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-    .segmented::-webkit-scrollbar {
-      display: none;
-    }
-  }
-  .segmented__opt {
-    position: relative;
-    cursor: pointer;
-  }
-  .segmented__opt input {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    margin: 0;
-    cursor: pointer;
-  }
-  .segmented__opt span {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: var(--tap);
-    min-width: var(--tap);
-    padding: 0 16px;
-    border-radius: var(--r-pill);
-    font-size: var(--fs-small);
-    font-weight: 500;
-    color: var(--c-ink-muted);
-    transition:
-      background-color var(--dur-2) var(--ease-out),
-      color var(--dur-2) var(--ease-out),
-      box-shadow var(--dur-2) var(--ease-out);
-  }
-  @media (max-width: 559px) {
-    .segmented__opt span {
-      padding: 0 10px;
-      font-size: 0.875rem;
-    }
-  }
-  .segmented__opt input:checked + span {
-    background: var(--c-white);
-    color: var(--c-ink);
-    box-shadow: var(--sh-1);
-  }
-  .segmented__opt input:focus-visible + span {
-    outline: 2px solid var(--c-gold-text);
-    outline-offset: 2px;
-  }
-
-  .grid {
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--s-2);
+  .gallery-filter {
+    display: none;
+    margin-bottom: var(--s-6);
   }
   @media (min-width: 768px) {
-    .grid {
-      grid-template-columns: repeat(3, 1fr);
+    .gallery-filter {
+      display: block;
+    }
+  }
+  @media (scripting: none) {
+    .gallery-filter {
+      display: none !important;
+    }
+  }
+
+  /* Mobil: je Bereich ein horizontaler Streifen mit Scroll-Snap, das nächste Bild ist angeschnitten */
+  .gal {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-7);
+  }
+  .gal__title {
+    display: flex;
+    align-items: baseline;
+    gap: var(--s-2);
+    font-size: var(--fs-h3);
+    margin-bottom: var(--s-3);
+  }
+  .gal__count {
+    font-family: var(--font-sans);
+    font-size: var(--fs-small);
+    color: var(--c-ink-muted);
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+  .gal__scroller {
+    margin-inline: calc(-1 * var(--gutter));
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  .gal__scroller::-webkit-scrollbar {
+    display: none;
+  }
+  .gal__list {
+    list-style: none;
+    display: flex;
+    gap: var(--s-2);
+    width: max-content;
+    padding-inline: var(--gutter);
+  }
+  .gal__list .grid__item {
+    flex: none;
+    width: 70vw;
+    max-width: 20rem;
+    scroll-snap-align: start;
+  }
+
+  /* Desktop: alle Gruppen fließen in ein dichtes Mosaik mit wechselnden Formaten */
+  @media (min-width: 768px) {
+    .gal {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-auto-rows: 7rem;
+      grid-auto-flow: dense;
       gap: var(--s-3);
+    }
+    .gal__group,
+    .gal__scroller,
+    .gal__list {
+      display: contents;
+    }
+    .gal__title {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    .gal__list .grid__item {
+      width: auto;
+      max-width: none;
+      grid-column: span 4;
+      grid-row: span 3;
+    }
+    .gal__list .grid__item--wide {
+      grid-column: span 8;
+      grid-row: span 3;
+    }
+    .gal__list .grid__item--tall {
+      grid-row: span 4;
+    }
+    .grid__btn,
+    .grid__btn :global(.img) {
+      height: 100%;
+    }
+    .grid__btn :global(.img) {
+      aspect-ratio: auto !important;
     }
   }
   @media (min-width: 1200px) {
-    .grid {
-      grid-template-columns: repeat(4, 1fr);
+    .gal__list .grid__item {
+      grid-column: span 3;
+    }
+    .gal__list .grid__item--wide {
+      grid-column: span 6;
     }
   }
   .grid__item[hidden] {

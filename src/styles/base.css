@@ -719,20 +719,6 @@ textarea.input {
   }
 }
 
-/* Einblenden beim Scrollen: nur Elemente unterhalb des ersten Viewports (scripts/ui.ts) */
-.reveal--pending {
-  opacity: 0;
-  transform: translateY(16px);
-  transition:
-    opacity 600ms var(--ease-out),
-    transform 600ms var(--ease-out);
-}
-
-.reveal--pending.is-visible {
-  opacity: 1;
-  transform: none;
-}
-
 /* Bewegung reduzieren: alle Animationen und Übergänge aus */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -742,10 +728,6 @@ textarea.input {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-  .reveal--pending {
-    opacity: 1 !important;
-    transform: none !important;
   }
 }
 
@@ -787,4 +769,93 @@ textarea.input {
 }
 :lang(hu) q {
   quotes: '„' '”' '»' '«';
+}
+
+/*
+ * Segmented Control (iOS): gleich breite Segmente, der weiße Indikator gleitet zum gewählten Segment.
+ * Ohne JavaScript – die Position kommt per :has() aus dem gewählten Radio. --n = Anzahl Segmente (inline).
+ * Auf schmalen Bildschirmen horizontal scrollbar (.segmented-scroll).
+ */
+.segmented-scroll {
+  margin-inline: calc(-1 * var(--gutter));
+  padding-inline: var(--gutter);
+  overflow-x: auto;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.segmented-scroll::-webkit-scrollbar {
+  display: none;
+}
+.segmented {
+  --i: 0;
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  width: max-content;
+  min-width: 0;
+  margin: 0;
+  padding: 4px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--c-cream);
+}
+.segmented::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc((100% - 8px) / var(--n, 1));
+  border-radius: var(--r-pill);
+  background: var(--c-white);
+  box-shadow: var(--sh-1);
+  transform: translateX(calc(var(--i) * 100%));
+  transition: transform 200ms var(--ease-out);
+}
+.segmented:has(.segmented__opt:nth-of-type(2) input:checked) { --i: 1; }
+.segmented:has(.segmented__opt:nth-of-type(3) input:checked) { --i: 2; }
+.segmented:has(.segmented__opt:nth-of-type(4) input:checked) { --i: 3; }
+.segmented:has(.segmented__opt:nth-of-type(5) input:checked) { --i: 4; }
+.segmented:has(.segmented__opt:nth-of-type(6) input:checked) { --i: 5; }
+.segmented:has(.segmented__opt:nth-of-type(7) input:checked) { --i: 6; }
+.segmented:has(.segmented__opt:nth-of-type(8) input:checked) { --i: 7; }
+.segmented__opt {
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+}
+.segmented__opt input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+.segmented__opt span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap);
+  padding: 0 18px;
+  border-radius: var(--r-pill);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--c-ink-muted);
+  transition: color var(--dur-2) var(--ease-out);
+}
+.segmented__opt input:checked + span {
+  color: var(--c-ink);
+}
+.segmented__opt input:focus-visible + span {
+  outline: 2px solid var(--c-gold-text);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .segmented__opt:hover span {
+    color: var(--c-ink);
+  }
 }

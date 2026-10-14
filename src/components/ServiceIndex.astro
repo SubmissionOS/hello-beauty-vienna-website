@@ -1,0 +1,168 @@
+---
+/**
+ * Leistungen als nummerierter, großformatiger Index (01–06) – wie das Inhaltsverzeichnis eines Magazins.
+ * Ganze Zeile antippbar (iOS-Zelle). Das Bild trägt den View-Transition-Namen der Leistungsseite.
+ */
+import Img from './Img.astro';
+import Icon from './Icon.astro';
+import { categories, priceRange } from '../data/services';
+import { href, SERVICE_PAGES } from '../i18n/routes';
+import type { Lang } from '../i18n/config';
+import { fmt, t } from '../i18n';
+import { euro } from '../lib/format';
+import { servicePageMedia } from '../data/gallery';
+
+interface Props {
+  lang: Lang;
+  headingLevel?: 'h2' | 'h3';
+}
+const { lang, headingLevel = 'h3' } = Astro.props;
+const d = t(lang);
+const H = headingLevel;
+---
+<ol class="sx" role="list">
+  {
+    categories.map((c, i) => {
+      const r = priceRange(c.id);
+      const img = servicePageMedia[c.id];
+      return (
+        <li class="sx__item">
+          <a class="sx__row" href={href(SERVICE_PAGES[c.id], lang)}>
+            <span class="sx__num" aria-hidden="true">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <span class="sx__body">
+              <H class="sx__title">{d.cards[c.id].title}</H>
+              <span class="sx__text">{d.cards[c.id].text}</span>
+              <span class="sx__price">{fmt(d.units.from, { price: euro(r.min, lang) })}</span>
+            </span>
+            <span class="sx__media" style={`view-transition-name: svc-${c.id}`}>
+              <Img name={img.hero} alt={d.svc[c.id].heroAlt} ratio="4 / 5" {...(img.pos ? { position: img.pos } : {})} sizes="(min-width: 1024px) 220px, 34vw" widths={[240, 360, 480]} />
+            </span>
+            <span class="sx__go" aria-hidden="true"><Icon name="arrow-right" size={22} /></span>
+          </a>
+        </li>
+      );
+    })
+  }
+</ol>
+
+<style>
+  .sx {
+    list-style: none;
+    counter-reset: none;
+    border-top: 1px solid var(--c-ink);
+  }
+  .sx__item {
+    border-bottom: 1px solid var(--c-line-strong);
+  }
+  .sx__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 34%;
+    grid-template-areas:
+      'num media'
+      'body media';
+    grid-template-rows: auto 1fr;
+    column-gap: var(--s-4);
+    row-gap: var(--s-2);
+    padding-block: var(--s-5);
+    color: var(--c-ink);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color var(--dur-1) var(--ease-out);
+  }
+  .sx__row:active {
+    background: var(--c-cream);
+  }
+  .sx__num {
+    grid-area: num;
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1;
+    color: var(--c-gold-text);
+    letter-spacing: 0.04em;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  .sx__body {
+    grid-area: body;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    min-width: 0;
+  }
+  .sx__title {
+    font-size: clamp(1.625rem, 1.2rem + 2.4vw, 3.25rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+  }
+  .sx__text {
+    color: var(--c-ink-muted);
+    font-size: var(--fs-small);
+    line-height: 1.5;
+  }
+  .sx__price {
+    margin-top: auto;
+    padding-top: var(--s-2);
+    font-weight: 500;
+    color: var(--c-gold-text);
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+  .sx__media {
+    grid-area: media;
+    align-self: start;
+  }
+  .sx__media :global(.img) {
+    border-radius: var(--r-md);
+  }
+  .sx__go {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .sx__row {
+      grid-template-columns: 4.5rem minmax(0, 1fr) 11rem 3rem;
+      grid-template-areas: 'num body media go';
+      grid-template-rows: auto;
+      column-gap: var(--s-6);
+      align-items: center;
+      padding-block: var(--s-6);
+    }
+    .sx__num {
+      align-self: start;
+      padding-top: 0.6rem;
+      font-size: 1.25rem;
+    }
+    .sx__text {
+      font-size: var(--fs-body);
+      max-width: 34rem;
+    }
+    .sx__go {
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1px solid var(--c-line-strong);
+      color: var(--c-ink);
+      transition:
+        background-color var(--dur-2) var(--ease-out),
+        color var(--dur-2) var(--ease-out),
+        border-color var(--dur-2) var(--ease-out);
+    }
+  }
+  @media (min-width: 1024px) {
+    .sx__row {
+      grid-template-columns: 6rem minmax(0, 1fr) 14rem 3rem;
+    }
+  }
+  @media (hover: hover) {
+    .sx__row:hover .sx__title {
+      color: var(--c-gold-deep);
+    }
+    .sx__row:hover .sx__go {
+      background: var(--c-ink);
+      border-color: var(--c-ink);
+      color: var(--c-white);
+    }
+  }
+</style>

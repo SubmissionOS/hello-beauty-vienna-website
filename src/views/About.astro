@@ -44,7 +44,7 @@ const salon = ['salon-innenraum-ueberblick', 'salon-kosmetikraum-liege', 'salon-
       <ul class="values" role="list">
         {
           p.values.map((v) => (
-            <li class="reveal">
+            <li>
               <h3>{v.title}</h3>
               <p>{v.text}</p>
             </li>
@@ -71,7 +71,7 @@ const salon = ['salon-innenraum-ueberblick', 'salon-kosmetikraum-liege', 'salon-
       <ul class="salon-grid" role="list">
         {
           salon.map((name, i) => (
-            <li class="reveal">
+            <li>
               <Img name={name} alt={d.gallery[name as keyof typeof d.gallery]} ratio={i === 0 ? '3 / 2' : '1 / 1'} sizes="(min-width: 1024px) 400px, 92vw" widths={[360, 540, 720, 960]} />
             </li>
           ))

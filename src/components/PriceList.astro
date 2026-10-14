@@ -64,22 +64,35 @@ const H = level;
 </div>
 
 <style>
+  /* Wie eine gedruckte Karte: keine Kästen, feine Linien, Preise in Tabellenziffern rechtsbündig */
   .price-groups {
     display: grid;
     gap: var(--s-7);
   }
-
   .price-group__title {
-    font-size: clamp(1.25rem, 1.15rem + 0.45vw, 1.5rem);
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
     margin-bottom: var(--s-3);
+    font-family: var(--font-sans);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1.4;
+    color: var(--c-gold-text);
   }
-
+  .price-group__title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--c-gold-soft);
+  }
   .price-group__note {
-    margin: calc(var(--s-2) * -1) 0 var(--s-3);
+    margin: 0 0 var(--s-3);
     font-size: var(--fs-small);
     color: var(--c-ink-muted);
   }
-
   .price {
     color: var(--c-ink);
     font-weight: 500;
@@ -87,10 +100,27 @@ const H = level;
     white-space: nowrap;
   }
 
-  .price-cells .cell {
-    align-items: flex-start;
+  /* Mobil: Zeilen statt Karten */
+  .price-cells {
+    list-style: none;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
   }
-
+  .price-cells .cell {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--s-4);
+    min-height: 0;
+    padding: 12px 0;
+    background: none;
+    border-bottom: 1px solid var(--c-line-strong);
+  }
+  .price-cells .cell::after,
+  .price-cells .cell::before {
+    display: none;
+  }
   .price-cells .cell__value {
     padding-top: 1px;
     max-width: 46%;
@@ -101,13 +131,9 @@ const H = level;
   .price-table {
     display: none;
     width: 100%;
+    table-layout: fixed;
     border-collapse: collapse;
-    background: var(--c-white);
-    border-radius: var(--r-md);
-    overflow: hidden;
-    box-shadow: var(--sh-1);
   }
-
   @media (min-width: 768px) {
     .price-table {
       display: table;
@@ -116,53 +142,40 @@ const H = level;
       display: none;
     }
   }
-
   .price-table th,
   .price-table td {
-    padding: 13px 18px;
+    padding: 12px 0;
     text-align: left;
-    vertical-align: top;
-    border-top: 1px solid var(--c-line);
+    vertical-align: baseline;
+    border-bottom: 1px solid var(--c-line-strong);
   }
-
+  .price-table td + td,
+  .price-table th + th {
+    padding-left: var(--s-5);
+  }
   .price-table thead th {
-    border-top: 0;
+    padding-block: 0 8px;
+    border-bottom: 1px solid var(--c-ink);
     font-size: var(--fs-xs);
     font-weight: 500;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--c-ink-muted);
-    background: var(--c-paper);
-    padding-block: 10px;
   }
-
   .price-table tbody th {
     font-weight: 400;
   }
-
-  .price-table {
-    table-layout: fixed;
-  }
-
   .price-table .num {
     text-align: right;
-    white-space: nowrap;
     font-variant-numeric: tabular-nums lining-nums;
   }
-
   .price-table thead th:nth-child(2) {
     width: 10.5rem;
   }
-
   .price-table thead th:nth-child(3) {
     width: 9.5rem;
   }
-
   .price-table td.num {
     white-space: normal;
-  }
-
-  .price-table tbody tr:hover {
-    background: var(--c-paper);
   }
 </style>

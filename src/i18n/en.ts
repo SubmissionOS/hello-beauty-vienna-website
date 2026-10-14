@@ -529,6 +529,7 @@ export const en: Dict = {
     h1: 'Price list',
     lead: 'All treatments and prices at a glance. Pick an area – or book straight away.',
     jump: 'Choose an area',
+    tabs: { all: 'All', nails: 'Nails', manicure: 'Manicure', pedicure: 'Pedicure', facial: 'Facials', lashes: 'Lashes', hair: 'Hair removal' },
     service: 'Treatment',
     price: 'Price',
     duration: 'Duration',
