@@ -64,7 +64,7 @@ const schema = [
             <a class="btn btn--secondary" href="#prices">{d.cta.prices}</a>
           </div>
         </div>
-        <div class="svc-hero__media">
+        <div class="svc-hero__media" style={`view-transition-name: svc-${cat}`}>
           <Img name={media.hero} alt={s.heroAlt} ratio="4 / 3" {...(media.pos ? { position: media.pos } : {})} eager sizes="(min-width: 1024px) 560px, 92vw" widths={[360, 480, 640, 800, 1000, 1200]} />
         </div>
       </div>

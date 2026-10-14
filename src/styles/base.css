@@ -859,3 +859,38 @@ textarea.input {
     color: var(--c-ink);
   }
 }
+
+/*
+ * Signature-Moment 1: Seitenübergänge (native Cross-Document View Transitions, kein JavaScript).
+ * Das Bild einer Leistung im Index wird zum Hero der Leistungsseite (gleicher view-transition-name svc-<id>).
+ * Header und Aktionsleiste bleiben stehen. Browser ohne Unterstützung wechseln normal die Seite.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+.site-header {
+  view-transition-name: site-header;
+}
+.bottom-bar {
+  view-transition-name: bottom-bar;
+}
+::view-transition-group(*) {
+  animation-duration: 380ms;
+  animation-timing-function: var(--ease-sheet);
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 220ms;
+}
+::view-transition-image-pair(*) {
+  isolation: auto;
+}
+::view-transition-old(*),
+::view-transition-new(*) {
+  /* Bildwechsel ohne Verzerrung: beide Zustände füllen die Gruppe wie object-fit: cover */
+  height: 100%;
+  object-fit: cover;
+  overflow: clip;
+}
