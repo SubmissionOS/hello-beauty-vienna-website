@@ -1,18 +1,18 @@
 # Schriften
 
-Einmalig am 2026-10-13 von Google Fonts heruntergeladen und lokal abgelegt. Beim Seitenaufruf wird kein Google-Server kontaktiert.
+Einmalig am 2026-10-14 über die Google-Fonts-API heruntergeladen und lokal abgelegt. Beim Seitenaufruf wird kein Google-Server kontaktiert. Auswahl und Vergleich: `docs/design-upgrade.md`.
 
 | Datei | Familie | Achsen / Gewichte | Zeichenumfang | Größe |
 |---|---|---|---|---|
-| playfair-display-latin.woff2 | Playfair Display v40 (variabel) | wght 400–900, genutzt 500–700 | Latin (U+0000–00FF, Satzzeichen, €) | 38 KB |
-| playfair-display-hu-extra.woff2 | Playfair Display v40 | wie oben | nur Ő ő Ű ű (+ Kombinationszeichen) | 3 KB |
-| roboto-latin.woff2 | Roboto v51 (variabel) | wght 100–900, genutzt 300–500 | Latin | 43 KB |
-| roboto-hu-extra.woff2 | Roboto v51 | wie oben | nur Ő ő Ű ű | 6 KB |
+| gloock-latin.woff2 | Gloock (Display) | 400 | Latin (U+0000–00FF, Satzzeichen, €) | 26 KB |
+| gloock-hu-extra.woff2 | Gloock | 400 | nur Ő ő Ű ű | 4 KB |
+| hanken-grotesk-latin.woff2 | Hanken Grotesk (variabel, Text) | wght 300–700 | Latin | 35 KB |
+| hanken-grotesk-hu-extra.woff2 | Hanken Grotesk | wght 300–700 | nur Ő ő Ű ű | 2 KB |
 
-Die Ungarisch-Ergänzung wurde mit dem Google-Fonts-Parameter `text=` erzeugt und wird per `unicode-range: U+0150-0151, U+0170-0171, U+030B` nur geladen, wenn diese Zeichen auf der Seite vorkommen. Alle anderen ungarischen Zeichen (á é í ó ö ú ü) liegen im Latin-Subset.
+Die Ungarisch-Ergänzung wurde mit dem Google-Fonts-Parameter `text=` erzeugt und wird per `unicode-range: U+0150-0151, U+0170-0171, U+030B` nur geladen, wenn diese Zeichen auf der Seite vorkommen. Alle anderen ungarischen Zeichen (á é í ó ö ú ü) liegen im Latin-Subset. Glyphentest (ő ű in der Webfont gerendert, nicht im Fallback): `tests/typo.spec.ts`.
 
 ## Lizenz
-- **Playfair Display** – Copyright 2017 The Playfair Display Project Authors (https://github.com/clauseggers/Playfair-Display). SIL Open Font License 1.1.
-- **Roboto** – Copyright 2011 The Roboto Project Authors (https://github.com/googlefonts/roboto-classic). SIL Open Font License 1.1.
+- **Gloock** – Copyright 2022 The Gloock Project Authors (https://github.com/duartp/gloock). SIL Open Font License 1.1. Quelle: https://github.com/google/fonts/blob/main/ofl/gloock/OFL.txt
+- **Hanken Grotesk** – Copyright 2021 The Hanken Grotesk Project Authors (https://github.com/marcologous/hanken-grotesk). SIL Open Font License 1.1. Quelle: https://github.com/google/fonts/blob/main/ofl/hankengrotesk/OFL.txt
 
-Die OFL erlaubt Nutzung, Einbettung und Weitergabe (auch kommerziell), solange die Schriften nicht einzeln verkauft werden. Lizenztext: https://openfontlicense.org/open-font-license-official-text/
+Die OFL erlaubt Nutzung, Einbettung, Self-Hosting und Weitergabe (auch kommerziell und in öffentlichen Repositories), solange die Schriften nicht einzeln verkauft werden und Copyright-Hinweis und Lizenz beiliegen. Lizenztext: https://openfontlicense.org/open-font-license-official-text/

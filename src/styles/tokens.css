@@ -33,13 +33,13 @@
   --c-overlay: rgb(30 26 16 / 0.42);
 
   /* Schrift */
-  --font-serif: 'Playfair Display', 'Playfair Fallback', Georgia, 'Times New Roman', serif;
-  --font-sans: 'Roboto', 'Roboto Fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --font-serif: 'Gloock', 'Gloock Fallback', 'Gloock Fallback Times', Georgia, serif;
+  --font-sans: 'Hanken Grotesk', 'Hanken Fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
 
   /* Fluide Skala: Minimum bei 360 px, Maximum bei 1440 px Viewport */
-  --fs-display: clamp(2.375rem, 1.85rem + 2.35vw, 4rem); /* 38 → 64 */
-  --fs-h1: clamp(1.75rem, 1.33rem + 1.85vw, 3.25rem); /* 28 → 52 */
-  --fs-h2: clamp(1.5rem, 1.17rem + 1.48vw, 2.5rem); /* 24 → 40 */
+  --fs-display: clamp(2.75rem, 1.5rem + 5.6vw, 6.75rem); /* 44 → 108 */
+  --fs-h1: clamp(2.125rem, 1.5rem + 2.8vw, 4.25rem); /* 34 → 68 */
+  --fs-h2: clamp(1.75rem, 1.3rem + 2vw, 3.125rem); /* 28 → 50 */
   --fs-h3: clamp(1.25rem, 1.17rem + 0.37vw, 1.5rem); /* 20 → 24 */
   --fs-lead: clamp(1.1875rem, 1.125rem + 0.28vw, 1.375rem); /* 19 → 22 */
   --fs-body: 1.0625rem; /* 17 */

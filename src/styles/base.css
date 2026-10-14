@@ -34,6 +34,9 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-tap-highlight-color: transparent;
   overflow-wrap: break-word;
+  font-synthesis: none;
+  /* Mediävalziffern im Fließtext, sofern die Schrift sie hat (Hanken Grotesk: nein – dann ohne Wirkung) */
+  font-variant-numeric: oldstyle-nums proportional-nums;
   display: flex;
   flex-direction: column;
 }
@@ -89,16 +92,20 @@ h3,
 h4 {
   overflow-wrap: break-word;
   font-family: var(--font-serif);
-  font-weight: 600;
+  font-weight: 400;
   line-height: var(--lh-tight);
   color: var(--c-ink);
   margin: 0;
   text-wrap: balance;
-  letter-spacing: -0.005em;
+  letter-spacing: -0.01em;
+  font-variant-numeric: lining-nums;
 }
 
+/* Display-Größen: enger gesetzt */
 h1 {
   font-size: var(--fs-h1);
+  line-height: 1.02;
+  letter-spacing: -0.028em;
 }
 
 /* Silbentrennung nur auf sehr schmalen Bildschirmen, wo lange Wörter sonst nicht passen */
@@ -112,6 +119,8 @@ h1 {
 }
 h2 {
   font-size: var(--fs-h2);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
 }
 h3 {
   font-size: var(--fs-h3);
@@ -767,4 +776,15 @@ textarea.input {
     background: Mark;
     color: MarkText;
   }
+}
+
+/* Anführungszeichen je Sprache */
+:lang(de) q {
+  quotes: '„' '“' '‚' '‘';
+}
+:lang(en) q {
+  quotes: '“' '”' '‘' '’';
+}
+:lang(hu) q {
+  quotes: '„' '”' '»' '«';
 }
