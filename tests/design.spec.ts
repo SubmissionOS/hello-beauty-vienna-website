@@ -135,7 +135,7 @@ test.describe('Typografie', () => {
     await page.goto('/hu/');
     const result = await page.evaluate(async () => {
       const out: Record<string, boolean> = {};
-      for (const fam of ['Gloock', 'Hanken Grotesk']) {
+      for (const fam of ['Bodoni Moda', 'Jost']) {
         await document.fonts.load(`40px "${fam}"`, 'ŐőŰű');
         const c = document.createElement('canvas').getContext('2d')!;
         const w = (stack: string) => {
@@ -147,9 +147,9 @@ test.describe('Typografie', () => {
       }
       return out;
     });
-    expect(result).toEqual({ Gloock: true, 'Hanken Grotesk': true });
+    expect(result).toEqual({ 'Bodoni Moda': true, Jost: true });
     // Überschrift nutzt tatsächlich Gloock, Fließtext Hanken Grotesk
-    expect(await page.locator('h1').evaluate((e) => getComputedStyle(e).fontFamily)).toMatch(/^"?Gloock/);
-    expect(await page.locator('body').evaluate((e) => getComputedStyle(e).fontFamily)).toMatch(/^"?Hanken Grotesk/);
+    expect(await page.locator('h1').evaluate((e) => getComputedStyle(e).fontFamily)).toMatch(/^"?Bodoni Moda/);
+    expect(await page.locator('body').evaluate((e) => getComputedStyle(e).fontFamily)).toMatch(/^"?Jost/);
   });
 });

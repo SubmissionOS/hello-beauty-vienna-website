@@ -18,3 +18,4 @@ docs/qa/screenshots/
 blob-report/
 test-results-*
 .vercel/
+.tmp-clone/

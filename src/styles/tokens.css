@@ -33,8 +33,8 @@
   --c-overlay: rgb(30 26 16 / 0.42);
 
   /* Schrift */
-  --font-serif: 'Gloock', 'Gloock Fallback', 'Gloock Fallback Times', Georgia, serif;
-  --font-sans: 'Hanken Grotesk', 'Hanken Fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --font-serif: 'Bodoni Moda', 'Bodoni Fallback', Georgia, serif;
+  --font-sans: 'Jost', 'Jost Fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
 
   /* Fluide Skala: Minimum bei 360 px, Maximum bei 1440 px Viewport */
   --fs-display: clamp(2.75rem, 1.5rem + 5.6vw, 6.75rem); /* 44 → 108 */

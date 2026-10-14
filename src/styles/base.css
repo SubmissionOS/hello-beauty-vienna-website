@@ -35,7 +35,7 @@ body {
   -webkit-tap-highlight-color: transparent;
   overflow-wrap: break-word;
   font-synthesis: none;
-  /* Mediävalziffern im Fließtext, sofern die Schrift sie hat (Hanken Grotesk: nein – dann ohne Wirkung) */
+  /* Mediävalziffern im Fließtext, sofern die Schrift sie hat */
   font-variant-numeric: oldstyle-nums proportional-nums;
   display: flex;
   flex-direction: column;
@@ -92,7 +92,8 @@ h3,
 h4 {
   overflow-wrap: break-word;
   font-family: var(--font-serif);
-  font-weight: 400;
+  /* Bodoni Moda: 500 hält die Haarlinien auch klein stabil */
+  font-weight: 500;
   line-height: var(--lh-tight);
   color: var(--c-ink);
   margin: 0;
@@ -103,9 +104,9 @@ h4 {
 
 /* Display-Größen: enger gesetzt */
 h1 {
-  /* Größe nie über die Breite des längsten Wortes hinaus: „Wimpernverlängerung,“ ist 10,2 em breit und muss auf jedem
+  /* Größe nie über die Breite des längsten Wortes hinaus: „Wimpernverlängerung,“ ist 10,23 em breit und muss auf jedem
      Bildschirm in eine Zeile passen (statt mitten im Wort umzubrechen) */
-  font-size: min(var(--fs-h1), calc((100vw - 2 * var(--gutter)) / 10.6));
+  font-size: min(var(--fs-h1), calc((100vw - 2 * var(--gutter)) / 10.8));
   line-height: 1.02;
   letter-spacing: -0.028em;
 }

@@ -12,7 +12,7 @@ import { overlapAudit, pseudoLocalize } from './support/overlap';
 const settle = async (page: Page) => {
   await page.evaluate(async () => {
     await document.fonts.ready;
-    for (const fam of ['Gloock', 'Hanken Grotesk']) await document.fonts.load(`40px "${fam}"`, 'ŐőŰű');
+    for (const fam of ['Bodoni Moda', 'Jost']) await document.fonts.load(`40px "${fam}"`, 'ŐőŰű');
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
   });
 };
