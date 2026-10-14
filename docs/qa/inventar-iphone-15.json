@@ -1,5 +1,5 @@
 {
- "erzeugt": "2026-10-13T23:04:24.421Z",
+ "erzeugt": "2026-10-14T01:59:35.371Z",
  "seiten": 54,
  "elemente": 4602,
  "out": {
@@ -5254,7 +5254,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Manicure, gel polish & Shellacfrom 35 €",
+     "name": "Manicure, gel polish & Shellacfrom €35",
      "href": "/en/services/manicure/",
      "type": null,
      "inDialog": null,
@@ -5263,7 +5263,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Pedicure & foot carefrom 42 €",
+     "name": "Pedicure & foot carefrom €42",
      "href": "/en/services/pedicure/",
      "type": null,
      "inDialog": null,
@@ -5272,7 +5272,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Facialsfrom 49 €",
+     "name": "Facialsfrom €49",
      "href": "/en/services/facials/",
      "type": null,
      "inDialog": null,
@@ -5281,7 +5281,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Lashes & browsfrom 15 €",
+     "name": "Lashes & browsfrom €15",
      "href": "/en/services/lashes-brows/",
      "type": null,
      "inDialog": null,
@@ -5290,7 +5290,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Hair removalfrom 15 €",
+     "name": "Hair removalfrom €15",
      "href": "/en/services/hair-removal/",
      "type": null,
      "inDialog": null,
@@ -7351,7 +7351,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Nail extensionsfrom 56 €",
+     "name": "Nail extensionsfrom €56",
      "href": "/en/services/nail-extensions/",
      "type": null,
      "inDialog": null,
@@ -7360,7 +7360,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Pedicure & foot carefrom 42 €",
+     "name": "Pedicure & foot carefrom €42",
      "href": "/en/services/pedicure/",
      "type": null,
      "inDialog": null,
@@ -7369,7 +7369,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Facialsfrom 49 €",
+     "name": "Facialsfrom €49",
      "href": "/en/services/facials/",
      "type": null,
      "inDialog": null,
@@ -7378,7 +7378,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Lashes & browsfrom 15 €",
+     "name": "Lashes & browsfrom €15",
      "href": "/en/services/lashes-brows/",
      "type": null,
      "inDialog": null,
@@ -7387,7 +7387,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Hair removalfrom 15 €",
+     "name": "Hair removalfrom €15",
      "href": "/en/services/hair-removal/",
      "type": null,
      "inDialog": null,
@@ -9448,7 +9448,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Nail extensionsfrom 56 €",
+     "name": "Nail extensionsfrom €56",
      "href": "/en/services/nail-extensions/",
      "type": null,
      "inDialog": null,
@@ -9457,7 +9457,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Manicure, gel polish & Shellacfrom 35 €",
+     "name": "Manicure, gel polish & Shellacfrom €35",
      "href": "/en/services/manicure/",
      "type": null,
      "inDialog": null,
@@ -9466,7 +9466,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Facialsfrom 49 €",
+     "name": "Facialsfrom €49",
      "href": "/en/services/facials/",
      "type": null,
      "inDialog": null,
@@ -9475,7 +9475,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Lashes & browsfrom 15 €",
+     "name": "Lashes & browsfrom €15",
      "href": "/en/services/lashes-brows/",
      "type": null,
      "inDialog": null,
@@ -9484,7 +9484,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Hair removalfrom 15 €",
+     "name": "Hair removalfrom €15",
      "href": "/en/services/hair-removal/",
      "type": null,
      "inDialog": null,
@@ -11545,7 +11545,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Nail extensionsfrom 56 €",
+     "name": "Nail extensionsfrom €56",
      "href": "/en/services/nail-extensions/",
      "type": null,
      "inDialog": null,
@@ -11554,7 +11554,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Manicure, gel polish & Shellacfrom 35 €",
+     "name": "Manicure, gel polish & Shellacfrom €35",
      "href": "/en/services/manicure/",
      "type": null,
      "inDialog": null,
@@ -11563,7 +11563,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Pedicure & foot carefrom 42 €",
+     "name": "Pedicure & foot carefrom €42",
      "href": "/en/services/pedicure/",
      "type": null,
      "inDialog": null,
@@ -11572,7 +11572,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Lashes & browsfrom 15 €",
+     "name": "Lashes & browsfrom €15",
      "href": "/en/services/lashes-brows/",
      "type": null,
      "inDialog": null,
@@ -11581,7 +11581,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Hair removalfrom 15 €",
+     "name": "Hair removalfrom €15",
      "href": "/en/services/hair-removal/",
      "type": null,
      "inDialog": null,
@@ -13642,7 +13642,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Nail extensionsfrom 56 €",
+     "name": "Nail extensionsfrom €56",
      "href": "/en/services/nail-extensions/",
      "type": null,
      "inDialog": null,
@@ -13651,7 +13651,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Manicure, gel polish & Shellacfrom 35 €",
+     "name": "Manicure, gel polish & Shellacfrom €35",
      "href": "/en/services/manicure/",
      "type": null,
      "inDialog": null,
@@ -13660,7 +13660,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Pedicure & foot carefrom 42 €",
+     "name": "Pedicure & foot carefrom €42",
      "href": "/en/services/pedicure/",
      "type": null,
      "inDialog": null,
@@ -13669,7 +13669,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Facialsfrom 49 €",
+     "name": "Facialsfrom €49",
      "href": "/en/services/facials/",
      "type": null,
      "inDialog": null,
@@ -13678,7 +13678,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Hair removalfrom 15 €",
+     "name": "Hair removalfrom €15",
      "href": "/en/services/hair-removal/",
      "type": null,
      "inDialog": null,
@@ -15739,7 +15739,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Nail extensionsfrom 56 €",
+     "name": "Nail extensionsfrom €56",
      "href": "/en/services/nail-extensions/",
      "type": null,
      "inDialog": null,
@@ -15748,7 +15748,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Manicure, gel polish & Shellacfrom 35 €",
+     "name": "Manicure, gel polish & Shellacfrom €35",
      "href": "/en/services/manicure/",
      "type": null,
      "inDialog": null,
@@ -15757,7 +15757,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Pedicure & foot carefrom 42 €",
+     "name": "Pedicure & foot carefrom €42",
      "href": "/en/services/pedicure/",
      "type": null,
      "inDialog": null,
@@ -15766,7 +15766,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Facialsfrom 49 €",
+     "name": "Facialsfrom €49",
      "href": "/en/services/facials/",
      "type": null,
      "inDialog": null,
@@ -15775,7 +15775,7 @@
     {
      "tag": "a",
      "role": null,
-     "name": "Lashes & browsfrom 15 €",
+     "name": "Lashes & browsfrom €15",
      "href": "/en/services/lashes-brows/",
      "type": null,
      "inDialog": null,
@@ -36496,8 +36496,8 @@
     {
      "tag": "a",
      "role": null,
-     "name": "+43 1 52 152",
-     "href": "tel:+43152152",
+     "name": "+43 1 52 152-0",
+     "href": "tel:+431521520",
      "type": null,
      "inDialog": null,
      "action": "Anruf"
@@ -37114,8 +37114,8 @@
     {
      "tag": "a",
      "role": null,
-     "name": "+43 1 52 152",
-     "href": "tel:+43152152",
+     "name": "+43 1 52 152-0",
+     "href": "tel:+431521520",
      "type": null,
      "inDialog": null,
      "action": "Anruf"
@@ -37732,8 +37732,8 @@
     {
      "tag": "a",
      "role": null,
-     "name": "+43 1 52 152",
-     "href": "tel:+43152152",
+     "name": "+43 1 52 152-0",
+     "href": "tel:+431521520",
      "type": null,
      "inDialog": null,
      "action": "Anruf"
