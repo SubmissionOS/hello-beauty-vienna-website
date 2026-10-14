@@ -33,7 +33,7 @@ const labels = { today: n.today, tomorrow: n.tomorrow, on: n.on, fallback: n.fal
   data-labels={JSON.stringify(labels)}
 >
   <span class="slot-chip__dot" aria-hidden="true"></span>
-  <span class="slot-chip__text" data-slot-text>{n.loading}</span>
+  <span class="slot-chip__text" data-slot-text>{variant === 'bar' ? '…' : n.loading}</span>
   {isDemo && <span class="slot-chip__demo">{n.demo}</span>}
 </a>
 
@@ -104,10 +104,7 @@ const labels = { today: n.today, tomorrow: n.tomorrow, on: n.on, fallback: n.fal
     font-size: 0.8125rem;
   }
   .slot-chip--bar .slot-chip__text {
-    min-width: 0;
-    width: 6.4em;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    min-width: 5.6em;
   }
   .slot-chip--bar {
     flex-direction: column;

@@ -87,7 +87,7 @@ test.describe('Buchung', () => {
   for (const lang of LOCALES) {
     test(`kompletter Weg Startseite → Leistung → Preis → Buchung → .ics (${lang})`, async ({ page, watch }) => {
       await page.goto(routes.home.path[lang]);
-      await page.locator('.service-card__link').first().click();
+      await page.locator('.sx__row').first().click();
       await expect(page).toHaveURL(new RegExp(routes.svcNails.path[lang]));
       await page.locator('.svc-hero a[href="#prices"]').click();
       await expect(page.locator('#prices')).toBeInViewport();
@@ -372,11 +372,26 @@ test.describe('Galerie', () => {
     await page.goto('/galerie/');
     const items = page.locator('[data-gallery] li');
     const total = await items.count();
-    await page.locator('.segmented__opt:has(input[value="pedicure"])').click();
-    const shown = await page.locator('[data-gallery] li:not([hidden])').count();
-    expect(shown).toBeLessThan(total);
-    await expect(page.locator('[data-filter-status]')).toHaveText(new RegExp(`${shown}`));
-    await page.locator('.segmented__opt:has(input[value="all"])').click();
+    if (await page.locator('.gallery-filter').isVisible()) {
+      // Desktop/Tablet: Segmented Control filtert das Mosaik
+      await page.locator('.segmented__opt:has(input[value="pedicure"])').click();
+      const shown = await page.locator('[data-gallery] li:not([hidden])').count();
+      expect(shown).toBeLessThan(total);
+      await expect(page.locator('[data-filter-status]')).toHaveText(new RegExp(`${shown}`));
+      await page.locator('.segmented__opt:has(input[value="all"])').click();
+    } else {
+      // Mobil: je Bereich ein horizontal scrollbarer Streifen mit Scroll-Snap
+      const scrollers = page.locator('.gal__scroller');
+      await expect(scrollers).toHaveCount(4);
+      const s0 = scrollers.first();
+      const can = await s0.evaluate((el) => el.scrollWidth > el.clientWidth + 50 && getComputedStyle(el).scrollSnapType.includes('x'));
+      expect(can, 'Streifen scrollt horizontal mit Scroll-Snap').toBe(true);
+      await s0.evaluate((el) => el.scrollBy({ left: 400, behavior: 'instant' as ScrollBehavior }));
+      expect(await s0.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
+      await s0.evaluate((el) => el.scrollTo({ left: 0, behavior: 'instant' as ScrollBehavior }));
+      // Seite selbst scrollt nicht horizontal
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    }
 
     const first = page.locator('[data-gallery] button').first();
     await first.click();

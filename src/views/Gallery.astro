@@ -81,7 +81,7 @@ const groups = groupTags.map((tag) => ({
               <h2 class="gal__title" id={`gal-${g.tag}`}>
                 {p.filters[g.tag]} <span class="gal__count">{g.items.length}</span>
               </h2>
-              <div class="gal__scroller" role="region" aria-labelledby={`gal-${g.tag}`} tabindex="0">
+              <div class="gal__scroller" role="group" aria-labelledby={`gal-${g.tag}`} tabindex="0">
                 <ul class="gal__list" role="list">
                   {g.items.map((x) => (
                     <li class:list={['grid__item', `grid__item--${x.shape}`]} data-tag={x.tag}>
@@ -227,6 +227,7 @@ const groups = groupTags.map((tag) => ({
 
 <style>
   .gallery-section {
+    position: relative;
     padding-bottom: var(--section-y);
   }
 
@@ -304,11 +305,12 @@ const groups = groupTags.map((tag) => ({
     }
     .gal__title {
       position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
+      left: 0;
+      top: 0;
+      margin: 0;
       clip-path: inset(50%);
       white-space: nowrap;
+      pointer-events: none;
     }
     .gal__list .grid__item {
       width: auto;

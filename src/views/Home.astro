@@ -156,7 +156,7 @@ const strip: { name: string; ratio: string; pos?: string }[] = [
         </div>
         <a class="link-arrow" href={href('gallery', lang)}>{d.cta.gallery}<Icon name="arrow-right" /></a>
       </div>
-      <div class="strip" role="region" aria-label={h.gallery.title} tabindex="0">
+      <div class="strip" role="group" aria-label={h.gallery.text} tabindex="0">
         <ul class="mosaic" role="list">
           {
             strip.map((x, i) => (
@@ -232,7 +232,7 @@ const strip: { name: string; ratio: string; pos?: string }[] = [
     background: var(--c-paper);
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
-    padding: 0 0.14em 0.02em 0;
+    box-shadow: 0.14em 0 0 var(--c-paper);
   }
   .hero__lead {
     margin-top: var(--s-5);
@@ -263,8 +263,9 @@ const strip: { name: string; ratio: string; pos?: string }[] = [
       margin-top: calc(-0.62 * var(--fs-display));
     }
     .hero__title .hl {
-      padding-left: var(--gutter);
-      margin-left: calc(-1 * var(--gutter));
+      box-shadow:
+        calc(-1 * var(--gutter)) 0 0 var(--c-paper),
+        0.14em 0 0 var(--c-paper);
     }
   }
   @media (min-width: 1024px) {

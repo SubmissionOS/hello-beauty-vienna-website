@@ -38,6 +38,7 @@ export const hu: Dict = {
     contact: 'Kapcsolat',
     faq: 'GYIK',
     book: 'Időpontfoglalás',
+    bookShort: 'Foglalás',
     call: 'Hívás',
   },
   units: {

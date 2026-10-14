@@ -38,6 +38,7 @@ export const en: Dict = {
     contact: 'Contact',
     faq: 'FAQ',
     book: 'Book now',
+    bookShort: 'Book',
     call: 'Call',
   },
   units: {

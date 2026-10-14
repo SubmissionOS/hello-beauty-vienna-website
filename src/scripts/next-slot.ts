@@ -55,7 +55,8 @@ async function load(first: HTMLAnchorElement): Promise<void> {
     set(`${day} · ${hhmm(minutes)}`, short, href, aria);
   } catch {
     // Kein Slot oder API nicht erreichbar: Chip bleibt ein Link in die Buchung
-    set(L.fallback, L.fallback);
+    set(L.fallback, '');
+    for (const c of chips) if (c.dataset.variant === 'bar') c.hidden = true;
   }
 }
 

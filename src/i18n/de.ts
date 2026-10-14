@@ -39,6 +39,7 @@ export const de = {
     contact: 'Kontakt',
     faq: 'FAQ',
     book: 'Termin buchen',
+    bookShort: 'Buchen',
     call: 'Anrufen',
   },
   units: {

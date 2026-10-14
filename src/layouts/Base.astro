@@ -14,7 +14,6 @@ import { t } from '../i18n';
 import { image } from '../data/images';
 import { abs, graph, salonNode, websiteNode, webPageNode } from '../lib/schema';
 import { demoMode } from '../lib/env';
-import displayFont from '../assets/fonts/gloock-latin.woff2?url';
 
 interface Props {
   lang: Lang;
@@ -66,7 +65,6 @@ const nodes = [
     {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
     {routeKey && <link rel="alternate" hreflang="x-default" href={abs(routes[routeKey].path.de)} />}
 
-    <link rel="preload" as="font" type="font/woff2" href={displayFont} crossorigin="anonymous" />
     {preloadImage && <link rel="preload" as="image" href={preloadImage.href} imagesrcset={preloadImage.srcset} imagesizes={preloadImage.sizes} type={preloadImage.type} fetchpriority="high" />}
 
     <meta name="theme-color" content="#fbf9f4" />

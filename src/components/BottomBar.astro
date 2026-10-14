@@ -16,7 +16,8 @@ const d = t(lang);
   <SlotChip lang={lang} variant="bar" />
   <a class="btn bottom-bar__book" href={href('booking', lang)}>
     <Icon name="calendar" />
-    {d.nav.book}
+    <span class="bottom-bar__long">{d.nav.book}</span>
+    <span class="bottom-bar__short">{d.nav.bookShort}</span>
   </a>
   <a class="bottom-bar__call" href={`tel:${site.phoneE164}`} aria-label={`${d.nav.call}: ${site.phone}`}>
     <Icon name="phone" />
@@ -46,9 +47,17 @@ const d = t(lang);
     min-width: 0;
     padding-inline: 12px;
   }
+  .bottom-bar__short {
+    display: none;
+  }
+  /* Schmal: Kurzlabel ohne Symbol, damit Termin-Chip und Anruf-Knopf Platz haben */
   @media (max-width: 399px) {
-    .bottom-bar__book :global(svg) {
+    .bottom-bar__book :global(svg),
+    .bottom-bar__long {
       display: none;
+    }
+    .bottom-bar__short {
+      display: inline;
     }
   }
 
