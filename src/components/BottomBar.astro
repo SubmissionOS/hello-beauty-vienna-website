@@ -4,6 +4,7 @@ import { href } from '../i18n/routes';
 import type { Lang } from '../i18n/config';
 import { t } from '../i18n';
 import { site } from '../data/site';
+import SlotChip from './SlotChip.astro';
 
 interface Props {
   lang: Lang;
@@ -12,6 +13,7 @@ const { lang } = Astro.props;
 const d = t(lang);
 ---
 <div class="bottom-bar" data-bottom-bar role="region" aria-label={d.a11y.quickActions}>
+  <SlotChip lang={lang} variant="bar" />
   <a class="btn bottom-bar__book" href={href('booking', lang)}>
     <Icon name="calendar" />
     {d.nav.book}
@@ -34,21 +36,6 @@ const d = t(lang);
     transition: transform var(--dur-2) var(--ease-out);
   }
 
-  @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-    .bottom-bar {
-      background: color-mix(in srgb, var(--c-paper) 82%, transparent);
-      -webkit-backdrop-filter: saturate(180%) blur(20px);
-      backdrop-filter: saturate(180%) blur(20px);
-    }
-  }
-
-  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
-    .bottom-bar {
-      background: var(--c-paper);
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
-    }
-  }
 
   .bottom-bar:global(.is-hidden) {
     transform: translateY(110%);
@@ -56,6 +43,13 @@ const d = t(lang);
 
   .bottom-bar__book {
     flex: 1;
+    min-width: 0;
+    padding-inline: 12px;
+  }
+  @media (max-width: 399px) {
+    .bottom-bar__book :global(svg) {
+      display: none;
+    }
   }
 
   .bottom-bar__call {

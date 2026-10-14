@@ -538,6 +538,16 @@ export const en: Dict = {
       stiletto: { name: 'Stiletto', text: 'Long and sharply tapered – the most dramatic shape. For special occasions and anyone who wants to stand out.', daily: 'Everyday: demanding – the tip is delicate.' },
     },
   },
+  nextSlot: {
+    loading: 'Free slots …',
+    today: 'Free today',
+    tomorrow: 'Free tomorrow',
+    on: 'Free {day}',
+    fallback: 'Free slots',
+    demo: 'Demo',
+    label: 'Next free appointment for {service}: {when}',
+    demoNote: 'demo data',
+  },
   pricesPage: {
     title: 'Prices: Nail & Beauty Salon Vienna | Hello Beauty',
     description:
@@ -745,6 +755,7 @@ export const en: Dict = {
       tooLong: 'Together, your treatments take more than {h} hours. Please split them across two appointments or give us a call.',
       remove: 'Remove {service}',
       preselected: 'Preselected: {service}',
+      preselectedSlot: 'Preselected: {service} – {when}. You can still change everything.',
       estimate: 'Durations marked “approx.” are a guide for this demo.',
     },
     staff: {

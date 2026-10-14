@@ -7,6 +7,7 @@ import VisitCard from '../components/VisitCard.astro';
 import FaqList from '../components/FaqList.astro';
 import CtaBand from '../components/CtaBand.astro';
 import NailShapes from '../components/NailShapes.astro';
+import SlotChip from '../components/SlotChip.astro';
 import { href } from '../i18n/routes';
 import type { Lang } from '../i18n/config';
 import { LANG_META } from '../i18n/config';
@@ -56,6 +57,7 @@ const strip: { name: string; ratio: string; pos?: string }[] = [
           <Icon name="calendar" />
           {d.cta.bookNow}
         </a>
+        <SlotChip lang={lang} />
       </div>
     </div>
     <div class="container">

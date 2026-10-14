@@ -539,6 +539,16 @@ export const de = {
       stiletto: { name: 'Stiletto', text: 'Lang und spitz zulaufend – die dramatischste Form. Für besondere Anlässe und alle, die auffallen möchten.', daily: 'Alltag: anspruchsvoll – die Spitze ist empfindlich.' },
     },
   },
+  nextSlot: {
+    loading: 'Freie Termine …',
+    today: 'Heute frei',
+    tomorrow: 'Morgen frei',
+    on: '{day} frei',
+    fallback: 'Freie Termine',
+    demo: 'Demo',
+    label: 'Nächster freier Termin für {service}: {when}',
+    demoNote: 'Demo-Daten',
+  },
   pricesPage: {
     title: 'Preise Nagelstudio & Kosmetik Wien 1060 | Hello Beauty',
     description:
@@ -746,6 +756,7 @@ export const de = {
       tooLong: 'Die gewählten Leistungen dauern zusammen über {h} Stunden. Bitte buchen Sie diese auf zwei Termine verteilt oder rufen Sie uns an.',
       remove: '{service} entfernen',
       preselected: 'Vorausgewählt: {service}',
+      preselectedSlot: 'Vorausgewählt: {service} – {when}. Sie können alles noch ändern.',
       estimate: 'Dauer mit „ca.“ ist ein Richtwert für die Demo.',
     },
     staff: {

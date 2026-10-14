@@ -1,0 +1,132 @@
+---
+/**
+ * Signature-Moment 3: Chip „Nächster freier Termin“. Inhalt kommt live aus der Buchungs-API
+ * (scripts/next-slot.ts). Ohne JavaScript: Link in die Buchung mit neutralem Text.
+ */
+import { href } from '../i18n/routes';
+import type { Lang } from '../i18n/config';
+import { LANG_META } from '../i18n/config';
+import { t } from '../i18n';
+import { service } from '../data/services';
+import { isDemo } from '../lib/booking';
+
+interface Props {
+  lang: Lang;
+  variant?: 'hero' | 'bar';
+}
+const { lang, variant = 'hero' } = Astro.props;
+const d = t(lang);
+const n = d.nextSlot;
+// Kürzeste Standardbehandlung als Referenz für „nächster freier Termin“
+const SERVICE = 'gel-polish';
+const serviceName = service(SERVICE).name[lang];
+const labels = { today: n.today, tomorrow: n.tomorrow, on: n.on, fallback: n.fallback, label: n.label, demoNote: n.demoNote };
+---
+<a
+  class:list={['slot-chip', `slot-chip--${variant}`]}
+  href={href('booking', lang)}
+  data-slot-chip
+  data-service={SERVICE}
+  data-service-name={serviceName}
+  data-intl={LANG_META[lang].intl}
+  data-variant={variant}
+  data-labels={JSON.stringify(labels)}
+>
+  <span class="slot-chip__dot" aria-hidden="true"></span>
+  <span class="slot-chip__text" data-slot-text>{n.loading}</span>
+  {isDemo && <span class="slot-chip__demo">{n.demo}</span>}
+</a>
+
+<script>
+  import '../scripts/next-slot';
+</script>
+
+<style>
+  .slot-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: var(--tap);
+    padding: 0 14px 0 12px;
+    border: 1px solid var(--c-line-strong);
+    border-radius: var(--r-pill);
+    background: var(--c-white);
+    color: var(--c-ink);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums lining-nums;
+    text-decoration: none;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      border-color var(--dur-1) var(--ease-out),
+      transform var(--dur-1) var(--ease-out);
+  }
+  .slot-chip:active {
+    transform: scale(0.97);
+  }
+  @media (hover: hover) {
+    .slot-chip:hover {
+      border-color: var(--c-ink);
+      color: var(--c-ink);
+    }
+  }
+  /* Platz für den längsten Text reservieren, damit beim Laden nichts springt */
+  .slot-chip__text {
+    min-width: 9.5em;
+  }
+  .slot-chip__dot {
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--c-line-strong);
+  }
+  .slot-chip[data-state='ready'] .slot-chip__dot {
+    background: var(--c-success);
+    box-shadow: 0 0 0 3px var(--c-success-bg);
+  }
+  .slot-chip__demo {
+    padding: 1px 6px;
+    border-radius: var(--r-pill);
+    background: var(--c-cream);
+    color: var(--c-ink-muted);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* Aktionsleiste: kompakt */
+  .slot-chip--bar {
+    gap: 6px;
+    padding: 0 10px;
+    font-size: 0.8125rem;
+  }
+  .slot-chip--bar .slot-chip__text {
+    min-width: 0;
+    width: 6.4em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .slot-chip--bar {
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0;
+    padding: 0 12px 0 22px;
+    position: relative;
+    line-height: 1.15;
+  }
+  .slot-chip--bar .slot-chip__dot {
+    position: absolute;
+    left: 9px;
+    top: 50%;
+    margin-top: -4px;
+  }
+  .slot-chip--bar .slot-chip__demo {
+    padding: 0;
+    background: none;
+    font-size: 0.625rem;
+  }
+</style>

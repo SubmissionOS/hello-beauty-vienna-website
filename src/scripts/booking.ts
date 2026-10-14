@@ -116,6 +116,19 @@ export function initBooking(): void {
     const q = params.toString();
     history.replaceState(null, '', `${location.pathname}${q ? `?${q}` : ''}`);
   }
+  // ?termin=<ISO> (Chip „Nächster freier Termin“): Tag vormerken, der Slot wird beim Start gegen die API geprüft
+  const preSlot = pre && preInput ? params.get('termin') : null;
+  if (params.has('termin')) {
+    params.delete('termin');
+    const q = params.toString();
+    history.replaceState(null, '', `${location.pathname}${q ? `?${q}` : ''}`);
+  }
+  if (preSlot) {
+    const day = splitDateTime(preSlot).date;
+    s.date = day;
+    s.month = day.slice(0, 7);
+    s.maxStep = 4;
+  }
   // ?notiz=… (z. B. Nagelform aus dem Form-Wähler) landet im Notizfeld
   const preNote = params.get('notiz');
   if (preNote) {
@@ -962,5 +975,23 @@ export function initBooking(): void {
   if (start >= 4 && !s.date) start = 3;
   history.replaceState({ step: start }, '', `${location.pathname}${location.search}#step-${start}`);
   show(start, { focus: false, push: false });
+  if (preSlot && preInput) {
+    void (async () => {
+      try {
+        const res = await bk.getAvailability({ serviceIds: s.services, date: s.date!, staffId: null });
+        const hit = res.days.flatMap((x) => x.slots).find((x) => x.start === preSlot);
+        if (!hit) return;
+        s.slot = hit;
+        s.maxStep = Math.max(s.maxStep, 5);
+        save();
+        $('span', $('[data-preselected]')).textContent = fmt(B.service.preselectedSlot, {
+          service: preInput.dataset.name ?? '',
+          when: `${dateLong(hit.start.slice(0, 10))}, ${time(hit.start)}`,
+        });
+      } catch {
+        // Slot nicht prüfbar: Tag bleibt vorgemerkt, die Uhrzeit wählt man in Schritt 4
+      }
+    })();
+  }
   root.dataset.ready = '';
 }

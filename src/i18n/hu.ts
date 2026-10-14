@@ -538,6 +538,16 @@ export const hu: Dict = {
       stiletto: { name: 'Stiletto', text: 'Hosszú, hegyesen elvékonyodó – a legdrámaibb forma. Különleges alkalmakra és mindenkinek, aki feltűnő szeretne lenni.', daily: 'Hétköznap: igényes – a csúcs érzékeny.' },
     },
   },
+  nextSlot: {
+    loading: 'Szabad időpontok …',
+    today: 'Ma szabad',
+    tomorrow: 'Holnap szabad',
+    on: '{day} szabad',
+    fallback: 'Szabad időpontok',
+    demo: 'Demó',
+    label: 'Következő szabad időpont ({service}): {when}',
+    demoNote: 'demóadatok',
+  },
   pricesPage: {
     title: 'Árak – körömszalon és kozmetika Bécs | Hello Beauty',
     description:
@@ -745,6 +755,7 @@ export const hu: Dict = {
       tooLong: 'A kiválasztott kezelések együtt több mint {h} órát vesznek igénybe. Kérjük, oszd el őket két időpontra, vagy hívj fel minket.',
       remove: '{service} eltávolítása',
       preselected: 'Előre kiválasztva: {service}',
+      preselectedSlot: 'Előre kiválasztva: {service} – {when}. Mindent módosíthatsz még.',
       estimate: 'A „kb.” jelölésű időtartam a demóhoz használt irányérték.',
     },
     staff: {
