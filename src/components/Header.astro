@@ -90,7 +90,6 @@ const links: { key: RouteKey; label: string }[] = [
     <div class="site-header__actions">
       <button type="button" class="lang-btn" data-open="lang-sheet" aria-haspopup="dialog" aria-label={`${d.a11y.chooseLanguage} – ${d.a11y.currentLanguage}`}>
         <img src={`/flags/${flag}.svg`} alt="" width="20" height="14" class="flag" />
-        <span class="lang-btn__label" aria-hidden="true">{LANG_META[lang].short}</span>
         <span class="lang-btn__name" aria-hidden="true">{LANG_META[lang].label}</span>
         <Icon name="chevron-down" size={14} class="lang-btn__chev" />
       </button>
@@ -204,10 +203,6 @@ const links: { key: RouteKey; label: string }[] = [
     object-fit: cover;
   }
 
-  .lang-btn__name {
-    display: none;
-  }
-
   .header-book {
     display: none;
   }
@@ -222,12 +217,6 @@ const links: { key: RouteKey; label: string }[] = [
     }
     .header-book {
       display: inline-flex;
-    }
-    .lang-btn__label {
-      display: none;
-    }
-    .lang-btn__name {
-      display: inline;
     }
     .desk-nav {
       display: block;

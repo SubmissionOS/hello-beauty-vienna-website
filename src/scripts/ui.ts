@@ -229,9 +229,17 @@ if (reveals.length && 'IntersectionObserver' in window && !reduced()) {
 }
 
 /* ---------------- Sprache merken ---------------- */
+// Die Wahl gilt für die Sitzung; keine automatische Umleitung. Genutzt dort, wo die Seite die Sprache nicht
+// aus der Adresse kennt (Fehlerseite unter /404.html): der Rückweg führt zur Startseite der gewählten Sprache.
 document.querySelectorAll<HTMLAnchorElement>('[data-lang-link]').forEach((a) =>
   a.addEventListener('click', () => store.set('hb-lang', a.dataset.langLink ?? '')),
 );
+const remembered = store.get('hb-lang');
+const homeLink = document.querySelector<HTMLAnchorElement>('[data-home-link]');
+if (homeLink && (remembered === 'en' || remembered === 'hu') && document.documentElement.lang.startsWith('de')) {
+  homeLink.href = `/${remembered}/`;
+  homeLink.lang = remembered;
+}
 
 /* ---------------- Adresse kopieren ---------------- */
 document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {

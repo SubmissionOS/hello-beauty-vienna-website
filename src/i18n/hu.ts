@@ -749,6 +749,7 @@ export const hu: Dict = {
       today: 'ma',
       selected: 'kiválasztva',
       loading: 'A szabad időpontok betöltése …',
+      error: 'Nem sikerült betölteni a szabad napokat.',
       gridLabel: 'Naptár: {month}',
       keyboard: 'A nyílbillentyűkkel válthatsz a napok között, a Page Up és Page Down billentyű hónapot vált.',
     },

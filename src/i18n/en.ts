@@ -749,6 +749,7 @@ export const en: Dict = {
       today: 'today',
       selected: 'selected',
       loading: 'Loading availability …',
+      error: 'We couldn’t load availability.',
       gridLabel: 'Calendar {month}',
       keyboard: 'Use the arrow keys to move between days; Page Up and Page Down change the month.',
     },

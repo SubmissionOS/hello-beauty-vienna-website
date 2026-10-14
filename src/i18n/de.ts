@@ -750,6 +750,7 @@ export const de = {
       today: 'heute',
       selected: 'ausgewählt',
       loading: 'Verfügbarkeit wird geladen …',
+      error: 'Die Verfügbarkeit konnte nicht geladen werden.',
       gridLabel: 'Kalender {month}',
       keyboard: 'Mit den Pfeiltasten zwischen Tagen wechseln, Bild auf/ab wechselt den Monat.',
     },

@@ -77,11 +77,17 @@ for (const lang of LOCALES) {
     await page.locator('#st7').waitFor();
     await shot('buchung-7-bestaetigung');
 
-    // Fehlerzustand Uhrzeiten
+    // Fehlerzustand Kalender (Schalter lässt die nächste Anfrage scheitern) und Erneut versuchen
     await page.goto(`${B}?leistung=gel-polish&demo=network`);
     await page.locator('[data-next]').click();
     await page.locator('[data-next]').click();
+    await page.locator('[data-cal-retry]').waitFor();
+    await shot('buchung-3-fehler');
+    await page.locator('[data-cal-retry]').click();
     await page.locator('.day.is-available').first().click();
+    // Fehlerzustand Uhrzeiten
+    await page.locator('[data-devtools]').evaluate((d: HTMLDetailsElement) => (d.open = true));
+    await page.locator('label.check:has([data-dev="failNext"])').click();
     await page.locator('[data-next]').click();
     await page.locator('[data-slots] [role="alert"]').waitFor();
     await shot('buchung-4-fehler');
@@ -114,6 +120,11 @@ for (const lang of LOCALES) {
     await page.locator('[data-next]').click();
     await page.locator('.slot').first().click();
     await page.locator('[data-next]').click();
+    await page.fill('#bk-name', 'Maria Muster');
+    await page.fill('#bk-phone', '+43 660 1234567');
+    await page.fill('#bk-email', 'maria@example.com');
+    await page.locator('label.check:has(input[name="terms"])').click();
+    if (await page.locator('[data-early]').isVisible()) await page.locator('[data-early] label.check').click();
     await page.locator('[data-next]').click();
     await page.locator('[data-submit]').click();
     await page.locator('[role="alert"].notice--error').first().waitFor();

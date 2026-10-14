@@ -62,6 +62,16 @@ export function initBooking(): void {
     window.setTimeout(() => (live.textContent = msg), 30);
   };
 
+  // Demo-Schalter werden vom Mock nach Gebrauch zurückgesetzt – Checkboxen danach angleichen
+  const syncDev = () =>
+    document.querySelectorAll<HTMLInputElement>('[data-dev]').forEach((cb) => {
+      cb.checked = mockControls.get()[cb.dataset.dev as 'failNext' | 'conflictNext'];
+    });
+  const bk = {
+    getAvailability: (q: Parameters<typeof api.getAvailability>[0]) => api.getAvailability(q).finally(syncDev),
+    createBooking: (r: Parameters<typeof api.createBooking>[0]) => api.createBooking(r).finally(syncDev),
+  };
+
   const today = viennaNow().date;
   const newKey = () => (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`);
   const blank = (): Draft => ({
@@ -109,6 +119,12 @@ export function initBooking(): void {
   const demo = params.get('demo');
   if (isDemo && demo === 'network') mockControls.set({ failNext: true });
   if (isDemo && demo === 'conflict') mockControls.set({ conflictNext: true });
+  if (demo) {
+    // einmalig anwenden – nach dem Neuladen nicht erneut auslösen
+    params.delete('demo');
+    const q = params.toString();
+    history.replaceState(null, '', `${location.pathname}${q ? `?${q}` : ''}${location.hash}`);
+  }
 
   /* ---------------- Formatierung ---------------- */
   const euro = (n: number) =>
@@ -338,7 +354,7 @@ export function initBooking(): void {
     const hit = monthCache.get(key);
     if (hit) return hit;
     const [y, m] = month.split('-').map(Number) as [number, number];
-    const res = await api.getAvailability({
+    const res = await bk.getAvailability({
       serviceIds: s.services,
       from: toIsoDate(y, m, 1),
       to: toIsoDate(y, m, daysInMonth(y, m)),
@@ -372,8 +388,10 @@ export function initBooking(): void {
       if (token !== calToken) return;
       calGrid.setAttribute('aria-busy', 'false');
       draw({}, false);
-      showError(B.time.error);
+      showError(B.date.error);
+      $$('[data-cal-retry]').forEach((x) => x.remove());
       const retry = document.createElement('button');
+      retry.dataset.calRetry = '';
       retry.type = 'button';
       retry.className = 'btn btn--secondary btn--sm';
       retry.textContent = B.time.retry;
@@ -531,7 +549,7 @@ export function initBooking(): void {
     slotsBox.append(loading, sk);
     announce(B.time.loading);
     try {
-      const res = await api.getAvailability({ serviceIds: s.services, date: s.date, staffId: s.staff || null });
+      const res = await bk.getAvailability({ serviceIds: s.services, date: s.date, staffId: s.staff || null });
       if (token !== slotToken) return;
       const day = res.days[0];
       slotsBox.setAttribute('aria-busy', 'false');
@@ -793,7 +811,7 @@ export function initBooking(): void {
     submit.textContent = B.payment.submitting;
     submitErr.hidden = true;
     try {
-      const booking = await api.createBooking({
+      const booking = await bk.createBooking({
         serviceIds: s.services,
         staffId: s.staff || null,
         start: s.slot.start,
