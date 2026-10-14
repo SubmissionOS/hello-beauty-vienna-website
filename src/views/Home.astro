@@ -231,9 +231,6 @@ const strip = ['salon-innenraum-ueberblick', 'naegel-rot-blumendesign', 'pedikue
     pointer-events: none;
   }
   @media (max-width: 1023px) {
-    .hero__media {
-      max-width: 560px;
-    }
     .hero__media :global(.img) {
       aspect-ratio: 4 / 3 !important;
     }
@@ -293,11 +290,14 @@ const strip = ['salon-innenraum-ueberblick', 'naegel-rot-blumendesign', 'pedikue
     }
   }
   @media (max-width: 1023px) {
-    .why__media {
-      max-width: 520px;
-    }
     .why__media :global(.img) {
       aspect-ratio: 3 / 2 !important;
+    }
+  }
+  @media (min-width: 640px) and (max-width: 1023px) {
+    .hero__media :global(.img),
+    .why__media :global(.img) {
+      aspect-ratio: 16 / 9 !important;
     }
   }
   .why__list {

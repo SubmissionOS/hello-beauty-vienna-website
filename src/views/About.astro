@@ -149,8 +149,14 @@ const salon = ['salon-innenraum-ueberblick', 'salon-kosmetikraum-liege', 'salon-
     gap: var(--s-3);
     grid-template-columns: repeat(2, 1fr);
   }
-  .salon-grid li:first-child {
+  .salon-grid li:first-child,
+  .salon-grid li:last-child {
     grid-column: 1 / -1;
+  }
+  @media (max-width: 1023px) {
+    .salon-grid li:last-child :global(.img) {
+      aspect-ratio: 2 / 1 !important;
+    }
   }
   @media (min-width: 1024px) {
     .salon-grid {

@@ -4,7 +4,7 @@ import { href, type RouteKey } from '../i18n/routes';
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 const TOKEN =
-  /\[\[([^\]|]+)\|([a-zA-Z]+)(#[a-z0-9-]+)?\]\]|(\[(?:PLATZHALTER|PLACEHOLDER|HELYŐRZŐ)[^\]]*\])|([\w.+-]+@[\w-]+(?:\.[\w-]+)+)|(https:\/\/[^\s,;)]+[^\s,;).])|(\+43 [\d ]{6,}\d)/g;
+  /\[\[([^\]|]+)\|([a-zA-Z]+)(#[a-z0-9-]+)?\]\]|(\[(?:PLATZHALTER|PLACEHOLDER|HELYŐRZŐ)[^\]]*\])|([\w.+-]+@[\w-]+(?:\.[\w-]+)+)|(https:\/\/[^\s,;)]+[^\s,;).])|(\+43 [\d ]{6,}\d(?:-\d+)?)/g;
 
 /**
  * Wandelt einen Text in sicheres HTML um: interne Links [[Text|routeKey]], E-Mail, https-URL und

@@ -81,13 +81,10 @@ const d = t(lang);
     }
   }
 
-  :global(body.has-bar) {
-    padding-bottom: calc(var(--bar-h) + var(--safe-bottom));
-  }
-
-  @media (min-width: 1024px) {
-    :global(body.has-bar) {
-      padding-bottom: 0;
+  /* Platz für die Leiste: im dunklen Footer statt als heller Streifen unter der Seite */
+  @media (max-width: 1023px) {
+    :global(body.has-bar .site-footer) {
+      padding-bottom: calc(var(--s-6) + var(--bar-h) + var(--safe-bottom));
     }
   }
 </style>

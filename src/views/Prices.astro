@@ -48,7 +48,7 @@ const schema = categories.map((c) =>
     </div>
   </nav>
 
-  <div class="container container--narrow price-page">
+  <div class="container price-page">
     {
       categories.map((c) => (
         <section class="price-cat" id={c.id} aria-labelledby={`${c.id}-title`}>
@@ -130,6 +130,9 @@ const schema = categories.map((c) =>
     padding-block: var(--s-7) var(--s-4);
     display: grid;
     gap: var(--s-9);
+  }
+  .price-page > * {
+    max-width: 52rem;
   }
   .price-cat {
     scroll-margin-top: calc(var(--header-h) + var(--safe-top) + 80px);

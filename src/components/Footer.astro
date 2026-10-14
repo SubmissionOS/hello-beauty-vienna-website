@@ -41,9 +41,8 @@ const year = new Date().getFullYear();
       </address>
       <p class="site-footer__hours">
         <span>{d.hours.weekdays}</span>
-        <span class="tabular">{d.hours.weekdaysTime}</span>
-        <span>{d.hours.sunday}</span>
-        <span>{d.hours.closed}</span>
+        <span class="tabular site-footer__time">{d.hours.weekdaysTime}</span>
+        <span>{d.hours.sunday} {d.hours.closed}</span>
       </p>
       <p class="site-footer__contact">
         <a href={`tel:${site.phoneE164}`} class="tabular">{site.phone}</a>
@@ -181,11 +180,14 @@ const year = new Date().getFullYear();
 
   .site-footer__hours {
     display: grid;
-    grid-template-columns: auto auto;
-    justify-content: start;
-    gap: 2px var(--s-4);
+    gap: 2px;
     margin-top: var(--s-2);
     color: var(--c-on-dark-muted);
+  }
+
+  .site-footer__time {
+    color: var(--c-on-dark);
+    margin-bottom: var(--s-2);
   }
 
   .site-footer__contact {

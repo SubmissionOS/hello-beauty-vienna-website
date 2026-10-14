@@ -44,7 +44,11 @@ for (const lang of LOCALES) {
   test(`Screenshots Zustände ${lang}`, async ({ page }, info) => {
     test.skip(!wanted(info), 'Chromium alle Geräte, WebKit iPhone 15');
     const dir = dirFor(info, lang);
-    const shot = (name: string) => page.screenshot({ path: path.join(dir, `zustand-${name}.png`), animations: 'disabled' });
+    const shot = async (name: string) => {
+      // warten, bis sanftes Scrollen abgeschlossen ist
+      await page.waitForFunction(() => new Promise<boolean>((r) => { const y = scrollY; setTimeout(() => r(Math.abs(scrollY - y) < 1), 200); }), null, { timeout: 5000 }).catch(() => undefined);
+      await page.screenshot({ path: path.join(dir, `zustand-${name}.png`), animations: 'disabled' });
+    };
     const B = routes.booking.path[lang];
 
     // Buchungsschritte

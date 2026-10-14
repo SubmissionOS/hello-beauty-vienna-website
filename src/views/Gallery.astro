@@ -213,6 +213,7 @@ const items = await Promise.all(
     border-radius: var(--r-pill);
     background: var(--c-cream);
     max-width: 100%;
+    min-width: 0;
   }
   .segmented[hidden] {
     display: none;
@@ -220,9 +221,15 @@ const items = await Promise.all(
   @media (max-width: 559px) {
     .segmented {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      border-radius: var(--r-lg);
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(max-content, 1fr);
+      gap: 2px;
       width: 100%;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .segmented::-webkit-scrollbar {
+      display: none;
     }
   }
   .segmented__opt {
@@ -254,8 +261,8 @@ const items = await Promise.all(
   }
   @media (max-width: 559px) {
     .segmented__opt span {
-      min-height: var(--tap);
-      border-radius: var(--r-md);
+      padding: 0 10px;
+      font-size: 0.875rem;
     }
   }
   .segmented__opt input:checked + span {

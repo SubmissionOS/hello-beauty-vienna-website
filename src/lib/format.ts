@@ -8,7 +8,8 @@ export function euro(n: number, lang: Lang): string {
     minimumFractionDigits: Number.isInteger(n) ? 0 : 2,
     maximumFractionDigits: 2,
   }).format(n);
-  return `${s}\u00a0€`;
+  // Englisch: Symbol vorangestellt (€56), Deutsch/Ungarisch: nachgestellt (56 €)
+  return lang === 'en' ? `€${s}` : `${s}\u00a0€`;
 }
 
 export function priceLabel(x: Service, lang: Lang): string {

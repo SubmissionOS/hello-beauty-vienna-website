@@ -127,8 +127,10 @@ export function initBooking(): void {
   }
 
   /* ---------------- Formatierung ---------------- */
-  const euro = (n: number) =>
-    `${new Intl.NumberFormat(D.intl, { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 }).format(n)}\u00a0€`;
+  const euro = (n: number) => {
+    const s = new Intl.NumberFormat(D.intl, { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 }).format(n);
+    return D.lang === 'en' ? `€${s}` : `${s}\u00a0€`;
+  };
   const dur = (min: number) => {
     const h = Math.floor(min / 60);
     const m = min % 60;
@@ -297,8 +299,12 @@ export function initBooking(): void {
     announce(`${fmt(B.progress, { current: n, total: TOTAL })}: ${B.steps[n - 1]}`);
     if (focus) {
       h.focus({ preventScroll: true });
-      const top = root.getBoundingClientRect().top + window.scrollY - 80;
-      if (window.scrollY > top) window.scrollTo({ top, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      // Überschrift des neuen Schritts direkt unter die klebende Fortschrittsleiste bringen (wie ein iOS-Seitenwechsel)
+      const barBottom = $('.flow__bar').getBoundingClientRect().bottom;
+      const delta = h.getBoundingClientRect().top - barBottom - 12;
+      if (delta < 0 || delta > window.innerHeight * 0.35) {
+        window.scrollTo({ top: Math.max(0, window.scrollY + delta), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      }
     }
   }
 
@@ -822,6 +828,12 @@ export function initBooking(): void {
         idempotencyKey: s.idem,
       });
       s.done = booking;
+      // Datenminimierung: Kontaktdaten werden nach der Buchung im Browser nicht weiter vorgehalten
+      s.name = '';
+      s.phone = '';
+      s.email = '';
+      s.note = '';
+      form.reset();
       save();
       show(7);
     } catch (err) {

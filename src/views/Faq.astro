@@ -20,7 +20,7 @@ const schema = [faqNode(abs(href('faq', lang)), all, plainText)];
 ---
 <Base lang={lang} routeKey="faq" title={p.title} description={p.description} crumbs={crumbs} schema={schema} pageType="FAQPage">
   <PageHeader lang={lang} eyebrow={p.eyebrow} title={p.h1} lead={p.lead} crumbs={crumbs} />
-  <div class="container container--narrow faq-page">
+  <div class="container faq-page">
     {
       p.groups.map((g, i) => (
         <section aria-labelledby={`faq-g${i}`}>
@@ -40,6 +40,9 @@ const schema = [faqNode(abs(href('faq', lang)), all, plainText)];
     display: grid;
     gap: var(--s-7);
     padding-bottom: var(--s-4);
+  }
+  .faq-page > section {
+    max-width: 48rem;
   }
   .faq-group__title {
     font-size: var(--fs-h3);
