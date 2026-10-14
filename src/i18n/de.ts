@@ -39,6 +39,7 @@ export const de = {
     contact: 'Kontakt',
     faq: 'FAQ',
     book: 'Termin buchen',
+    login: 'Anmelden',
     bookShort: 'Buchen',
     call: 'Anrufen',
   },
@@ -549,6 +550,10 @@ export const de = {
     demo: 'Demo',
     label: 'Nächster freier Termin für {service}: {when}',
     demoNote: 'Demo-Daten',
+  },
+  portal: {
+    title: 'Kundenportal – bald verfügbar',
+    text: 'Die Anmeldung zum Kundenportal ist in dieser Demo noch nicht aktiv.',
   },
   pricesPage: {
     title: 'Preise Nagelstudio & Kosmetik Wien 1060 | Hello Beauty',

@@ -7,6 +7,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BottomBar from '../components/BottomBar.astro';
 import LangSheet from '../components/LangSheet.astro';
+import PortalSheet from '../components/PortalSheet.astro';
 import MenuSheet from '../components/MenuSheet.astro';
 import { LANG_META, LOCALES, type Lang } from '../i18n/config';
 import { routes, type RouteKey } from '../i18n/routes';
@@ -101,6 +102,7 @@ const nodes = [
     {!hideBar && <BottomBar lang={lang} />}
     <MenuSheet lang={lang} routeKey={routeKey} />
     <LangSheet lang={lang} routeKey={routeKey} />
+    {demoMode && <PortalSheet lang={lang} />}
     <script>
       import '../scripts/ui';
     </script>

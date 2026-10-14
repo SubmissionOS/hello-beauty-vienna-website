@@ -38,6 +38,7 @@ export const hu: Dict = {
     contact: 'Kapcsolat',
     faq: 'GYIK',
     book: 'Időpontfoglalás',
+    login: 'Bejelentkezés',
     bookShort: 'Foglalás',
     call: 'Hívás',
   },
@@ -548,6 +549,10 @@ export const hu: Dict = {
     demo: 'Demó',
     label: 'Következő szabad időpont ({service}): {when}',
     demoNote: 'demóadatok',
+  },
+  portal: {
+    title: 'Ügyfélportál – hamarosan elérhető',
+    text: 'Az ügyfélportálba való bejelentkezés ebben a demóban még nem aktív.',
   },
   pricesPage: {
     title: 'Árak – körömszalon és kozmetika Bécs | Hello Beauty',

@@ -38,6 +38,7 @@ export const en: Dict = {
     contact: 'Contact',
     faq: 'FAQ',
     book: 'Book now',
+    login: 'Log in',
     bookShort: 'Book',
     call: 'Call',
   },
@@ -548,6 +549,10 @@ export const en: Dict = {
     demo: 'Demo',
     label: 'Next free appointment for {service}: {when}',
     demoNote: 'demo data',
+  },
+  portal: {
+    title: 'Customer portal – coming soon',
+    text: 'Logging in to the customer portal is not active in this demo yet.',
   },
   pricesPage: {
     title: 'Prices: Nail & Beauty Salon Vienna | Hello Beauty',

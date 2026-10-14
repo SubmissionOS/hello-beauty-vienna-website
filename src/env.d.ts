@@ -5,6 +5,8 @@ interface ImportMetaEnv {
   readonly PUBLIC_BOOKING_API_BASE?: string;
   /** Standard 'true': noindex, nofollow + robots.txt Disallow. 'false' für den Livegang */
   readonly PUBLIC_DEMO_MODE?: string;
+  /** Ziel des Login-Buttons (Kundenportal), Standard https://kundenportal.hellobeautysalon.at */
+  readonly PUBLIC_PORTAL_URL?: string;
 }
 
 interface ImportMeta {

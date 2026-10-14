@@ -6,6 +6,7 @@ import type { Lang } from '../i18n/config';
 import { t } from '../i18n';
 import { categories } from '../data/services';
 import { site } from '../data/site';
+import { demoMode, portalUrl } from '../lib/env';
 
 interface Props {
   lang: Lang;
@@ -69,6 +70,31 @@ const main: { key: RouteKey; label: string }[] = [
     </ul>
 
     <ul class="cells menu__contact" role="list">
+      <li>
+        {
+          demoMode ? (
+            <button type="button" class="cell" data-open="portal-sheet" aria-haspopup="dialog">
+              <span class="cell__icon">
+                <Icon name="user" />
+              </span>
+              <span class="cell__body">
+                <span class="cell__title">{d.nav.login}</span>
+              </span>
+              <Icon name="chevron-right" class="cell__chevron" />
+            </button>
+          ) : (
+            <a class="cell" href={portalUrl(lang)}>
+              <span class="cell__icon">
+                <Icon name="user" />
+              </span>
+              <span class="cell__body">
+                <span class="cell__title">{d.nav.login}</span>
+              </span>
+              <Icon name="chevron-right" class="cell__chevron" />
+            </a>
+          )
+        }
+      </li>
       <li>
         <a class="cell" href={`tel:${site.phoneE164}`}>
           <span class="cell__icon"><Icon name="phone" /></span>

@@ -6,6 +6,7 @@ import { href, routes, SERVICE_PAGES, type RouteKey } from '../i18n/routes';
 import { LANG_META, type Lang } from '../i18n/config';
 import { t } from '../i18n';
 import { categories } from '../data/services';
+import { demoMode, portalUrl } from '../lib/env';
 
 interface Props {
   lang: Lang;
@@ -92,6 +93,19 @@ const links: { key: RouteKey; label: string }[] = [
         <span class="lang-btn__name" aria-hidden="true">{LANG_META[lang].label}</span>
         <Icon name="chevron-down" size={14} class="lang-btn__chev" />
       </button>
+      {
+        demoMode ? (
+          <button type="button" class="login-btn" data-open="portal-sheet" aria-haspopup="dialog">
+            <Icon name="user" size={20} />
+            <span class="login-btn__label">{d.nav.login}</span>
+          </button>
+        ) : (
+          <a class="login-btn" href={portalUrl(lang)}>
+            <Icon name="user" size={20} />
+            <span class="login-btn__label">{d.nav.login}</span>
+          </a>
+        )
+      }
       <a class="btn btn--sm header-book" href={href('booking', lang)}>{d.nav.book}</a>
       <button type="button" class="menu-btn" data-open="menu-sheet" aria-haspopup="dialog" aria-label={d.a11y.openMenu}>
         <Icon name="menu" />
@@ -167,6 +181,7 @@ const links: { key: RouteKey; label: string }[] = [
   }
 
   .lang-btn,
+  .login-btn,
   .menu-btn {
     display: inline-flex;
     align-items: center;
@@ -185,29 +200,97 @@ const links: { key: RouteKey; label: string }[] = [
   }
 
   .lang-btn:hover,
+  .login-btn:hover,
   .menu-btn:hover {
     background: var(--c-cream);
   }
 
   .lang-btn:active,
+  .login-btn:active,
   .menu-btn:active {
     background: var(--c-line);
   }
 
+  /* 3:2 wie die SVGs – keine Verzerrung */
   .flag {
-    width: 20px;
+    width: 21px;
     height: 14px;
     border-radius: 2px;
     box-shadow: 0 0 0 1px rgb(43 38 24 / 0.12);
-    object-fit: cover;
+  }
+
+  .login-btn {
+    text-decoration: none;
+  }
+  .login-btn:hover {
+    color: var(--c-ink);
+  }
+  /* Unter 1280 px nur das Symbol (Name bleibt für Screenreader), ab 1280 px sekundärer Outline-Button */
+  .login-btn__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  @media (min-width: 1280px) {
+    .login-btn {
+      padding: 0 16px 0 14px;
+      border-color: var(--c-field);
+    }
+    .login-btn__label {
+      position: static;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      clip-path: none;
+    }
   }
 
   .header-book {
     display: none;
   }
 
+  /* Navigation und Aktionen brechen nie um, Symbole schrumpfen nicht */
+  .desk-nav__link,
+  .header-book,
+  .lang-btn,
+  .login-btn {
+    white-space: nowrap;
+  }
+  .lang-btn :global(svg),
+  .desk-nav__toggle :global(svg),
+  .login-btn :global(svg) {
+    flex: none;
+  }
+
   .desk-nav {
     display: none;
+  }
+
+  /* Schmale Handys: Logo, Sprache, Login und Menü müssen in eine Zeile */
+  @media (max-width: 399px) {
+    .site-header__inner {
+      gap: var(--s-2);
+    }
+    .site-header__actions {
+      gap: 0;
+    }
+    .lang-btn {
+      padding: 0 8px;
+    }
+    .lang-btn :global(.lang-btn__chev) {
+      display: none;
+    }
+    .brand :global(.brand__logo) {
+      height: 26px;
+    }
+  }
+  @media (max-width: 339px) {
+    .lang-btn__name {
+      display: none;
+    }
   }
 
   @media (min-width: 1024px) {
@@ -223,6 +306,23 @@ const links: { key: RouteKey; label: string }[] = [
     }
     .brand {
       margin-right: var(--s-5);
+    }
+  }
+
+  /* 1024–1179 px: kompakter, damit Logo, Navigation, Sprache, Login und Buchen in eine Zeile passen */
+  @media (min-width: 1024px) and (max-width: 1179px) {
+    .site-header__inner {
+      gap: var(--s-3);
+    }
+    .brand {
+      margin-right: var(--s-3);
+    }
+    .brand :global(.brand__logo) {
+      height: 32px;
+    }
+    .desk-nav__link {
+      padding: 0 9px;
+      font-size: 0.9375rem;
     }
   }
 

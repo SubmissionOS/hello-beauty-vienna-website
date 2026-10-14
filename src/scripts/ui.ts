@@ -122,7 +122,12 @@ document.addEventListener('click', (e) => {
   const dialog = document.getElementById(opener.dataset.open ?? '');
   if (dialog instanceof HTMLDialogElement) {
     e.preventDefault();
-    openSheet(dialog, opener);
+    const host = opener.closest<HTMLDialogElement>('dialog[data-sheet]');
+    if (host?.open) {
+      // aus einem Sheet heraus (z. B. Menü → Kundenportal): erst schließen, dann öffnen, Fokus zurück zum Menü-Knopf
+      const back = openers.get(host) ?? null;
+      void closeSheet(host).then(() => openSheet(dialog, back));
+    } else openSheet(dialog, opener);
   }
 });
 

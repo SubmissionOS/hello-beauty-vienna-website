@@ -1,0 +1,28 @@
+---
+/**
+ * Hinweis „Kundenportal – bald verfügbar“: Bottom-Sheet mobil, Popover am Desktop.
+ * Wird nur im Demo-Modus gerendert; im Livegang führt der Login-Button direkt zu PUBLIC_PORTAL_URL.
+ */
+import Sheet from './Sheet.astro';
+import type { Lang } from '../i18n/config';
+import { t } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+---
+<Sheet id="portal-sheet" title={d.portal.title} closeLabel={d.a11y.close} desktop="popover">
+  <p class="portal__text">{d.portal.text}</p>
+  <button type="button" class="btn btn--secondary btn--block portal__close" data-close data-autofocus>{d.a11y.close}</button>
+</Sheet>
+
+<style>
+  .portal__text {
+    color: var(--c-ink-muted);
+  }
+  .portal__close {
+    margin-top: var(--s-4);
+  }
+</style>
