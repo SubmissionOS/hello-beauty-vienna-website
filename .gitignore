@@ -13,3 +13,4 @@ assets-original/
 test-results-*/
 docs/qa/playwright-results.json
 lh/
+test-results-*.log

@@ -88,8 +88,6 @@ h2,
 h3,
 h4 {
   overflow-wrap: break-word;
-  hyphens: auto;
-  -webkit-hyphens: auto;
   font-family: var(--font-serif);
   font-weight: 600;
   line-height: var(--lh-tight);
@@ -101,6 +99,16 @@ h4 {
 
 h1 {
   font-size: var(--fs-h1);
+}
+
+/* Silbentrennung nur auf sehr schmalen Bildschirmen, wo lange Wörter sonst nicht passen */
+@media (max-width: 359px) {
+  h1,
+  h2,
+  h3 {
+    hyphens: auto;
+    -webkit-hyphens: auto;
+  }
 }
 h2 {
   font-size: var(--fs-h2);
