@@ -32,7 +32,7 @@ Drei Paarungen mit echten Texten der Seite (Hero DE, HU-Zeile mit Ő ő Ű ű, F
 
 ## Umsetzung
 - woff2 lokal, Latin-Subset + Mini-Subset für Ő ő Ű ű (`unicode-range`), zusammen ~66 KB (vorher ~90 KB).
-- Nur Gloock (Hero-Schrift) wird vorgeladen.
+- **Kein Font-Preload (bewusste Abweichung vom Briefing):** Gemessen (Playwright, iPhone-Emulation): mit `<link rel=preload crossorigin>` lädt WebKit/Safari Gloock auf Unterseiten doppelt (2 Requests + Konsolenwarnung), ohne `crossorigin` lädt Chromium doppelt. Ein Preload, das in beiden Engines wirkt, gibt es hier nicht. Die @font-face-Regeln stehen im inline ausgelieferten CSS und werden sofort gefunden; das LCP-Element ist das Hero-Foto.
 - `font-display: swap` mit metrisch angepassten Fallbacks (Georgia bzw. Times New Roman für Gloock, Arial für Hanken; `size-adjust`/`ascent-override`/`descent-override` im Browser gegen die Webfont gemessen).
 - `font-synthesis: none` – kein künstliches Fett für Gloock.
 - Display-Größen mit `clamp()` (H1 34→68 px, Display 44→108 px), Tracking −0,028 em (H1) / −0,02 em (H2).
