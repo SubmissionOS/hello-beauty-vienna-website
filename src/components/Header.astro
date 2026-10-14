@@ -15,7 +15,6 @@ const { lang, routeKey } = Astro.props;
 const d = t(lang);
 const current = (k: RouteKey) => routeKey === k;
 const inServices = routeKey === 'services' || (routeKey !== null && routes[routeKey].parent === 'services');
-const flag = { de: 'at', en: 'gb', hu: 'hu' }[lang];
 const links: { key: RouteKey; label: string }[] = [
   { key: 'prices', label: d.nav.prices },
   { key: 'gallery', label: d.nav.gallery },
@@ -89,7 +88,7 @@ const links: { key: RouteKey; label: string }[] = [
 
     <div class="site-header__actions">
       <button type="button" class="lang-btn" data-open="lang-sheet" aria-haspopup="dialog" aria-label={`${d.a11y.chooseLanguage} – ${d.a11y.currentLanguage}`}>
-        <img src={`/flags/${flag}.svg`} alt="" width="20" height="14" class="flag" />
+        <img src={`/flags/${LANG_META[lang].flag}.svg`} alt="" width="21" height="14" class="flag" />
         <span class="lang-btn__name" aria-hidden="true">{LANG_META[lang].label}</span>
         <Icon name="chevron-down" size={14} class="lang-btn__chev" />
       </button>
