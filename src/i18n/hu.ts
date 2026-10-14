@@ -554,6 +554,17 @@ export const hu: Dict = {
     title: 'Ügyfélportál – hamarosan elérhető',
     text: 'Az ügyfélportálba való bejelentkezés ebben a demóban még nem aktív.',
   },
+  mega: {
+    all: 'Összes szolgáltatás megtekintése',
+    desc: {
+      nails: 'Új szett, töltés, eltávolítás',
+      manicure: 'Ápolás, géllakk és shellac',
+      pedicure: 'Lábápolás, géllakk, paraffin',
+      facial: 'Tisztítás, microneedling, LED',
+      lashes: 'Hosszabbítás, lifting, szemöldök',
+      hair: 'Lézer, gyantázás, cukorpasztás',
+    },
+  },
   pricesPage: {
     title: 'Árak – körömszalon és kozmetika Bécs | Hello Beauty',
     description:

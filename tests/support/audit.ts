@@ -15,6 +15,8 @@ export function layoutAudit({ mobile }: { mobile: boolean }): string[] {
     for (let n: Element | null = el; n; n = n.parentElement) {
       const cs = getComputedStyle(n);
       if (cs.display === 'none' || cs.visibility === 'hidden') return true;
+      // per clip-path / clip unsichtbar gemachte Screenreader-Texte
+      if (/inset\(\s*50%/.test(cs.clipPath) || /rect\(\s*0(px)?[ ,]+0(px)?[ ,]+0(px)?[ ,]+0(px)?\s*\)/.test(cs.clip)) return true;
       if (n.classList.contains('visually-hidden') || n.classList.contains('hp') || n.classList.contains('skip-link')) return true;
       if (n.tagName === 'DIALOG' && !(n as HTMLDialogElement).open) return true;
       if (n.hasAttribute('hidden')) return true;

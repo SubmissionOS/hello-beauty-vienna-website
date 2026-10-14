@@ -554,6 +554,17 @@ export const en: Dict = {
     title: 'Customer portal – coming soon',
     text: 'Logging in to the customer portal is not active in this demo yet.',
   },
+  mega: {
+    all: 'View all services',
+    desc: {
+      nails: 'New set, refill, removal',
+      manicure: 'Care, gel polish and Shellac',
+      pedicure: 'Foot care, gel polish, paraffin',
+      facial: 'Cleansing, microneedling, LED',
+      lashes: 'Extensions, lifting, brows',
+      hair: 'Laser, waxing and sugaring',
+    },
+  },
   pricesPage: {
     title: 'Prices: Nail & Beauty Salon Vienna | Hello Beauty',
     description:

@@ -1,12 +1,13 @@
 /**
  * Gemeinsame Interaktionen aller Seiten. Kein Framework, keine Abhängigkeiten.
  * - Sheets (<dialog>): öffnen/schließen mit Animation, Wischen nach unten, Klick auf Hintergrund, Fokus-Rückgabe
- * - Disclosure-Popover (Desktop-Navigation)
+ * - Mega-Menü „Leistungen“ der Desktop-Navigation (scripts/mega.ts)
  * - Header-Haarlinie beim Scrollen, Aktionsleiste bei offener Tastatur ausblenden
  * - Einblenden beim Scrollen (nur Elemente außerhalb des ersten Viewports)
  * - Sprachwahl für die Sitzung merken, Adresse kopieren
  */
 import { store } from '../lib/store';
+import './mega';
 
 const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -129,37 +130,6 @@ document.addEventListener('click', (e) => {
       void closeSheet(host).then(() => openSheet(dialog, back));
     } else openSheet(dialog, opener);
   }
-});
-
-/* ---------------- Disclosure-Popover ---------------- */
-document.querySelectorAll<HTMLButtonElement>('[data-disclosure]').forEach((btn) => {
-  const panel = document.getElementById(btn.getAttribute('aria-controls') ?? '');
-  if (!panel) return;
-  const item = btn.parentElement!;
-  const set = (open: boolean) => {
-    btn.setAttribute('aria-expanded', String(open));
-    panel.hidden = !open;
-  };
-  btn.addEventListener('click', () => set(btn.getAttribute('aria-expanded') !== 'true'));
-  item.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
-      set(false);
-      btn.focus();
-    }
-  });
-  item.addEventListener('focusout', (e) => {
-    if (!item.contains(e.relatedTarget as Node | null)) set(false);
-  });
-  document.addEventListener('click', (e) => {
-    if (!item.contains(e.target as Node)) set(false);
-  });
-  // Safari fokussiert Buttons beim Klick nicht – ESC deshalb dokumentweit abfangen
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
-      set(false);
-      btn.focus();
-    }
-  });
 });
 
 /* ---------------- Header & Aktionsleiste ---------------- */

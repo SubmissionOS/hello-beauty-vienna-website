@@ -22,12 +22,12 @@ for (const p of PAGES) {
     await page.goto(p.path, { waitUntil: 'load' });
     await settle(page);
 
-    const plain = await page.evaluate(overlapAudit);
+    const plain = await page.evaluate(overlapAudit, undefined);
     expect.soft(plain, `Überlappung (Originaltexte)\n${plain.join('\n')}`).toEqual([]);
 
     await page.evaluate(pseudoLocalize);
     await settle(page);
-    const pseudo = await page.evaluate(overlapAudit);
+    const pseudo = await page.evaluate(overlapAudit, undefined);
     expect.soft(pseudo, `Überlappung (Pseudo-Lokalisierung +40 %)\n${pseudo.join('\n')}`).toEqual([]);
 
     const layout = (await page.evaluate(layoutAudit, { mobile: isMobile(info.project) })).filter((i) => /^(Horizontaler Scroll|Ragt aus dem Viewport|Text läuft über)/.test(i));

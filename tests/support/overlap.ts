@@ -4,6 +4,7 @@
  * overlapAudit: Kein Textstück darf ein Bild oder ein anderes Textstück schneiden. Gemessen werden die
  * tatsächlichen Zeilenboxen des Texts (Range.getClientRects, auf die Zeilenhöhe gekürzt), nicht die Elementboxen –
  * so löst enger Zeilenabstand keinen Fehlalarm aus, ein Text, der über die Spaltengrenze ins Bild läuft, aber sehr wohl.
+ * Mit rootSel läuft die Prüfung nur innerhalb dieses Bereichs (z. B. das geöffnete Mega-Menü, das absichtlich über der Seite liegt).
  * Ausgenommen: Elemente mit [data-overlay] (bewusstes Overlay) samt Nachfahren, position: fixed (Aktionsleiste),
  * versteckte und geschlossene Elemente.
  *
@@ -11,7 +12,8 @@
  * Klammern. Nur Zeichen aus Latin-1, damit die Schrift keinen Fallback braucht und das Ergebnis auf allen
  * Systemen gleich ist. So fallen längenabhängige Layoutfehler auf, bevor eine echte Sprache sie auslöst.
  */
-export function overlapAudit(): string[] {
+export function overlapAudit(rootSel?: string): string[] {
+  const root: Element = (rootSel ? document.querySelector(rootSel) : null) ?? document.body;
   const issues: string[] = [];
   const ignoredTags = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA', 'OPTION', 'TITLE', 'HEAD']);
   const describe = (el: Element) => {
@@ -70,7 +72,7 @@ export function overlapAudit(): string[] {
 
   // Textzeilen
   const texts: Box[] = [];
-  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
   for (let n = walker.nextNode(); n; n = walker.nextNode()) {
     const s = n.nodeValue ?? '';
     if (!s.trim()) continue;
@@ -95,7 +97,7 @@ export function overlapAudit(): string[] {
 
   // Bilder (Icons unter 48 px zählen nicht: sie stehen bewusst neben Text)
   const images: Box[] = [];
-  for (const el of document.body.querySelectorAll('img, video, canvas, svg')) {
+  for (const el of root.querySelectorAll('img, video, canvas, svg')) {
     // Bestandteile innerhalb eines <svg> zählen nicht einzeln
     if (el.tagName === 'svg' ? el.parentElement?.closest('svg') : el.closest('svg')) continue;
     if (skipped(el)) continue;

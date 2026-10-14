@@ -1,11 +1,14 @@
 ---
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
+import Img from './Img.astro';
+import '../styles/mega.css';
 import { image } from '../data/images';
 import { href, routes, SERVICE_PAGES, type RouteKey } from '../i18n/routes';
 import { LANG_META, type Lang } from '../i18n/config';
 import { t } from '../i18n';
 import { categories } from '../data/services';
+import { shortTitle } from '../lib/menu';
 import { demoMode, portalUrl } from '../lib/env';
 
 interface Props {
@@ -45,34 +48,50 @@ const links: { key: RouteKey; label: string }[] = [
             type="button"
             class="desk-nav__link desk-nav__toggle"
             aria-expanded="false"
-            aria-controls="services-popover"
-            data-disclosure
+            aria-controls="mega-services"
+            data-mega-trigger
             aria-current={inServices ? 'true' : undefined}
           >
             {d.nav.services}
             <Icon name="chevron-down" size={16} />
           </button>
-          <div class="popover" id="services-popover" hidden>
-            <ul class="cells">
-              <li>
-                <a class="cell" href={href('services', lang)} aria-current={current('services') ? 'page' : undefined}>
-                  <span class="cell__body"><span class="cell__title">{d.nav.allServices}</span></span>
-                  <Icon name="chevron-right" class="cell__chevron" />
+          <div class="mega" id="mega-services" data-mega-panel>
+            <div class="container mega__inner">
+              <ul class="mega__grid" role="list">
+                {
+                  categories.map((c) => (
+                    <li class="mega__col">
+                      <p class="mega__title">
+                        <a href={href(SERVICE_PAGES[c.id], lang)} aria-current={current(SERVICE_PAGES[c.id]) ? 'page' : undefined}>
+                          {d.cards[c.id].title}
+                        </a>
+                      </p>
+                      <p class="mega__desc">{d.mega.desc[c.id]}</p>
+                      <ul class="mega__subs" role="list">
+                        {c.groups.map((g) => (
+                          <li>
+                            <a href={`${href('prices', lang)}#p-${c.id}-${g.id}`}>{shortTitle(g.title[lang])}</a>
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  ))
+                }
+              </ul>
+              <div class="mega__teaser">
+                <a class="mega__photo" href={href('services', lang)} tabindex="-1" aria-hidden="true">
+                  <Img name="salon-innenraum-ueberblick" alt="" ratio="4 / 3" position="40% 50%" sizes="304px" widths={[320, 480, 640]} />
                 </a>
-              </li>
-              {
-                categories.map((c) => (
-                  <li>
-                    <a class="cell" href={href(SERVICE_PAGES[c.id], lang)} aria-current={current(SERVICE_PAGES[c.id]) ? 'page' : undefined}>
-                      <span class="cell__body">
-                        <span class="cell__title">{d.cards[c.id].title}</span>
-                      </span>
-                      <Icon name="chevron-right" class="cell__chevron" />
-                    </a>
-                  </li>
-                ))
-              }
-            </ul>
+                <a class="link-arrow mega__all" href={href('services', lang)} aria-current={current('services') ? 'page' : undefined}>
+                  {d.mega.all}
+                  <Icon name="arrow-right" />
+                </a>
+                <a class="btn btn--block" href={href('booking', lang)}>
+                  <Icon name="calendar" />
+                  {d.nav.book}
+                </a>
+              </div>
+            </div>
           </div>
         </li>
         {
@@ -113,6 +132,7 @@ const links: { key: RouteKey; label: string }[] = [
     </div>
   </div>
 </header>
+<div class="mega-scrim" data-mega-scrim aria-hidden="true"></div>
 
 <style>
   .site-header {
@@ -143,6 +163,14 @@ const links: { key: RouteKey; label: string }[] = [
     }
   }
 
+  /* Menü offen: Leiste und Panel bilden eine ruhige, deckende Fläche */
+  .site-header:global(.is-mega-open) {
+    background: var(--c-paper);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-bottom-color: transparent;
+  }
+
   :global(.is-scrolled) .site-header,
   .site-header:global(.is-scrolled) {
     border-bottom-color: var(--c-line);
@@ -157,6 +185,7 @@ const links: { key: RouteKey; label: string }[] = [
 
   .brand {
     display: flex;
+    flex: none;
     align-items: center;
     min-height: var(--tap);
     margin-right: auto;
@@ -176,13 +205,16 @@ const links: { key: RouteKey; label: string }[] = [
 
   .site-header__actions {
     display: flex;
+    flex: none;
     align-items: center;
     gap: var(--s-2);
+    margin-left: auto;
   }
 
   .lang-btn,
   .login-btn,
   .menu-btn {
+    flex: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -294,6 +326,13 @@ const links: { key: RouteKey; label: string }[] = [
   }
 
   @media (min-width: 1024px) {
+    /* Reicht der Platz bei sehr langen Texten nicht, bricht der Aktionsblock in eine zweite Zeile um, statt zu überlappen */
+    .site-header__inner {
+      flex-wrap: wrap;
+      height: auto;
+      min-height: var(--header-h);
+      align-content: center;
+    }
     .menu-btn {
       display: none;
     }
@@ -372,41 +411,4 @@ const links: { key: RouteKey; label: string }[] = [
     transform: rotate(180deg);
   }
 
-  .popover {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: -8px;
-    width: 300px;
-    padding: 6px;
-    background: var(--c-white);
-    border-radius: var(--r-lg);
-    box-shadow: var(--sh-2);
-    border: 1px solid var(--c-line);
-    animation: pop var(--dur-2) var(--ease-out);
-  }
-
-  .popover .cells {
-    box-shadow: none;
-  }
-
-  .popover .cell {
-    min-height: var(--tap);
-    border-radius: var(--r-sm);
-  }
-
-  .popover .cells > li + li > .cell::before {
-    display: none;
-  }
-
-  .popover .cell[aria-current='page'] .cell__title {
-    color: var(--c-gold-text);
-    font-weight: 500;
-  }
-
-  @keyframes pop {
-    from {
-      opacity: 0;
-      transform: translateY(-4px) scale(0.98);
-    }
-  }
 </style>

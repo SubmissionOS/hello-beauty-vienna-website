@@ -555,6 +555,17 @@ export const de = {
     title: 'Kundenportal – bald verfügbar',
     text: 'Die Anmeldung zum Kundenportal ist in dieser Demo noch nicht aktiv.',
   },
+  mega: {
+    all: 'Alle Leistungen ansehen',
+    desc: {
+      nails: 'Neues Set, Auffüllen, Ablösen',
+      manicure: 'Pflege, Gellack und Shellac',
+      pedicure: 'Fußpflege, Gellack, Paraffin',
+      facial: 'Reinigung, Microneedling, LED',
+      lashes: 'Verlängerung, Lifting, Brauen',
+      hair: 'Laser, Waxing und Sugaring',
+    },
+  },
   pricesPage: {
     title: 'Preise Nagelstudio & Kosmetik Wien 1060 | Hello Beauty',
     description:

@@ -5,6 +5,7 @@ import { href, SERVICE_PAGES, type RouteKey } from '../i18n/routes';
 import type { Lang } from '../i18n/config';
 import { t } from '../i18n';
 import { categories } from '../data/services';
+import { shortTitle } from '../lib/menu';
 import { site } from '../data/site';
 import { demoMode, portalUrl } from '../lib/env';
 
@@ -31,27 +32,37 @@ const main: { key: RouteKey; label: string }[] = [
       {d.nav.book}
     </a>
 
-    <p class="menu__label">{d.nav.services}</p>
-    <ul class="cells" role="list">
-      <li>
-        <a class="cell" href={href('services', lang)} aria-current={cur('services')}>
-          <span class="cell__body"><span class="cell__title">{d.nav.allServices}</span></span>
-          <Icon name="chevron-right" class="cell__chevron" />
+    <details class="menu-acc">
+      <summary class="menu-acc__summary">
+        <span>{d.nav.services}</span>
+        <Icon name="chevron-down" size={20} class="menu-acc__chev" />
+      </summary>
+      <div class="menu-acc__body">
+        <ul class="menu-acc__list" role="list">
+          {
+            categories.map((c) => (
+              <li class="menu-acc__item">
+                <a class="menu-acc__main" href={href(SERVICE_PAGES[c.id], lang)} aria-current={cur(SERVICE_PAGES[c.id])}>
+                  <span class="menu-acc__title">{d.cards[c.id].title}</span>
+                  <span class="menu-acc__desc">{d.mega.desc[c.id]}</span>
+                </a>
+                <ul class="menu-acc__subs" role="list">
+                  {c.groups.map((g) => (
+                    <li>
+                      <a href={`${href('prices', lang)}#p-${c.id}-${g.id}`}>{shortTitle(g.title[lang])}</a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))
+          }
+        </ul>
+        <a class="link-arrow menu-acc__all" href={href('services', lang)} aria-current={cur('services')}>
+          {d.mega.all}
+          <Icon name="arrow-right" />
         </a>
-      </li>
-      {
-        categories.map((c) => (
-          <li>
-            <a class="cell" href={href(SERVICE_PAGES[c.id], lang)} aria-current={cur(SERVICE_PAGES[c.id])}>
-              <span class="cell__body">
-                <span class="cell__title">{d.cards[c.id].title}</span>
-              </span>
-              <Icon name="chevron-right" class="cell__chevron" />
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+      </div>
+    </details>
 
     <p class="menu__label">Hello Beauty</p>
     <ul class="cells" role="list">
@@ -129,6 +140,114 @@ const main: { key: RouteKey; label: string }[] = [
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--c-ink-muted);
+  }
+  /* Akkordeon „Leistungen“ (iOS-Stil): weiße Zelle, die sich nach unten aufklappt */
+  .menu-acc {
+    margin-top: var(--s-5);
+    background: var(--c-white);
+    border-radius: var(--r-md);
+    box-shadow: var(--sh-1);
+    overflow: clip;
+    interpolate-size: allow-keywords;
+  }
+  .menu-acc::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size 220ms var(--ease-out),
+      content-visibility 220ms allow-discrete;
+  }
+  .menu-acc[open]::details-content {
+    block-size: auto;
+  }
+  .menu-acc__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    min-height: 52px;
+    padding: 12px 16px;
+    font-weight: 500;
+    list-style: none;
+    cursor: pointer;
+  }
+  .menu-acc__summary::-webkit-details-marker {
+    display: none;
+  }
+  .menu-acc__summary:active {
+    background: var(--c-cream);
+  }
+  .menu-acc__summary :global(.menu-acc__chev) {
+    flex: none;
+    color: var(--c-ink-muted);
+    transition: transform 200ms var(--ease-out);
+  }
+  .menu-acc[open] .menu-acc__summary :global(.menu-acc__chev) {
+    transform: rotate(180deg);
+  }
+  .menu-acc__body {
+    padding: 0 16px 8px;
+  }
+  .menu-acc__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .menu-acc__item {
+    padding-block: var(--s-3);
+    border-top: 1px solid var(--c-line);
+  }
+  .menu-acc__main {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-height: var(--tap);
+    padding-block: 6px;
+    color: var(--c-ink);
+    text-decoration: none;
+  }
+  .menu-acc__title {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+  .menu-acc__main[aria-current='page'] .menu-acc__title {
+    color: var(--c-gold-text);
+  }
+  .menu-acc__desc {
+    font-size: var(--fs-small);
+    color: var(--c-ink-muted);
+    overflow-wrap: anywhere;
+  }
+  .menu-acc__subs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .menu-acc__subs a {
+    display: flex;
+    align-items: center;
+    min-height: var(--tap);
+    padding-block: 6px;
+    border-top: 1px solid var(--c-line);
+    color: var(--c-ink);
+    font-size: var(--fs-small);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+  .menu-acc__all {
+    display: flex;
+    align-items: center;
+    min-height: var(--tap);
+    margin-top: var(--s-2);
+    border-top: 1px solid var(--c-line);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .menu-acc::details-content,
+    .menu-acc__summary :global(.menu-acc__chev) {
+      transition: none;
+    }
   }
   .menu__contact {
     margin-top: var(--s-5);
