@@ -44,5 +44,10 @@ export async function scrollThrough(page: Page): Promise<void> {
 }
 
 export async function waitImages(page: Page): Promise<void> {
+  // WebKit bricht Lazy-Loads ab, wenn das Bild beim schnellen Durchscrollen wieder aus dem Viewport ist –
+  // solche Bilder gezielt nachladen (echte Nutzer scrollen langsamer und lösen den Load erneut aus)
+  await page.evaluate(() => {
+    for (const i of document.images) if (!i.complete && i.loading === 'lazy') i.loading = 'eager';
+  });
   await page.waitForFunction(() => [...document.images].every((i) => i.complete), null, { timeout: 15_000 });
 }

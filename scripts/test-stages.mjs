@@ -14,9 +14,9 @@ for (const s of specs) {
     env: { ...process.env, PW_WORKERS: process.env.PW_WORKERS ?? '4' },
     maxBuffer: 256 * 1024 * 1024,
   });
-  const out = ((r.stdout ?? '') + (r.stderr ?? '')).replace(/[[0-9;]*m/g, '');
+  const out = ((r.stdout ?? '') + (r.stderr ?? '')).replace(/\x1b\[[0-9;]*m/g, '');
   fs.writeFileSync(`test-results-${s}.log`, out);
-  const n = (k) => Number(new RegExp(`(\d+) ${k}`).exec(out)?.[1] ?? 0);
+  const n = (k) => Number(new RegExp(`(?:^|\\s)(\\d+) ${k}`).exec(out)?.[1] ?? 0);
   const res = { passed: n('passed'), failed: n('failed'), skipped: n('skipped'), flaky: n('flaky') };
   for (const k of Object.keys(total)) total[k] += res[k];
   rows.push(`| ${s} | ${res.passed} | ${res.failed} | ${res.flaky} | ${res.skipped} | ${Math.round((Date.now() - t0) / 60000)} min |`);

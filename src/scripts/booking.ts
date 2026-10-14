@@ -149,6 +149,12 @@ export function initBooking(): void {
 
   /* ---------------- Leistungen ---------------- */
   const svcInputs = $$<HTMLInputElement>('input[name="svc"]');
+  // Das Formular ist vor dem Skript sichtbar: schon angetippte Leistungen nicht verwerfen
+  const early = svcInputs.filter((i) => i.checked).map((i) => i.value);
+  if (early.length && !s.services.length) {
+    s.services = early;
+    save();
+  }
   const selected = () => svcInputs.filter((i) => s.services.includes(i.value));
   const totals = () => {
     const sel = selected();
@@ -948,4 +954,5 @@ export function initBooking(): void {
   if (start >= 4 && !s.date) start = 3;
   history.replaceState({ step: start }, '', `${location.pathname}${location.search}#step-${start}`);
   show(start, { focus: false, push: false });
+  root.dataset.ready = '';
 }

@@ -439,7 +439,7 @@ test.describe('Tastatur', () => {
     await page.locator('.header-book').focus();
     await page.keyboard.press('Enter');
     await expect(page).toHaveURL(/termin-buchen/);
-    await expect(page.locator('[data-booking]')).toBeVisible();
+    await expect(page.locator('[data-booking][data-ready]')).toBeVisible();
     // Schritt 1: erste Kategorie ist offen → erste Leistung mit Leertaste wählen
     await page.locator('input[name="svc"]').first().focus();
     await page.keyboard.press('Space');
