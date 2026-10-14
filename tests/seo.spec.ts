@@ -14,6 +14,8 @@ test('Metadaten, hreflang und JSON-LD aller Seiten', async ({ request }, info) =
   const alternates = new Map<string, Map<string, string>>();
   const problems: string[] = [];
 
+  // Demo-Modus (Standard): alle Seiten noindex, nofollow; robots.txt sperrt alles
+  const demo = (await (await request.get('/robots.txt')).text()).includes('Disallow: /');
   for (const p of PAGES) {
     const html = await (await request.get(p.path)).text();
     const title = /<title>([^<]*)<\/title>/.exec(html)?.[1] ?? '';
@@ -33,7 +35,8 @@ test('Metadaten, hreflang und JSON-LD aller Seiten', async ({ request }, info) =
     titles.set(title, p.id);
     descs.set(desc, p.id);
     if (canonical !== `https://hellobeautysalon.at${p.path}`) problems.push(`${p.id}: Canonical ${canonical}`);
-    if (robots.includes('noindex')) problems.push(`${p.id}: noindex auf indexierbarer Seite`);
+    if (demo && robots !== 'noindex, nofollow') problems.push(`${p.id}: Demo-Modus ohne noindex, nofollow`);
+    if (!demo && robots.includes('noindex')) problems.push(`${p.id}: noindex auf indexierbarer Seite`);
     for (const og of ['og:title', 'og:description', 'og:image', 'og:url', 'og:locale', 'og:image:alt']) {
       if (!html.includes(`property="${og}"`)) problems.push(`${p.id}: ${og} fehlt`);
     }
@@ -79,7 +82,8 @@ test('sitemap.xml, robots.txt, llms.txt, manifest', async ({ request }, info) =>
   }
   expect(sitemap).toContain('hreflang="x-default"');
   const robots = await (await request.get('/robots.txt')).text();
-  expect(robots).toContain('Sitemap: https://hellobeautysalon.at/sitemap.xml');
+  if (robots.includes('Disallow: /')) expect(robots).toBe('User-agent: *\nDisallow: /\n');
+  else expect(robots).toContain('Sitemap: https://hellobeautysalon.at/sitemap.xml');
   const llms = await (await request.get('/llms.txt')).text();
   expect(llms).toContain('Barnabitengasse 7');
   expect(llms).toContain('+43 660 7055 631');

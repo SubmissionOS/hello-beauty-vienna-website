@@ -4,16 +4,17 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": ">=22.12.0"
+    "node": "22.x"
   },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview --port 4321",
-    "check": "tsc --noEmit",
+    "check": "tsc --noEmit && node scripts/check-case.mjs",
     "test": "playwright test",
     "test:shots": "node scripts/run-shots.mjs",
-    "lighthouse": "node scripts/lighthouse.mjs"
+    "lighthouse": "node scripts/lighthouse.mjs",
+    "check:case": "node scripts/check-case.mjs"
   },
   "dependencies": {
     "astro": "7.3.5",

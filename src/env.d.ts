@@ -3,8 +3,8 @@ interface ImportMetaEnv {
   readonly PUBLIC_BOOKING_ADAPTER?: 'mock' | 'http';
   /** Basis-URL der Buchungs-API, Standard: gleiche Domain */
   readonly PUBLIC_BOOKING_API_BASE?: string;
-  /** 'true' setzt noindex auf alle Seiten (Staging) */
-  readonly PUBLIC_NOINDEX?: string;
+  /** Standard 'true': noindex, nofollow + robots.txt Disallow. 'false' für den Livegang */
+  readonly PUBLIC_DEMO_MODE?: string;
 }
 
 interface ImportMeta {

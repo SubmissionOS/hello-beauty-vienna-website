@@ -14,3 +14,7 @@ test-results-*/
 docs/qa/playwright-results.json
 lh/
 test-results-*.log
+docs/qa/screenshots/
+blob-report/
+test-results-*
+.vercel/
