@@ -3,7 +3,7 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 
-const specs = process.argv.slice(2).length ? process.argv.slice(2) : ['pages', 'workflows', 'links', 'a11y-extra', 'seo', 'design', 'overlap', 'header', 'megamenu'];
+const specs = process.argv.slice(2).length ? process.argv.slice(2) : ['pages', 'workflows', 'links', 'a11y-extra', 'seo', 'design', 'overlap', 'header', 'megamenu', 'consistency'];
 const rows = [];
 let total = { passed: 0, failed: 0, skipped: 0, flaky: 0 };
 for (const s of specs) {

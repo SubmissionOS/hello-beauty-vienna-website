@@ -381,7 +381,7 @@ const json = JSON.stringify(clientData).replace(/</g, '\\u003c');
     top: calc(var(--header-h) + var(--safe-top));
     z-index: 5;
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
     gap: 4px var(--s-3);
     padding: 10px 0 12px;
@@ -881,7 +881,7 @@ const json = JSON.stringify(clientData).replace(/</g, '\\u003c');
   .summary :global(.cell) {
     background: transparent;
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
       'label edit'
       'value edit';
@@ -972,7 +972,7 @@ const json = JSON.stringify(clientData).replace(/</g, '\\u003c');
     bottom: 0;
     z-index: 5;
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: 4px var(--s-4);
     margin: var(--s-6) calc(clamp(16px, 3vw, 32px) * -1) calc(clamp(16px, 3vw, 32px) * -1);

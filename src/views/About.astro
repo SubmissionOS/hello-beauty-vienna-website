@@ -98,7 +98,7 @@ const salon = ['salon-innenraum-ueberblick', 'salon-kosmetikraum-liege', 'salon-
   }
   @media (min-width: 1024px) {
     .story {
-      grid-template-columns: 1fr 1.6fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
       gap: var(--s-8);
     }
   }
@@ -115,12 +115,12 @@ const salon = ['salon-innenraum-ueberblick', 'salon-kosmetikraum-liege', 'salon-
   }
   @media (min-width: 640px) {
     .values {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
   @media (min-width: 1024px) {
     .values {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
   .values li {
@@ -147,7 +147,7 @@ const salon = ['salon-innenraum-ueberblick', 'salon-kosmetikraum-liege', 'salon-
     list-style: none;
     display: grid;
     gap: var(--s-3);
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .salon-grid li:first-child,
   .salon-grid li:last-child {
@@ -160,7 +160,7 @@ const salon = ['salon-innenraum-ueberblick', 'salon-kosmetikraum-liege', 'salon-
   }
   @media (min-width: 1024px) {
     .salon-grid {
-      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
       gap: var(--s-4);
     }
     .salon-grid li:first-child {

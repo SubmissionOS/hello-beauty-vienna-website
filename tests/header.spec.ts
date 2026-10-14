@@ -104,7 +104,8 @@ test.describe('Login-Button', () => {
       expect(page.url()).toContain(routes.home.path[lang]);
 
       if (isDesktopNav(page) || page.viewportSize()!.width >= 768) {
-        // Popover am Desktop/Tablet: unterhalb des Kopfbereichs, innerhalb des Fensters
+        // Popover am Desktop/Tablet: unterhalb des Kopfbereichs, innerhalb des Fensters (nach der Einblend-Animation)
+        await page.waitForTimeout(400);
         const r = await sheet.boundingBox();
         expect(r!.y).toBeGreaterThanOrEqual(60);
         expect(r!.x + r!.width).toBeLessThanOrEqual(page.viewportSize()!.width);

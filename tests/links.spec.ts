@@ -33,7 +33,7 @@ async function inventory(page: Page): Promise<Item[]> {
       if (el.tagName === 'A') action = href?.startsWith('#') ? 'Anker' : href?.startsWith('tel:') ? 'Anruf' : href?.startsWith('mailto:') ? 'E-Mail' : /^https?:/.test(href ?? '') ? 'extern' : 'intern';
       else if (el.dataset.open) action = `öffnet #${el.dataset.open}`;
       else if (el.matches('[data-close]')) action = 'schließt Dialog';
-      else if (el.matches('[data-disclosure]')) action = 'Popover';
+      else if (el.matches('[data-mega-trigger]')) action = 'Mega-Menü';
       else if (el.matches('[data-copy]')) action = 'kopiert Adresse';
       else if (el.tagName === 'SUMMARY') action = 'klappt auf';
       else if (el.matches('input, select, textarea')) action = 'Eingabe';
@@ -70,6 +70,8 @@ const checked = new Map<string, number>();
 for (const p of PAGES) {
   test(`Links und Bedienelemente ${p.id}`, async ({ page, request, watch }, info) => {
     test.skip(!['laptop-chromium', 'iphone-15-webkit', 'android-360-chromium'].includes(info.project.name), 'Linkprüfung auf drei Referenzprojekten');
+    // Galerie: rund 70 Knöpfe, je Neuladen + Warten – braucht in WebKit länger als die Standardgrenze
+    test.setTimeout(p.key === 'gallery' ? 360_000 : 90_000);
     await page.goto(p.path);
     const links = await page.locator('a[href]').evaluateAll((as) =>
       as.map((a) => ({

@@ -119,13 +119,13 @@ const year = new Date().getFullYear();
 
   @media (min-width: 640px) {
     .site-footer__grid {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
   }
 
   @media (min-width: 1024px) {
     .site-footer__grid {
-      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
     }
   }
 

@@ -103,7 +103,9 @@ h4 {
 
 /* Display-Größen: enger gesetzt */
 h1 {
-  font-size: var(--fs-h1);
+  /* Größe nie über die Breite des längsten Wortes hinaus: „Wimpernverlängerung,“ ist 10,2 em breit und muss auf jedem
+     Bildschirm in eine Zeile passen (statt mitten im Wort umzubrechen) */
+  font-size: min(var(--fs-h1), calc((100vw - 2 * var(--gutter)) / 10.6));
   line-height: 1.02;
   letter-spacing: -0.028em;
 }
@@ -689,7 +691,7 @@ textarea.input {
 
 .prose dl {
   display: grid;
-  grid-template-columns: minmax(8rem, max-content) 1fr;
+  grid-template-columns: minmax(8rem, max-content) minmax(0, 1fr);
   gap: var(--s-2) var(--s-5);
   margin: var(--s-4) 0;
 }
@@ -704,7 +706,7 @@ textarea.input {
 
 @media (max-width: 479px) {
   .prose dl {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0;
   }
   .prose dd + dt {

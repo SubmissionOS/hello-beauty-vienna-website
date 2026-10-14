@@ -143,13 +143,22 @@ for (const lang of LOCALES) {
       await page.keyboard.press('Escape');
       await page.waitForTimeout(400);
     } else {
-      await page.locator('[data-disclosure]').click();
-      await shot('leistungen-popover');
+      await page.locator('[data-mega-trigger]').click();
+      await page.waitForTimeout(450);
+      await shot('leistungen-mega-menue');
       await page.keyboard.press('Escape');
+      await page.waitForTimeout(300);
     }
     await page.locator('[data-open="lang-sheet"]').click();
     await page.waitForTimeout(400);
     await shot('sprache-offen');
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(400);
+
+    // Login-Hinweis (Demo)
+    await page.locator('.site-header .login-btn').click();
+    await page.waitForTimeout(450);
+    await shot('login-hinweis');
     await page.keyboard.press('Escape');
 
     // Lightbox

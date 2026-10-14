@@ -307,7 +307,7 @@ test.describe('Sprachwechsel', () => {
 });
 
 test.describe('Menü, Sheets, Popover', () => {
-  test('Menü (mobil) bzw. Leistungs-Popover (Desktop): öffnen, schließen, Fokus-Rückgabe', async ({ page }, info) => {
+  test('Menü (mobil) bzw. Leistungs-Mega-Menü (Desktop): öffnen, schließen, Fokus-Rückgabe', async ({ page }, info) => {
     await page.goto('/');
     if (isMobile(info.project) && info.project.use.viewport!.width < 1024) {
       const btn = page.locator('[data-open="menu-sheet"]');
@@ -340,15 +340,16 @@ test.describe('Menü, Sheets, Popover', () => {
       await sheet.getByRole('link', { name: dictionaries.de.nav.prices, exact: true }).click();
       await expect(page).toHaveURL(/\/preise\/$/);
     } else {
-      const toggle = page.locator('[data-disclosure]');
+      const toggle = page.locator('[data-mega-trigger]');
       await toggle.click();
       await expect(toggle).toHaveAttribute('aria-expanded', 'true');
-      await expect(page.locator('#services-popover')).toBeVisible();
+      await expect(page.locator('#mega-services')).toBeVisible();
       await page.keyboard.press('Escape');
-      await expect(page.locator('#services-popover')).toBeHidden();
+      await expect(page.locator('#mega-services')).toBeHidden();
       await expect(toggle).toBeFocused();
       await toggle.click();
-      await page.locator('#services-popover a').nth(2).click();
+      await expect(page.locator('#mega-services')).toBeVisible();
+      await page.locator('#mega-services .mega__title a').nth(1).click();
       await expect(page).toHaveURL(/\/leistungen\/manikuere\/$/);
     }
   });

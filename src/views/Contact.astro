@@ -162,7 +162,7 @@ const messages = JSON.stringify(f.errors);
   }
   @media (min-width: 1024px) {
     .contact-grid {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
   }
   .social-cells {
@@ -176,14 +176,14 @@ const messages = JSON.stringify(f.errors);
   }
   .directions li {
     display: grid;
-    grid-template-columns: 6.5rem 1fr;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
     gap: var(--s-3);
     padding-bottom: var(--s-3);
     border-bottom: 1px solid var(--c-line);
   }
   @media (max-width: 359px) {
     .directions li {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
       gap: 2px;
     }
   }
@@ -212,7 +212,7 @@ const messages = JSON.stringify(f.errors);
   }
   @media (min-width: 640px) {
     .field-row {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
   }
   .hp {
