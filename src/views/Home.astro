@@ -36,28 +36,30 @@ const strip: { name: string; ratio: string; pos?: string }[] = [
 ---
 <Base lang={lang} routeKey="home" title={h.title} description={h.description}>
   <section class="hero">
-    <div class="hero__media">
-      <Img
-        name="salon-empfang-hb-monogramm"
-        alt={d.gallery['salon-empfang-hb-monogramm']}
-        ratio="4 / 5"
-        position="42% 50%"
-        eager
-        rounded={false}
-        sizes="(min-width: 1024px) 46vw, 100vw"
-        widths={[390, 520, 640, 800, 1000, 1200]}
-      />
-    </div>
-    <div class="container hero__inner">
-      <p class="eyebrow">{h.hero.eyebrow}</p>
-      <h1 class="hero__title"><span class="hl">{h.hero.h1}</span></h1>
-      <p class="hero__lead">{h.hero.lead}</p>
-      <div class="hero__actions">
-        <a class="btn" href={href('booking', lang)}>
-          <Icon name="calendar" />
-          {d.cta.bookNow}
-        </a>
-        <SlotChip lang={lang} />
+    <div class="hero__grid">
+      <div class="hero__text">
+        <p class="eyebrow">{h.hero.eyebrow}</p>
+        <h1 class="hero__title">{h.hero.h1}</h1>
+        <p class="hero__lead">{h.hero.lead}</p>
+        <div class="hero__actions">
+          <a class="btn" href={href('booking', lang)}>
+            <Icon name="calendar" />
+            {d.cta.bookNow}
+          </a>
+          <SlotChip lang={lang} />
+        </div>
+      </div>
+      <div class="hero__media">
+        <Img
+          name="salon-empfang-hb-monogramm"
+          alt={d.gallery['salon-empfang-hb-monogramm']}
+          ratio="4 / 5"
+          position="42% 50%"
+          eager
+          rounded={false}
+          sizes="(min-width: 1024px) 48vw, 100vw"
+          widths={[390, 520, 640, 800, 1000, 1200]}
+        />
       </div>
     </div>
     <div class="container">
@@ -201,38 +203,40 @@ const strip: { name: string; ratio: string; pos?: string }[] = [
 </Base>
 
 <style>
-  /* ---------- Hero: randabfallendes Foto, Überschrift überlappt auf Papierstreifen ---------- */
+  /* ---------- Hero: zweispaltiges Grid, Text und Foto teilen sich eine Spaltengrenze ----------
+     Ursache des früheren Fehlers: Das Foto war absolut positioniert, die Überschrift hing mit max-width in ch
+     (bezogen auf die eigene Schriftgröße) im Container – beide wussten nichts voneinander, und eine längere
+     Überschrift (DE/EN) lief ins Foto. Jetzt: eine Spalte, in der der Text bleibt, Schrift an ihre Breite gebunden. */
   .hero {
-    position: relative;
     padding-bottom: var(--s-7);
   }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hero__text {
+    /* Container für cqi: die Schriftgröße richtet sich nach der Spaltenbreite */
+    container-type: inline-size;
+    min-width: 0;
+    padding: var(--s-5) var(--gutter) 0;
+  }
   .hero__media {
-    margin-top: calc(-1 * var(--s-2));
+    order: -1;
+    min-width: 0;
   }
   .hero__media :global(.img) {
     aspect-ratio: auto !important;
     height: min(118vw, 62svh);
     min-height: 320px;
   }
-  .hero__inner {
-    position: relative;
-  }
-  .hero__inner .eyebrow {
-    margin-top: var(--s-5);
-  }
   .hero__title {
-    font-size: var(--fs-display);
+    /* 23cqi: das längste Wort der Überschrift in DE/EN/HU („Gepflegte“, 4,14 em) passt mit Reserve in die Spalte */
+    font-size: min(23cqi, var(--fs-display));
     line-height: 1.04;
     letter-spacing: -0.03em;
     margin-top: var(--s-3);
-    max-width: 12ch;
-  }
-  /* Papierstreifen hinter jeder Zeile: lesbar auch dort, wo die Überschrift das Foto überlappt */
-  .hl {
-    background: var(--c-paper);
-    box-decoration-break: clone;
-    -webkit-box-decoration-break: clone;
-    box-shadow: 0.14em 0 0 var(--c-paper);
+    max-width: 100%;
+    overflow-wrap: anywhere;
   }
   .hero__lead {
     margin-top: var(--s-5);
@@ -254,46 +258,23 @@ const strip: { name: string; ratio: string; pos?: string }[] = [
       width: 100%;
     }
   }
-  @media (max-width: 1023px) {
-    /* Mobil: Überschrift greift von unten ins Foto */
-    .hero__inner .eyebrow {
-      display: none;
-    }
-    .hero__title {
-      margin-top: calc(-0.62 * var(--fs-display));
-    }
-    .hero__title .hl {
-      box-shadow:
-        calc(-1 * var(--gutter)) 0 0 var(--c-paper),
-        0.14em 0 0 var(--c-paper);
-    }
-  }
   @media (min-width: 1024px) {
-    .hero {
-      min-height: min(calc(100svh - var(--header-h)), 900px);
-      display: grid;
-      grid-template-rows: 1fr auto;
-      padding-bottom: var(--s-6);
+    .hero__grid {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      /* linke Kante bündig mit dem Seiteninhalt, das Foto läuft rechts bis zum Rand */
+      padding-left: max(var(--gutter), calc((100% - var(--container)) / 2));
+      min-height: clamp(540px, 80svh, 840px);
+    }
+    .hero__text {
+      align-self: center;
+      padding: var(--s-8) var(--s-7) var(--s-8) 0;
     }
     .hero__media {
-      position: absolute;
-      inset: 0 0 0 auto;
-      width: 46vw;
-      margin: 0;
+      order: 0;
     }
     .hero__media :global(.img) {
       height: 100%;
       min-height: 0;
-    }
-    .hero__inner {
-      align-self: center;
-      padding-block: var(--s-8) var(--s-7);
-    }
-    .hero__title {
-      max-width: 10.5ch;
-    }
-    .hero__lead {
-      max-width: 30rem;
     }
   }
 
@@ -313,38 +294,13 @@ const strip: { name: string; ratio: string; pos?: string }[] = [
       gap: var(--s-6);
     }
   }
-  @media (min-width: 1024px) {
-    .facts {
-      position: relative;
-      max-width: calc(54% - var(--s-6));
-      margin-top: 0;
-      grid-template-columns: 1fr;
-      gap: var(--s-2);
-      background: var(--c-paper);
-    }
-    .facts li {
-      display: flex;
-      gap: var(--s-3);
-      flex-wrap: wrap;
-    }
-  }
   .facts__k {
     display: block;
     font-weight: 500;
     color: var(--c-ink);
   }
-  @media (min-width: 1024px) {
-    .facts__k {
-      display: inline;
-    }
-  }
   .facts .muted {
     display: block;
-  }
-  @media (min-width: 1024px) {
-    .facts .muted {
-      display: inline;
-    }
   }
 
   /* ---------- Leistungen ---------- */
