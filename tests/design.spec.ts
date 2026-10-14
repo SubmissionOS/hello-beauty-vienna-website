@@ -5,7 +5,7 @@
  * - View Transitions (eindeutige Namen, kein kaputter Zustand nach Zurück-Navigation)
  * - Glyphentest HU (ő ű kommen aus der Webfont, nicht aus dem Fallback)
  */
-import { test, expect, isMobile } from './support/fixtures';
+import { test, expect } from './support/fixtures';
 import { routes } from '../src/i18n/routes';
 import { LOCALES } from '../src/i18n/config';
 import { dictionaries } from '../src/i18n';
@@ -70,7 +70,7 @@ test.describe('Termin-Chip', () => {
   for (const lang of LOCALES) {
     test(`lädt den nächsten Slot und öffnet die Buchung vorausgewählt (${lang})`, async ({ page }, info) => {
       await page.goto(routes.home.path[lang]);
-      const chip = page.locator(isMobile(info.project) ? '.slot-chip--bar' : '.slot-chip--hero');
+      const chip = page.locator(page.viewportSize()!.width < 1024 ? '.slot-chip--bar' : '.slot-chip--hero');
       await expect(chip).toHaveAttribute('data-state', 'ready', { timeout: 10_000 });
       const href = (await chip.getAttribute('href')) ?? '';
       expect(href).toContain('leistung=gel-polish');

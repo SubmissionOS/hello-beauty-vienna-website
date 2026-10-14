@@ -97,6 +97,13 @@ const labels = { today: n.today, tomorrow: n.tomorrow, on: n.on, fallback: n.fal
     text-transform: uppercase;
   }
 
+  /* Unter 1024 px trägt die Aktionsleiste den Chip – im Hero nicht doppelt zeigen */
+  @media (max-width: 1023px) {
+    .slot-chip--hero {
+      display: none;
+    }
+  }
+
   /* Aktionsleiste: kompakt */
   .slot-chip--bar {
     gap: 6px;

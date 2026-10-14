@@ -215,18 +215,11 @@ strong {
   gap: var(--s-3);
   font-family: var(--font-sans);
   font-size: var(--fs-xs);
-  font-weight: 500;
-  letter-spacing: 0.14em;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--c-gold-text);
   margin: 0 0 var(--s-3);
-}
-
-.eyebrow::before {
-  content: '';
-  width: 28px;
-  height: 1px;
-  background: var(--c-gold);
 }
 
 .lead {
@@ -893,4 +886,10 @@ textarea.input {
   height: 100%;
   object-fit: cover;
   overflow: clip;
+}
+/* Segmented Control als Sprungnavigation (Anker statt Radios) */
+a.segmented__opt {
+  display: block;
+  text-decoration: none;
+  border-radius: var(--r-pill);
 }

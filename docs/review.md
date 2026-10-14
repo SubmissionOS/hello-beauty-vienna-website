@@ -47,3 +47,29 @@ Grundlage: Screenshots aller Seiten × Sprachen × Geräte (`docs/qa/screenshots
 ## Runde 2
 
 Nach allen Fixes: Screenshots neu erzeugt (456 Aufnahmen, 8 Geräteprofile × 3 Sprachen × 18 Seiten + Zustände) und erneut gesichtet. Neuer Befund nur: unnötige Silbentrennung in Überschriften auf 390–430 px (Befund 27, mittel) → behoben. Keine weiteren kritischen, hohen oder mittleren Befunde – Runde 3 nicht nötig.
+
+## Design-Upgrade „Signature statt Standard“ (2026-10-14)
+
+Grundlage: 456 neue Aufnahmen (8 Profile × 3 Sprachen, alle Seiten + Zustände), je Gerät und Seite gesichtet; Durchklicken der drei Signature-Momente in Chromium und WebKit.
+
+### D) Art Director (Wiener Beauty-Studio) – merkbar? hochwertig? Template/KI? überladen?
+
+| # | Befund | Schwere | Maßnahme | Status |
+|---|---|---|---|---|
+| D1 | Merkbar: Hero mit randabfallendem Monogramm-Foto und überlappender Gloock-Headline auf Papierstreifen, Index 01–06, Nagelform-Wähler – wirkt nach Magazin, nicht nach Baukasten | – | passt | – |
+| D2 | Goldstrich vor jeder Dachzeile („—— LEISTUNGEN“) – klassisches Template-Motiv, in jedem Abschnitt wiederholt | mittel | Strich entfernt, Dachzeile nur als gesperrte Versalien | ✅ |
+| D3 | Kreisbogen-Ornament im dunklen CTA-Band – Deko ohne Funktion | niedrig | entfernt | ✅ |
+| D4 | Termin-Chip mobil doppelt (Hero und Aktionsleiste) – wirkt überladen | mittel | Hero-Chip nur ab 1024 px, darunter trägt die Leiste ihn | ✅ |
+| D5 | „Über uns“ noch klassisch (Bild + Text, Wertekacheln) | niedrig | bewusst so belassen – ohne echte Teamfotos (Platzhalter) wäre mehr Bildregie dort Inszenierung ohne Inhalt | ➖ |
+| D6 | Bildregie: Fotos unterschiedlich hell/kühl | mittel | einheitliche Helligkeit und Wärme (`scripts/grade-photos.mjs`), Zuschnitte 4:5/16:9, Nagel-Detail als Gestaltungselement | ✅ |
+
+### E) Senior UI/UX
+
+| # | Befund | Schwere | Maßnahme | Status |
+|---|---|---|---|---|
+| E1 | Preise: CSS-Filter per Segmented Control ließ Nutzer nach Wahl einer Kategorie im Footer landen (gemessen: Titel 2 379 px oberhalb, Chromium und WebKit) | hoch | Segmented Control als Sprungnavigation (Anker, natives Scrollen); Indikator gleitet per `:has(:target)` – kein JavaScript | ✅ |
+| E2 | Leistungsindex Desktop: Nummer oben, Titel mittig – unverbunden | mittel | Zeile einheitlich mittig ausgerichtet | ✅ |
+| E3 | 320 px / 200 % Zoom: Hero-Headline 6 px zu breit (Innenabstand des Papierstreifens), „Időpontfoglalás“ in der Leiste zu breit | hoch | Streifen per `box-shadow` (kein Layoutmaß), Kurzlabel „Buchen/Book/Foglalás“ unter 400 px | ✅ |
+| E4 | Galerie: Wischstreifen und Startseiten-Streifen als Regionen mit gleichem Namen (axe `landmark-unique`) | mittel | Scroller als `role="group"` | ✅ |
+| E5 | Font-Preload: WebKit lädt Gloock mit `crossorigin` doppelt, Chromium ohne – kein Preload, das in beiden wirkt (gemessen) | mittel | kein Preload; Schrift steht im inline ausgelieferten CSS, LCP ist das Foto; dokumentiert | ✅ |
+| E6 | Mobil steht der Buchungsbutton des Hero unter dem Falz | niedrig | bewusst: Aktionsleiste mit „Buchen“ und Termin-Chip ist immer sichtbar | ➖ |
