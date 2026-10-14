@@ -1,0 +1,308 @@
+---
+/**
+ * Signature-Moment 2: Nagelform-Wähler.
+ * Radiogruppe (Tastatur: Pfeiltasten), die große Ansicht mit Beschreibung und Buchungslink
+ * wird per CSS :has() umgeschaltet – kein JavaScript. Formen als selbst gezeichnete SVG-Pfade.
+ * Angebotene Formen: Annahme (siehe docs/design-upgrade.md) – belegt ist im Bestand die Mandelform.
+ */
+import Icon from './Icon.astro';
+import { href } from '../i18n/routes';
+import type { Lang } from '../i18n/config';
+import { fmt, t } from '../i18n';
+import { servicePageMedia } from '../data/gallery';
+
+interface Props {
+  lang: Lang;
+  /** eindeutige ID je Einbindung (Radiogruppen-Name, CSS-Bereich) */
+  id: string;
+  compact?: boolean;
+  headingLevel?: 'h2' | 'h3';
+}
+const { lang, id, compact = false, headingLevel = 'h2' } = Astro.props;
+const d = t(lang);
+const s = d.shapes;
+const H = headingLevel;
+
+// Nagel von der Nagelhaut (unten) bis zur Spitze (oben), viewBox 0 0 100 170
+const base = 'L76,150 Q50,164 24,150Z';
+const shapes = {
+  almond: `M24,150 C23,100 32,52 45,26 Q50,18 55,26 C68,52 77,100 76,150 Q50,164 24,150Z`,
+  oval: `M24,150 L24,64 C24,26 76,26 76,64 ${base}`,
+  round: `M24,150 L24,72 A26,26 0 0 1 76,72 ${base}`,
+  square: `M24,150 L24,34 L76,34 ${base}`,
+  squoval: `M24,150 L24,44 Q24,34 34,34 L66,34 Q76,34 76,44 ${base}`,
+  coffin: `M24,150 C24,110 30,60 35,24 Q36,20 40,20 L60,20 Q64,20 65,24 C70,60 76,110 76,150 Q50,164 24,150Z`,
+  stiletto: `M24,150 C24,104 36,52 50,6 C64,52 76,104 76,150 Q50,164 24,150Z`,
+} as const;
+type Shape = keyof typeof shapes;
+const order = Object.keys(shapes) as Shape[];
+const lunula = 'M33,147 Q50,131 67,147';
+// angedeutete Fingerkuppe hinter dem Nagel (nur große Ansicht)
+const finger = 'M8,176 L8,96 C8,62 92,62 92,96 L92,176Z';
+const bookBase = `${href('booking', lang)}?leistung=${servicePageMedia.nails.book}`;
+const bookHref = (k: Shape) => `${bookBase}&notiz=${encodeURIComponent(fmt(s.note, { shape: s.items[k].name }))}`;
+const css = order
+  .map((k) => `#${id}:has(input[value="${k}"]:checked) .shapes__panel[data-shape="${k}"]{display:grid}`)
+  .join('');
+---
+<section class:list={['shapes', { 'shapes--compact': compact }]} id={id} aria-labelledby={`${id}-title`}>
+  <style is:inline set:html={css} />
+  <div class="shapes__head">
+    <p class="eyebrow">{s.eyebrow}</p>
+    <H id={`${id}-title`} class="shapes__title">{s.title}</H>
+    <p class="shapes__intro">{s.intro}</p>
+  </div>
+
+  <div class="shapes__body">
+    <div class="shapes__stage">
+      {
+        order.map((k) => (
+          <div class="shapes__panel" data-shape={k}>
+            <svg class="shapes__big" viewBox="0 0 100 176" aria-hidden="true" focusable="false">
+              <path d={finger} class="finger" />
+              <path d={shapes[k]} class="nail" />
+              <path d={lunula} class="lunula" />
+            </svg>
+            <div class="shapes__info">
+              <p class="shapes__name">{s.items[k].name}</p>
+              <p class="shapes__text">{s.items[k].text}</p>
+              <p class="shapes__daily">{s.items[k].daily}</p>
+              <a class="btn" href={bookHref(k)}>
+                <Icon name="calendar" />
+                {s.book}
+                <span class="visually-hidden">: {s.items[k].name}</span>
+              </a>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <fieldset class="shapes__options">
+      <legend class="visually-hidden">{s.legend}</legend>
+      {
+        order.map((k, i) => (
+          <label class="shapes__opt">
+            <input type="radio" name={`${id}-shape`} value={k} checked={i === 0} />
+            <span class="shapes__chip">
+              <svg viewBox="0 0 100 170" aria-hidden="true" focusable="false">
+                <path d={shapes[k]} class="nail" />
+              </svg>
+              <span>{s.items[k].name}</span>
+            </span>
+          </label>
+        ))
+      }
+    </fieldset>
+  </div>
+</section>
+
+<style>
+  .shapes__head {
+    max-width: 40rem;
+  }
+  .shapes__title {
+    margin-top: var(--s-2);
+  }
+  .shapes__intro {
+    margin-top: var(--s-3);
+    color: var(--c-ink-muted);
+  }
+  .shapes__body {
+    display: grid;
+    gap: var(--s-5);
+    margin-top: var(--s-6);
+  }
+  @media (min-width: 900px) {
+    .shapes__body {
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      gap: var(--s-7);
+      align-items: center;
+    }
+  }
+
+  /* Große Ansicht */
+  .shapes__stage {
+    background: var(--c-white);
+    border-radius: var(--r-xl);
+    padding: var(--s-5);
+  }
+  .shapes__panel {
+    display: none;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: var(--s-5);
+    align-items: center;
+  }
+  @media (min-width: 640px) {
+    .shapes__panel {
+      grid-template-columns: 11rem minmax(0, 1fr);
+      gap: var(--s-6);
+    }
+    .shapes__stage {
+      padding: var(--s-6);
+    }
+  }
+  .shapes__big {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    animation: shape-in 240ms var(--ease-out);
+  }
+  @keyframes shape-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px) scale(0.96);
+    }
+  }
+  .nail {
+    fill: var(--c-white);
+    stroke: var(--c-ink);
+    stroke-width: 2;
+    stroke-linejoin: round;
+  }
+  .finger {
+    fill: var(--c-line);
+  }
+  .shapes__big .nail {
+    fill: var(--c-gold-soft);
+    stroke-width: 1.25;
+  }
+  .lunula {
+    fill: none;
+    stroke: var(--c-ink);
+    stroke-width: 1.2;
+    opacity: 0.45;
+  }
+  .shapes__name {
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.75rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .shapes__text {
+    margin-top: var(--s-3);
+  }
+  .shapes__daily {
+    margin-top: var(--s-2);
+    font-size: var(--fs-small);
+    color: var(--c-gold-text);
+    font-weight: 500;
+  }
+  .shapes__info .btn {
+    margin-top: var(--s-5);
+  }
+  @media (max-width: 479px) {
+    .shapes__info .btn {
+      width: 100%;
+    }
+    /* Form und Name nebeneinander, Text und Button darunter in voller Breite */
+    .shapes__panel {
+      grid-template-columns: 4.5rem minmax(0, 1fr);
+      grid-template-areas:
+        'svg name'
+        'text text'
+        'daily daily'
+        'btn btn';
+      gap: 0 var(--s-4);
+      align-items: center;
+    }
+    .shapes__big {
+      grid-area: svg;
+    }
+    .shapes__info {
+      display: contents;
+    }
+    .shapes__name {
+      grid-area: name;
+    }
+    .shapes__text {
+      grid-area: text;
+      margin-top: var(--s-4);
+    }
+    .shapes__daily {
+      grid-area: daily;
+    }
+    .shapes__info .btn {
+      grid-area: btn;
+    }
+  }
+
+  /* Auswahl */
+  .shapes__options {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--s-2);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+  .shapes__opt {
+    position: relative;
+    cursor: pointer;
+  }
+  .shapes__opt input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .shapes__chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-height: var(--tap);
+    padding: 10px 4px 8px;
+    border: 1px solid var(--c-line-strong);
+    border-radius: var(--r-md);
+    background: var(--c-white);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.2;
+    color: var(--c-ink-muted);
+    transition:
+      border-color var(--dur-1) var(--ease-out),
+      color var(--dur-1) var(--ease-out),
+      transform var(--dur-1) var(--ease-out);
+  }
+  .shapes__chip svg {
+    width: 22px;
+    height: 37px;
+  }
+  .shapes__opt input:checked + .shapes__chip {
+    border-color: var(--c-ink);
+    color: var(--c-ink);
+    box-shadow: inset 0 0 0 1px var(--c-ink);
+  }
+  .shapes__opt input:checked + .shapes__chip .nail {
+    fill: var(--c-gold-soft);
+  }
+  .shapes__opt input:focus-visible + .shapes__chip {
+    outline: 2px solid var(--c-gold-text);
+    outline-offset: 2px;
+  }
+  .shapes__opt:active .shapes__chip {
+    transform: scale(0.97);
+  }
+  @media (hover: hover) {
+    .shapes__opt:hover .shapes__chip {
+      border-color: var(--c-ink);
+      color: var(--c-ink);
+    }
+  }
+
+  /* Kompakt (Startseite) */
+  .shapes--compact .shapes__stage {
+    padding: var(--s-5);
+  }
+  @media (min-width: 640px) {
+    .shapes--compact .shapes__panel {
+      grid-template-columns: 8rem minmax(0, 1fr);
+    }
+  }
+</style>

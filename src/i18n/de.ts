@@ -522,6 +522,23 @@ export const de = {
       priceGroups: ['hair-laser', 'hair-waxing', 'hair-sugaring'],
     },
   },
+  shapes: {
+    eyebrow: 'Nagelform',
+    title: 'Welche Form passt zu Ihnen?',
+    intro: 'Tippen Sie eine Form an. Die endgültige Form besprechen wir bei der Beratung – passend zu Länge, Material und Alltag.',
+    legend: 'Nagelform wählen',
+    book: 'Diese Form buchen',
+    note: 'Nagelform: {shape}',
+    items: {
+      almond: { name: 'Mandel', text: 'Schmal zulaufend mit weicher Spitze – streckt Finger und Hand optisch. Passt zu fast jeder Handform, besonders ab mittlerer Länge.', daily: 'Alltag: gut – die runde Spitze hakt kaum.' },
+      oval: { name: 'Oval', text: 'Gleichmäßig gerundet und etwas länger als rund. Zeitlos, feminin und schmeichelnd für kurze, breite Nagelbetten.', daily: 'Alltag: sehr gut.' },
+      round: { name: 'Rund', text: 'Kurz und weich gerundet, folgt der natürlichen Fingerkuppe. Ideal für kurze Nägel und alle, die viel mit den Händen arbeiten.', daily: 'Alltag: am robustesten.' },
+      square: { name: 'Eckig', text: 'Gerade Kante, klare Ecken – grafisch und modern. Wirkt auf langen, schmalen Nagelbetten am besten.', daily: 'Alltag: mittel – Ecken können hängen bleiben.' },
+      squoval: { name: 'Squoval', text: 'Gerade Kante mit sanft gerundeten Ecken: die Klarheit von Eckig, die Ruhe von Oval. Ein unkomplizierter Klassiker.', daily: 'Alltag: sehr gut.' },
+      coffin: { name: 'Ballerina', text: 'Zur Spitze hin schmaler, vorne gerade abgeschnitten – wie ein Ballettschuh. Ein Statement für mittlere bis lange Nägel.', daily: 'Alltag: mittel – braucht etwas Länge und Stabilität.' },
+      stiletto: { name: 'Stiletto', text: 'Lang und spitz zulaufend – die dramatischste Form. Für besondere Anlässe und alle, die auffallen möchten.', daily: 'Alltag: anspruchsvoll – die Spitze ist empfindlich.' },
+    },
+  },
   pricesPage: {
     title: 'Preise Nagelstudio & Kosmetik Wien 1060 | Hello Beauty',
     description:

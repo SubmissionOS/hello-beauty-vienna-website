@@ -6,6 +6,7 @@ import ServiceIndex from '../components/ServiceIndex.astro';
 import VisitCard from '../components/VisitCard.astro';
 import FaqList from '../components/FaqList.astro';
 import CtaBand from '../components/CtaBand.astro';
+import NailShapes from '../components/NailShapes.astro';
 import { href } from '../i18n/routes';
 import type { Lang } from '../i18n/config';
 import { LANG_META } from '../i18n/config';
@@ -90,6 +91,12 @@ const strip: { name: string; ratio: string; pos?: string }[] = [
       </p>
     </div>
   </section>
+
+  <div class="section section--cream">
+    <div class="container">
+      <NailShapes lang={lang} id="shapes-home" compact />
+    </div>
+  </div>
 
   <section class="section why-section" id="uberuns" aria-labelledby="why-title">
     <div class="why">

@@ -116,6 +116,14 @@ export function initBooking(): void {
     const q = params.toString();
     history.replaceState(null, '', `${location.pathname}${q ? `?${q}` : ''}`);
   }
+  // ?notiz=… (z. B. Nagelform aus dem Form-Wähler) landet im Notizfeld
+  const preNote = params.get('notiz');
+  if (preNote) {
+    s.note = preNote.slice(0, 200);
+    params.delete('notiz');
+    const q = params.toString();
+    history.replaceState(null, '', `${location.pathname}${q ? `?${q}` : ''}`);
+  }
   const demo = params.get('demo');
   if (isDemo && demo === 'network') mockControls.set({ failNext: true });
   if (isDemo && demo === 'conflict') mockControls.set({ conflictNext: true });

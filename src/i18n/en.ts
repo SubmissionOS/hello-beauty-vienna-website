@@ -521,6 +521,23 @@ export const en: Dict = {
       priceGroups: ['hair-laser', 'hair-waxing', 'hair-sugaring'],
     },
   },
+  shapes: {
+    eyebrow: 'Nail shape',
+    title: 'Which shape suits you?',
+    intro: 'Tap a shape. We finalise the shape together during your consultation – matched to length, material and your everyday life.',
+    legend: 'Choose a nail shape',
+    book: 'Book this shape',
+    note: 'Nail shape: {shape}',
+    items: {
+      almond: { name: 'Almond', text: 'Slim and tapered with a soft tip – visually lengthens fingers and hands. Suits almost every hand, especially from medium length.', daily: 'Everyday: good – the rounded tip rarely catches.' },
+      oval: { name: 'Oval', text: 'Evenly rounded and a little longer than round. Timeless, feminine and flattering on short, wide nail beds.', daily: 'Everyday: very good.' },
+      round: { name: 'Round', text: 'Short and softly rounded, following the natural fingertip. Ideal for short nails and anyone who works a lot with their hands.', daily: 'Everyday: the most robust.' },
+      square: { name: 'Square', text: 'Straight edge, crisp corners – graphic and modern. Looks best on long, narrow nail beds.', daily: 'Everyday: medium – corners can catch.' },
+      squoval: { name: 'Squoval', text: 'A straight edge with softly rounded corners: the clarity of square, the calm of oval. An easy classic.', daily: 'Everyday: very good.' },
+      coffin: { name: 'Ballerina', text: 'Narrowing towards the tip and cut straight across – like a ballet slipper. A statement for medium to long nails.', daily: 'Everyday: medium – needs some length and strength.' },
+      stiletto: { name: 'Stiletto', text: 'Long and sharply tapered – the most dramatic shape. For special occasions and anyone who wants to stand out.', daily: 'Everyday: demanding – the tip is delicate.' },
+    },
+  },
   pricesPage: {
     title: 'Prices: Nail & Beauty Salon Vienna | Hello Beauty',
     description:

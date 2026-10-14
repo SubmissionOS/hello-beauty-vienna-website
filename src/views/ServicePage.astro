@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Img from '../components/Img.astro';
 import Icon from '../components/Icon.astro';
+import NailShapes from '../components/NailShapes.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import PriceList from '../components/PriceList.astro';
 import FaqList from '../components/FaqList.astro';
@@ -94,6 +95,16 @@ const schema = [
       </div>
     </div>
   </section>
+
+  {
+    cat === 'nails' && (
+      <div class="section section--cream">
+        <div class="container">
+          <NailShapes lang={lang} id="shapes-nails" />
+        </div>
+      </div>
+    )
+  }
 
   <section class="section" aria-labelledby="steps-title">
     <div class="container">

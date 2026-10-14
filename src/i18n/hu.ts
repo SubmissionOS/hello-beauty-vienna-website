@@ -521,6 +521,23 @@ export const hu: Dict = {
       priceGroups: ['hair-laser', 'hair-waxing', 'hair-sugaring'],
     },
   },
+  shapes: {
+    eyebrow: 'Körömforma',
+    title: 'Melyik forma illik hozzád?',
+    intro: 'Koppints egy formára. A végleges formát a konzultáción beszéljük meg – a hosszhoz, az anyaghoz és a mindennapjaidhoz igazítva.',
+    legend: 'Körömforma kiválasztása',
+    book: 'Ezt a formát foglalom',
+    note: 'Körömforma: {shape}',
+    items: {
+      almond: { name: 'Mandula', text: 'Keskenyedő, lágy csúccsal – optikailag megnyújtja az ujjakat és a kezet. Szinte minden kézformához illik, főleg közepes hossztól.', daily: 'Hétköznap: jó – a lekerekített csúcs ritkán akad be.' },
+      oval: { name: 'Ovális', text: 'Egyenletesen lekerekített, kicsit hosszabb, mint a kerek. Időtlen, nőies, és jól áll a rövid, széles körömágyon.', daily: 'Hétköznap: nagyon jó.' },
+      round: { name: 'Kerek', text: 'Rövid, lágyan lekerekített, követi az ujjbegy természetes ívét. Ideális rövid körmökhöz és annak, aki sokat dolgozik a kezével.', daily: 'Hétköznap: a legstrapabíróbb.' },
+      square: { name: 'Szögletes', text: 'Egyenes él, éles sarkok – grafikus és modern. Hosszú, keskeny körömágyon mutat a legjobban.', daily: 'Hétköznap: közepes – a sarkok beakadhatnak.' },
+      squoval: { name: 'Squoval', text: 'Egyenes él lágyan lekerekített sarkokkal: a szögletes tisztasága, az ovális nyugalma. Egyszerű klasszikus.', daily: 'Hétköznap: nagyon jó.' },
+      coffin: { name: 'Balerina', text: 'A csúcs felé keskenyedik, elöl egyenesre vágva – mint egy balettcipő. Feltűnő forma közepes és hosszú körmökhöz.', daily: 'Hétköznap: közepes – kell hozzá némi hossz és stabilitás.' },
+      stiletto: { name: 'Stiletto', text: 'Hosszú, hegyesen elvékonyodó – a legdrámaibb forma. Különleges alkalmakra és mindenkinek, aki feltűnő szeretne lenni.', daily: 'Hétköznap: igényes – a csúcs érzékeny.' },
+    },
+  },
   pricesPage: {
     title: 'Árak – körömszalon és kozmetika Bécs | Hello Beauty',
     description:
