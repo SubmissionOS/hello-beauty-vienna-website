@@ -234,7 +234,7 @@ export const hu: Dict = {
       faqTitle: 'Kérdések erről a kezelésről',
       relatedTitle: 'Ez is érdekelhet',
       bookTitle: 'Készen állsz az időpontodra?',
-      bookText: 'A kezelés már ki van választva a foglalási űrlapon. Csak a napot és az időpontot kell megadnod.',
+      bookText: 'Egy illő kezelést már előre kiválasztottunk a foglalási űrlapon – ott bármikor módosíthatod vagy kiegészítheted.',
     },
     nails: {
       title: 'Műköröm és zselés köröm Bécsben | Hello Beauty',

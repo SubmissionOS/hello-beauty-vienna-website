@@ -20,3 +20,14 @@ Erfasst während Phase 8 (automatisierte Suite + Sichtprüfung) und Phase 9 (Exp
 | 14 | Über uns | HU | – | Meta-Description 162 Zeichen | gekürzt auf 152 | ✅ |
 | 15 | Projekt | – | – | `npm run build` verwies auf nicht existierendes Prüfskript | Build-Skript bereinigt; Übersetzungsprüfung läuft im Astro-Build | ✅ |
 | 16 | Termin buchen | alle | Desktop | Klick auf einen Ankerlink scrollte durch den neuen Fokus-Wächter zurück | Wächter greift nur bei `:focus-visible` und nur bei echter Überdeckung | ✅ |
+| 17 | Termin buchen | alle | mobil | Nach „Weiter“ landete der Schritt-Titel unter der Fortschrittsleiste bzw. mitten in der Seite | Schritt-Überschrift wird 12 px unter die Leiste gescrollt und fokussiert | ✅ |
+| 18 | alle (Footer) | alle | < 1024 px | Unterster Footer-Streifen von der Aktionsleiste verdeckt | Abstand für die Aktionsleiste am Footer statt am Body | ✅ |
+| 19 | Unterseiten | alle | Desktop | H1 auf großen Bildschirmen zu wuchtig gegenüber dem Fließtext | Skala `--fs-h1`/`--fs-h2` reduziert (52/40 px max.) | ✅ |
+| 20 | Galerie | HU | 360 px | Filterleiste brach zweizeilig um bzw. lief über (`fieldset`-Mindestbreite) | `min-width: 0`, einzeiliges Segmented Control mit Scroll | ✅ |
+| 21 | Über uns | alle | Tablet/Desktop | Letztes Salonbild stand allein in halber Breite | letztes Bild über volle Breite | ✅ |
+| 22 | Start | alle | iPad | Hochformat-Bilder füllten auf Tablet fast den ganzen Bildschirm | Tablet-Bildausschnitt 16 : 9 | ✅ |
+| 23 | FAQ, Preise | alle | Desktop | Inhalte liefen über 1200 px Breite, Zeilen schwer lesbar | Lesebreite 48 rem (FAQ) bzw. 52 rem (Preise) | ✅ |
+| 24 | alle (Footer) | alle | alle | Öffnungszeiten in einer Zeile, auf schmalen Spalten unglücklich umbrochen | Tage und Uhrzeit gestapelt | ✅ |
+| 25 | Impressum, Kontakt | alle | alle | Telefon mit Durchwahl (+43 1 52 152-0) wurde nur teilweise verlinkt | Muster für Durchwahl ergänzt | ✅ |
+| 26 | alle | EN | alle | Englische Preise als „85 €“ statt „€85“ | Englisches Format mit vorangestelltem € | ✅ |
+| 27 | Leistungsseiten, Impressum | DE, HU | iPhone 390–430 px | Überschriften unnötig getrennt („Wimpernverlängerung, Lif-ting“) | Silbentrennung nur noch unter 360 px, darüber nur Notumbruch | ✅ |

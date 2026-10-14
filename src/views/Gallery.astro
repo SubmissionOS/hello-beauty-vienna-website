@@ -45,7 +45,7 @@ const items = await Promise.all(
 
   <section class="gallery-section" aria-label={p.h1}>
     <div class="container">
-      <fieldset class="segmented" data-filter hidden>
+      <fieldset class="segmented" data-filter>
         <legend class="visually-hidden">{p.filterLabel}</legend>
         {
           tags.map((tag, i) => (
@@ -215,8 +215,10 @@ const items = await Promise.all(
     max-width: 100%;
     min-width: 0;
   }
-  .segmented[hidden] {
-    display: none;
+  @media (scripting: none) {
+    .segmented {
+      display: none;
+    }
   }
   @media (max-width: 559px) {
     .segmented {

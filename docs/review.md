@@ -32,3 +32,18 @@ Grundlage: Screenshots aller Seiten × Sprachen × Geräte (`docs/qa/screenshots
 | B8 | Abhängigkeiten: 2 Laufzeit-Pakete (astro, sharp), Cooldown, ignore-scripts, Vorfallsprüfung dokumentiert | – | passt | – |
 | B9 | Compliance: keine Cookies, keine Fremd-Requests (getestet auf allen Seiten), Rechtstexte AT-konform als Entwurf, FAGG-Button und -Hinweise im Flow | – | passt; offene Punkte = Platzhalter der Inhaberin | – |
 | B10 | i18n: typisierte Wörterbücher, Paritätsprüfung bricht den Build, übersetzte Slugs aus einer Tabelle – vierte Sprache = eine Datei + Slugs | – | passt | – |
+
+### C) Personas (durchgespielt auf den Zielgeräten, mit den Aufnahmen unter `docs/qa/screenshots/`)
+
+| # | Persona | Weg | Befund | Schwere | Maßnahme | Status |
+|---|---|---|---|---|---|---|
+| C1 | **Anna, 34**, Stammkundin, iPhone 15, Safari – will „Auffüllen L“ buchen | Start → „Termin buchen“ (Aktionsleiste) → Nagelmodellage → Auffüllen → Tag → Uhrzeit → Daten → zahlungspflichtig buchen | Weg in 7 Schritten ohne Sackgasse; Zwischenstand bleibt beim Zurück-Wischen erhalten. Nach „Weiter“ lag der neue Schritt anfangs nicht im Blick | hoch | Schrittüberschrift unter die Fortschrittsleiste (A2) | ✅ |
+| C2 | **Zsófia, 27**, Ungarin in Wien, Android 360 px, wählt HU | Sprachwahl → Szempilla → Preise → Buchung | Sprache bleibt beim Seitenwechsel, Slugs und Datumsformat ungarisch, Preise „15 €-tól“. Galerie-Filter auf 360 px zweizeilig/überlaufend | mittel | einzeiliges Segmented Control (Befund 20) | ✅ |
+| C3 | **Sarah, 29**, Expat, Laptop, Englisch – vergleicht Wimpernpreise | /en/ → Lashes & brows → full price list → „Book this treatment“ | Preise im englischen Format nötig (€85), Hinweis „Diese Leistung buchen“ versprach „nur noch Tag und Uhrzeit“, obwohl nur eine Variante (z. B. Lifting mit Färben) vorausgewählt ist und weitere Schritte folgen | mittel | €-Präfix (Befund 26); Hinweis ehrlich formuliert: „passende Behandlung vorausgewählt – änderbar“ (DE/EN/HU) | ✅ |
+| C4 | **Helga, 68**, Pediküre, große Schrift (200 % Zoom), telefoniert lieber | Start → Pediküre → Telefon | Telefonnummer auf jeder Seite in der Aktionsleiste und im Footer, `tel:` mit Ländervorwahl; 200 % Zoom und Textabstände ohne Überlauf (automatisiert geprüft); Öffnungszeiten gestapelt besser lesbar | mittel | Öffnungszeiten gestapelt (Befund 24) | ✅ |
+| C5 | **Lena, 38**, blind, VoiceOver/Tastatur – bucht Kosmetik | Tastatur: Skip-Link → Navigation → Buchung; Kalender (Pfeiltasten), Uhrzeiten als Radiogruppen, Fehler per `aria-live` | Fokus konnte in Safari unter Header/Aktionsleiste verschwinden; Menü-Sheet fokussierte nicht das erste Element | hoch | Fokus-Wächter (Befund 7), `data-autofocus` im Sheet | ✅ |
+| C6 | alle Personas | Gutscheine, Team, Barrierefreiheit des Salons | Antworten stehen als sichtbare Platzhalter – Inhaberin muss liefern | niedrig | bewusst: Regel „nichts erfinden“ | ➖ |
+
+## Runde 2
+
+Nach allen Fixes: Screenshots neu erzeugt (456 Aufnahmen, 8 Geräteprofile × 3 Sprachen × 18 Seiten + Zustände) und erneut gesichtet. Neuer Befund nur: unnötige Silbentrennung in Überschriften auf 390–430 px (Befund 27, mittel) → behoben. Keine weiteren kritischen, hohen oder mittleren Befunde – Runde 3 nicht nötig.

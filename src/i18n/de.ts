@@ -235,7 +235,7 @@ export const de = {
       faqTitle: 'Fragen zu dieser Leistung',
       relatedTitle: 'Passt gut dazu',
       bookTitle: 'Bereit für Ihren Termin?',
-      bookText: 'Die Leistung ist im Buchungsformular bereits ausgewählt. Sie wählen nur noch Tag und Uhrzeit.',
+      bookText: 'Eine passende Behandlung ist im Buchungsformular schon vorausgewählt – Sie können sie dort jederzeit ändern oder ergänzen.',
     },
     nails: {
       title: 'Nagelmodellage & Gelnägel Wien 1060 | Hello Beauty',

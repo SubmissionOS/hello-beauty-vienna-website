@@ -5,7 +5,7 @@ export default defineConfig({
   site: 'https://hellobeautysalon.at',
   output: 'static',
   trailingSlash: 'always',
-  build: { format: 'directory', inlineStylesheets: 'auto' },
+  build: { format: 'directory', inlineStylesheets: 'always' },
   devToolbar: { enabled: false },
   // Keine Bilder von fremden Servern: astro:assets verarbeitet nur lokale Dateien.
   image: { domains: [] },

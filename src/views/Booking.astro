@@ -62,7 +62,7 @@ const json = JSON.stringify(clientData).replace(/</g, '\\u003c');
       </noscript>
 
       <div class="booking__layout">
-        <div class="flow" data-booking hidden>
+        <div class="flow" data-booking>
           <div class="flow__bar">
             <button type="button" class="flow__back" data-back>
               <Icon name="chevron-left" size={20} />
@@ -80,8 +80,8 @@ const json = JSON.stringify(clientData).replace(/</g, '\\u003c');
             <p class="notice step__pre" data-preselected hidden><Icon name="check" /><span></span></p>
             <div class="svc-cats">
               {
-                categories.map((c) => (
-                  <details class="svc-cat" data-cat={c.id}>
+                categories.map((c, i) => (
+                  <details class="svc-cat" data-cat={c.id} open={i === 0}>
                     <summary>
                       <span class="svc-cat__title">{d.cards[c.id].title}</span>
                       <span class="svc-cat__count" data-cat-count />
@@ -994,6 +994,11 @@ const json = JSON.stringify(clientData).replace(/</g, '\\u003c');
       padding-inline: var(--gutter);
       border-radius: 0;
       background: color-mix(in srgb, var(--c-paper) 90%, transparent);
+    }
+  }
+  @media (scripting: none) {
+    [data-booking] {
+      display: none;
     }
   }
   .flow__footer[hidden] {

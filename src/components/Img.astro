@@ -26,15 +26,34 @@ const src = image(name);
 const usable = widths.filter((w) => w <= src.width);
 if (usable.length === 0 || usable[usable.length - 1]! < Math.min(src.width, widths[widths.length - 1]!)) usable.push(Math.min(src.width, widths[widths.length - 1]!));
 const frameRatio = ratio ?? `${src.width} / ${src.height}`;
+
+// LCP-Bild serverseitig auf den Rahmen zuschneiden: keine Bytes für Bildteile, die object-fit ohnehin abschneidet.
+// sharp kennt nur Schlüsselwörter als Position – Prozentwerte werden auf das nächste Schlüsselwort gerundet.
+let crop: { width: number; height: number; fit: 'cover'; position: string } | undefined;
+if (eager && ratio) {
+  const [a, b] = ratio.split('/').map((n) => Number(n.trim()));
+  const target = a! / b!;
+  const own = src.width / src.height;
+  if (Math.abs(own - target) / target > 0.02) {
+    const [px = 50, py = 50] = (position ?? '').split(/\s+/).map((v) => parseFloat(v)).filter((n) => !Number.isNaN(n));
+    const key = (v: number, lo: string, hi: string) => (v < 30 ? lo : v > 70 ? hi : 'centre');
+    crop =
+      own < target
+        ? { width: src.width, height: Math.round(src.width / target), fit: 'cover', position: key(py, 'top', 'bottom') }
+        : { width: Math.round(src.height * target), height: src.height, fit: 'cover', position: key(px, 'left', 'right') };
+  }
+}
+const pictureWidths = crop ? [...new Set(usable.map((w) => Math.min(w, crop.width)))] : usable;
 ---
 <div class:list={['img', cls, { 'img--rounded': rounded }]} style={`aspect-ratio: ${frameRatio};${position ? ` --pos: ${position};` : ''}`}>
   <Picture
     src={src}
     alt={alt}
-    widths={usable}
+    widths={pictureWidths}
+    {...(crop ?? {})}
     sizes={sizes}
     formats={['avif', 'webp']}
-    quality={72}
+    quality={64}
     loading={eager ? 'eager' : 'lazy'}
     decoding={eager ? 'sync' : 'async'}
     fetchpriority={eager ? 'high' : 'auto'}

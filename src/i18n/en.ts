@@ -234,7 +234,7 @@ export const en: Dict = {
       faqTitle: 'Questions about this treatment',
       relatedTitle: 'You might also like',
       bookTitle: 'Ready for your appointment?',
-      bookText: 'This treatment is already selected in the booking form. You only need to pick a day and time.',
+      bookText: 'A matching treatment is already preselected in the booking form – you can change it or add more there.',
     },
     nails: {
       title: 'Gel Nails & Nail Extensions Vienna | Hello Beauty',

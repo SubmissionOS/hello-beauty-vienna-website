@@ -183,7 +183,7 @@ export function initBooking(): void {
   if (s.services.length) {
     const first = svcInputs.find((i) => i.value === s.services[0]);
     const det = first?.closest('details');
-    if (det) det.open = true;
+    if (det) for (const c of $$<HTMLDetailsElement>('details.svc-cat')) c.open = c === det;
     if (preInput) {
       const box = $('[data-preselected]');
       box.hidden = false;
